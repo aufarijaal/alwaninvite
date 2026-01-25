@@ -1,0 +1,347 @@
+{
+  "common": {
+    "appName": "Alwan Invite",
+    "welcome": "Selamat Datang",
+    "loading": "Memuat...",
+    "save": "Simpan",
+    "cancel": "Batal",
+    "delete": "Hapus",
+    "edit": "Edit",
+    "create": "Buat",
+    "search": "Cari",
+    "filter": "Filter",
+    "actions": "Aksi",
+    "confirm": "Konfirmasi",
+    "back": "Kembali",
+    "next": "Selanjutnya",
+    "submit": "Kirim",
+    "logout": "Keluar",
+    "settings": "Pengaturan",
+    "profile": "Profil",
+    "previous": "Sebelumnya",
+    "close": "Tutup",
+    "saving": "Menyimpan...",
+    "deleting": "Menghapus..."
+  },
+  "auth": {
+    "signin": {
+      "title": "Selamat Datang di Alwan Invite",
+      "subtitle": "Mulai kelola undangan digital Anda dengan mudah dan efisien.",
+      "signInWithGoogle": "Masuk dengan Google",
+      "authenticating": "Mengautentikasi...",
+      "termsPrefix": "Dengan masuk, Anda menyetujui",
+      "termsAndConditions": "Syarat & Ketentuan",
+      "and": "dan",
+      "privacyPolicy": "Kebijakan Privasi"
+    },
+    "callback": {
+      "processing": "Memproses autentikasi...",
+      "success": "Berhasil masuk!",
+      "error": "Autentikasi gagal. Silakan coba lagi."
+    }
+  },
+  "dashboard": {
+    "title": "Dasbor",
+    "overview": "Ringkasan",
+    "statistics": "Statistik",
+    "recentActivity": "Aktivitas Terbaru",
+    "quickActions": "Aksi Cepat",
+    "viewAll": "Lihat Semua",
+    "noData": "Tidak ada data",
+    "totalInvitations": "Total Undangan",
+    "activeInvitations": "Undangan Aktif",
+    "totalGuests": "Total Tamu",
+    "totalEvents": "Total Acara",
+    "createInvitation": "Buat Undangan",
+    "manageGuests": "Kelola Tamu",
+    "viewReports": "Lihat Laporan",
+    "myInvitations": "Undangan Saya",
+    "myEvents": "Acara Saya",
+    "guestList": "Daftar Tamu",
+    "templates": "Template",
+    "analytics": "Analitik"
+  },
+  "navigation": {
+    "home": "Beranda",
+    "dashboard": "Dasbor",
+    "invitations": "Undangan",
+    "events": "Acara",
+    "guests": "Tamu",
+    "templates": "Template",
+    "settings": "Pengaturan",
+    "help": "Bantuan",
+    "wishes": "Ucapan",
+    "rsvps": "RSVPs",
+    "media": "Media"
+  },
+  "invitation": {
+    "title": "Undangan",
+    "audioTabs": {
+      "system": "Audio Sistem",
+      "userUploads": "Unggahan Saya"
+    },
+    "create": {
+      "title": "Buat Undangan Baru",
+      "subtitle": "Isi detail untuk membuat undangan pernikahan digital Anda",
+      "viewJson": "Lihat JSON",
+      "jsonPreview": "Pratinjau JSON"
+    },
+    "edit": {
+      "title": "Edit Undangan",
+      "subtitle": "Perbarui detail undangan pernikahan Anda"
+    },
+    "list": {
+      "subtitle": "Kelola semua undangan pernikahan Anda"
+    },
+    "delete": "Hapus Undangan",
+    "send": "Kirim Undangan",
+    "preview": "Pratinjau",
+    "quickCreate": "Buat Cepat",
+    "confirmDelete": "Apakah Anda yakin ingin menghapus undangan ini? Tindakan ini tidak dapat dibatalkan.",
+    "status": {
+      "draft": "Draf",
+      "active": "Aktif",
+      "sent": "Terkirim",
+      "expired": "Kedaluwarsa"
+    },
+    "steps": {
+      "basicInfo": "Info Dasar",
+      "coupleInfo": "Info Pasangan",
+      "events": "Acara",
+      "gifts": "Hadiah",
+      "liveStream": "Siaran Langsung",
+      "audio": "Audio"
+    },
+    "sections": {
+      "brideInfo": "Informasi Mempelai Wanita",
+      "groomInfo": "Informasi Mempelai Pria",
+      "event": "Acara",
+      "gift": "Hadiah"
+    },
+    "fields": {
+      "slug": "URL Slug",
+      "title": "Judul",
+      "language": "Bahasa",
+      "theme": "Tema",
+      "published": "Publikasikan Undangan",
+      "callname": "Nama Panggilan",
+      "fullname": "Nama Lengkap",
+      "additionalInfo": "Info Tambahan",
+      "eventType": "Jenis Acara",
+      "eventTitle": "Judul Acara",
+      "startTime": "Waktu Mulai",
+      "endTime": "Waktu Selesai",
+      "locationName": "Nama Lokasi",
+      "locationAddress": "Alamat Lokasi",
+      "mapUrl": "URL Peta",
+      "giftType": "Jenis Hadiah",
+      "provider": "Penyedia",
+      "accountName": "Nama Akun",
+      "accountNumber": "Nomor Akun",
+      "active": "Aktif",
+      "platform": "Platform",
+      "streamUrl": "URL Siaran",
+      "eventDate": "Tanggal Acara",
+      "streamStartTime": "Waktu Mulai Siaran",
+      "systemAudio": "Audio Sistem",
+      "customAudioUrl": "URL Audio Kustom",
+      "autoplay": "Putar Otomatis",
+      "loop": "Ulang"
+    },
+    "placeholders": {
+      "slug": "contoh: pernikahan-sarah-dan-john",
+      "title": "contoh: Pernikahan Sarah & John",
+      "brideCallname": "contoh: Sarah",
+      "brideFullname": "contoh: Sarah Elizabeth Smith",
+      "groomCallname": "contoh: John",
+      "groomFullname": "contoh: John Michael Doe",
+      "additionalInfo": "contoh: Putri dari Bapak & Ibu Smith",
+      "eventTitle": "contoh: Akad Nikah",
+      "locationName": "contoh: Ballroom Grand Hotel",
+      "locationAddress": "contoh: Jl. Utama No. 123, Kota",
+      "mapUrl": "https://maps.google.com/...",
+      "provider": "contoh: BCA, Mandiri, GoPay",
+      "accountName": "contoh: John Doe",
+      "accountNumber": "contoh: 1234567890",
+      "selectPlatform": "Pilih platform",
+      "selectAudio": "Pilih audio",
+      "streamUrl": "https://youtube.com/...",
+      "customAudioUrl": "https://example.com/audio.mp3"
+    },
+    "helpers": {
+      "slug": "Ini akan menjadi URL undangan Anda: alwaninvite.com/invite/{slug}",
+      "giftsOptional": "Informasi hadiah bersifat opsional. Anda dapat menambahkan rekening bank, e-wallet, atau alamat kripto.",
+      "liveStream": "Opsional: Tambahkan detail siaran langsung jika Anda berencana menyiarkan acara Anda secara online.",
+      "audio": "Opsional: Tambahkan musik latar untuk halaman undangan Anda."
+    },
+    "labels": {
+      "event": "Acara",
+      "gift": "Hadiah"
+    },
+    "actions": {
+      "addEvent": "Tambah Acara",
+      "addGift": "Tambah Hadiah",
+      "selectAudio": "Pilih Audio",
+      "changeAudio": "Ubah Audio",
+      "select": "Pilih",
+      "selected": "Terpilih",
+      "selectTheme": "Pilih Tema",
+      "changeTheme": "Ubah Tema",
+      "preview": "Pratinjau Undangan"
+    },
+    "eventTypes": {
+      "ceremony": "Akad Nikah",
+      "reception": "Resepsi",
+      "other": "Lainnya"
+    },
+    "giftTypes": {
+      "bank": "Transfer Bank",
+      "ewallet": "E-Wallet",
+      "crypto": "Cryptocurrency",
+      "giftRegistry": "Daftar Hadiah"
+    },
+    "empty": {
+      "noGifts": "Belum ada hadiah yang ditambahkan. Klik 'Tambah Hadiah' untuk menambahkan informasi hadiah.",
+      "title": "Belum Ada Undangan",
+      "subtitle": "Mulai membuat undangan pernikahan pertama Anda",
+      "createFirst": "Buat Undangan Pertama",
+      "noSystemAudio": "Tidak ada audio sistem yang tersedia",
+      "noUserAudio": "Belum ada file audio yang diunggah",
+      "uploadAudioHint": "Unggah file audio dari halaman Media",
+      "noThemes": "Tidak ada tema yang tersedia"
+    },
+    "languages": {
+      "en": "Inggris",
+      "id": "Indonesia"
+    },
+    "previewUnavailable": "Pratinjau tidak tersedia"
+  },
+  "validation": {
+    "slug": {
+      "min": "Slug minimal 3 karakter",
+      "max": "Slug maksimal 50 karakter",
+      "format": "Slug hanya boleh berisi huruf kecil, angka, dan tanda hubung"
+    },
+    "title": {
+      "min": "Judul minimal 3 karakter",
+      "max": "Judul maksimal 100 karakter"
+    },
+    "name": {
+      "min": "Nama minimal 2 karakter",
+      "max": "Nama maksimal 50 karakter"
+    },
+    "fullname": {
+      "min": "Nama lengkap minimal 3 karakter",
+      "max": "Nama lengkap maksimal 100 karakter"
+    },
+    "eventType": {
+      "required": "Jenis acara wajib diisi"
+    },
+    "time": {
+      "required": "Waktu wajib diisi"
+    },
+    "url": {
+      "invalid": "Mohon masukkan URL yang valid"
+    },
+    "provider": {
+      "required": "Penyedia wajib diisi"
+    },
+    "accountName": {
+      "min": "Nama akun minimal 3 karakter",
+      "max": "Nama akun maksimal 100 karakter"
+    },
+    "accountNumber": {
+      "min": "Nomor akun minimal 3 karakter",
+      "max": "Nomor akun maksimal 50 karakter"
+    },
+    "platform": {
+      "required": "Platform wajib diisi"
+    },
+    "events": {
+      "min": "Minimal satu acara diperlukan"
+    }
+  },
+  "error": {
+    "generic": "Terjadi kesalahan. Silakan coba lagi.",
+    "notFound": "Halaman tidak ditemukan",
+    "unauthorized": "Akses tidak diizinkan",
+    "serverError": "Kesalahan server. Silakan coba lagi nanti."
+  },
+  "media": {
+    "title": "Perpustakaan Media",
+    "subtitle": "Kelola file audio Anda",
+    "uploadAudio": "Unggah Audio",
+    "audioFile": "File Audio",
+    "audioTitle": "Judul Audio",
+    "audioTitlePlaceholder": "Masukkan judul audio",
+    "audioArtist": "Artis",
+    "audioArtistPlaceholder": "Masukkan nama artis",
+    "titleRequired": "Judul wajib diisi",
+    "optional": "Opsional",
+    "selectFile": "Pilih File Audio",
+    "selectedFile": "File terpilih",
+    "supportedFormats": "Format yang didukung",
+    "maxFileSize": "Ukuran file maks",
+    "fileSizeError": "Ukuran file melebihi batas 5 MB",
+    "fileTypeError": "Hanya file audio yang diperbolehkan",
+    "upload": "Unggah",
+    "uploading": "Mengunggah...",
+    "yourAudioFiles": "File Audio Anda",
+    "noAudioFiles": "Belum ada file audio yang diunggah",
+    "availableSystemAudio": "Audio Sistem yang Tersedia",
+    "systemAudioDescription": "Jelajahi dan preview trek audio yang disediakan oleh aplikasi",
+    "noSystemAudio": "Tidak ada audio sistem yang tersedia",
+    "play": "Putar",
+    "pause": "Jeda",
+    "premium": "Premium",
+    "confirmDelete": "Apakah Anda yakin ingin menghapus file audio ini?",
+    "uploadError": "Gagal mengunggah file audio",
+    "deleteError": "Gagal menghapus file audio",
+    "noWeddingFound": "Tidak ada pernikahan ditemukan. Silakan buat undangan terlebih dahulu.",
+    "search": "Cari",
+    "searchPlaceholder": "Cari berdasarkan judul atau artis...",
+    "empty": {
+      "title": "Tidak Ada File Audio",
+      "subtitle": "Unggah file audio pertama Anda untuk memulai"
+    }
+  },
+  "wishes": {
+    "title": "Ucapan & RSVP",
+    "subtitle": "Kelola ucapan tamu dan konfirmasi kehadiran",
+    "exportCSV": "Ekspor ke CSV",
+    "search": "Cari",
+    "searchPlaceholder": "Cari berdasarkan nama tamu atau pesan...",
+    "filterByWedding": "Filter berdasarkan Pernikahan",
+    "filterByAttendance": "Filter berdasarkan Kehadiran",
+    "allWeddings": "Semua Pernikahan",
+    "allAttendance": "Semua Kehadiran",
+    "confirmDelete": "Apakah Anda yakin ingin menghapus ucapan ini?",
+    "stats": {
+      "total": "Total Ucapan",
+      "totalDesc": "Semua tanggapan",
+      "attending": "Hadir",
+      "notAttending": "Tidak Hadir",
+      "maybe": "Mungkin",
+      "totalGuests": "Total Tamu",
+      "guestsDesc": "Tamu yang diharapkan"
+    },
+    "attendance": {
+      "yes": "Hadir",
+      "no": "Tidak Hadir",
+      "maybe": "Mungkin"
+    },
+    "table": {
+      "date": "Tanggal",
+      "guestName": "Nama Tamu",
+      "attendance": "Kehadiran",
+      "guestCount": "Jumlah Tamu",
+      "message": "Pesan",
+      "wedding": "Pernikahan",
+      "actions": "Aksi"
+    },
+    "empty": {
+      "title": "Belum Ada Ucapan",
+      "subtitle": "Ucapan tamu dan tanggapan RSVP akan muncul di sini"
+    }
+  }
+}

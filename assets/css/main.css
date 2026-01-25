@@ -1,0 +1,39 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  /* Ensure DaisyUI form inputs have visible borders */
+  .input-bordered {
+    border-width: 1px;
+    border-color: hsl(var(--bc) / 0.2);
+  }
+  
+  .select-bordered {
+    border-width: 1px;
+    border-color: hsl(var(--bc) / 0.2);
+  }
+  
+  .textarea-bordered {
+    border-width: 1px;
+    border-color: hsl(var(--bc) / 0.2);
+  }
+  
+  /* Focus states */
+  .input-bordered:focus,
+  .select-bordered:focus,
+  .textarea-bordered:focus {
+    outline: 2px solid hsl(var(--p) / 0.2);
+    outline-offset: 2px;
+  }
+}
+
+@keyframes shake {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(5deg); }
+  75% { transform: rotate(-5deg); }
+}
+
+.animation-shake {
+  animation: shake 0.5s infinite;
+}
