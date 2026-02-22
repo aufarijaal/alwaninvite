@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import type { Database } from '~/types/database.types'
-import DefaultTheme from '~/components/themes/default/index.vue'
 const route = useRoute()
 const supabase = useSupabaseClient<Database>()
 
@@ -55,7 +54,7 @@ onMounted(() => {
 
 <template>
     <div class="min-h-screen bg-base-100">
-        <DefaultTheme />
+
     </div>
 </template>
 
