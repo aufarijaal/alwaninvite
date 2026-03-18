@@ -51,12 +51,16 @@
                     <div class="w-1.5 h-1.5 rounded-full bg-amber-400"></div>
                 </div>
 
-                <!-- Scroll hint -->
-                <div class="mt-16 flex flex-col items-center gap-1.5 animate-bounce opacity-40">
-                    <p class="text-xs font-sans tracking-widest">SCROLL</p>
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 9l-7 7-7-7" />
-                    </svg>
+                <!-- Open invitation button -->
+                <div class="mt-16 flex flex-col items-center gap-3">
+                    <button @click="openInvitation"
+                        class="inline-flex items-center gap-2 bg-amber-400/90 hover:bg-amber-300 active:scale-95 text-slate-900 font-semibold font-sans text-sm px-7 py-3 rounded-full shadow-lg shadow-amber-900/40 transition-all">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                        </svg>
+                        Buka Undangan
+                    </button>
                 </div>
             </div>
         </section>
@@ -258,7 +262,7 @@
                                 <p class="text-blue-300/50 text-xs font-sans mb-0.5 truncate">{{ gift.account_name }}
                                 </p>
                                 <p class="text-white font-mono font-bold tracking-wider text-sm">{{ gift.account_number
-                                }}</p>
+                                    }}</p>
                             </div>
                             <button @click="copyToClipboard(gift.account_number)"
                                 class="flex-shrink-0 text-xs text-blue-300 hover:text-white font-sans border border-blue-700/50 hover:border-blue-400/50 rounded-lg px-3 py-1.5 transition-colors">
@@ -322,7 +326,7 @@
                             <div
                                 class="w-8 h-8 rounded-full bg-blue-700/50 border border-blue-500/30 flex items-center justify-center flex-shrink-0">
                                 <span class="text-blue-200 text-xs font-bold">{{ wish.guest_name?.[0]?.toUpperCase()
-                                }}</span>
+                                    }}</span>
                             </div>
                             <div class="flex-1 min-w-0">
                                 <div class="flex flex-wrap items-center gap-2 mb-1">
@@ -396,6 +400,14 @@ const supabase = useSupabaseClient()
 // ── Audio ──────────────────────────────────────────────
 const audioRef = ref<HTMLAudioElement | null>(null)
 const isPlaying = ref(false)
+
+const openInvitation = () => {
+    if (audioRef.value && !isPlaying.value) {
+        audioRef.value.play().then(() => { isPlaying.value = true }).catch(() => { })
+    }
+    const next = document.getElementById('theme-blue')?.querySelector('section:nth-child(2)')
+    next?.scrollIntoView({ behavior: 'smooth' })
+}
 
 const toggleAudio = () => {
     if (!audioRef.value) return

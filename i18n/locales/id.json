@@ -316,19 +316,37 @@
     "allWeddings": "Semua Pernikahan",
     "allAttendance": "Semua Kehadiran",
     "confirmDelete": "Apakah Anda yakin ingin menghapus ucapan ini?",
+    "addGuests": "Tambah Tamu",
+    "addGuestsSubtitle": "Isi daftar tamu Anda terlebih dahulu. Setiap tamu akan dimulai tanpa status kehadiran hingga mereka membuka undangan.",
+    "guestCounter": "{count} / 500 tamu",
+    "limitReached": "Batas 500 tamu telah tercapai",
+    "selectWeddingFirst": "Silakan pilih pernikahan terlebih dahulu",
+    "inputMethod": "Metode Input",
+    "methodTextarea": "Tempel daftar",
+    "methodFields": "Tambah satu per satu",
+    "textareaLabel": "Nama tamu (satu per baris)",
+    "textareaPlaceholder": "Ahmad\nBudi Santoso\nCitra Dewi\n...",
+    "addRow": "Tambah tamu lagi",
+    "saveGuests": "Simpan Tamu",
+    "savingGuests": "Menyimpan...",
+    "guestsSaved": "{count} tamu berhasil ditambahkan",
+    "copyWhatsapp": "Salin pesan WhatsApp",
+    "whatsappCopied": "Tersalin!",
     "stats": {
       "total": "Total Ucapan",
       "totalDesc": "Semua tanggapan",
       "attending": "Hadir",
       "notAttending": "Tidak Hadir",
       "maybe": "Mungkin",
+      "pending": "Belum Diputuskan",
       "totalGuests": "Total Tamu",
       "guestsDesc": "Tamu yang diharapkan"
     },
     "attendance": {
       "yes": "Hadir",
       "no": "Tidak Hadir",
-      "maybe": "Mungkin"
+      "maybe": "Mungkin",
+      "null": "Belum Diputuskan"
     },
     "table": {
       "date": "Tanggal",

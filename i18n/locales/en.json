@@ -316,19 +316,37 @@
     "allWeddings": "All Weddings",
     "allAttendance": "All Attendance",
     "confirmDelete": "Are you sure you want to delete this wish?",
+    "addGuests": "Add Guests",
+    "addGuestsSubtitle": "Pre-fill your guest list. Each guest will start with no attendance status until they open the invitation.",
+    "guestCounter": "{count} / 500 guests",
+    "limitReached": "Guest limit of 500 reached",
+    "selectWeddingFirst": "Please select a wedding first",
+    "inputMethod": "Input Method",
+    "methodTextarea": "Paste list",
+    "methodFields": "Add individually",
+    "textareaLabel": "Guest names (one per line)",
+    "textareaPlaceholder": "Ahmad\nBudi Santoso\nCitra Dewi\n...",
+    "addRow": "Add another guest",
+    "saveGuests": "Save Guests",
+    "savingGuests": "Saving...",
+    "guestsSaved": "{count} guest(s) added successfully",
+    "copyWhatsapp": "Copy WhatsApp message",
+    "whatsappCopied": "Copied!",
     "stats": {
       "total": "Total Wishes",
       "totalDesc": "All responses",
       "attending": "Attending",
       "notAttending": "Not Attending",
       "maybe": "Maybe",
+      "pending": "Pending",
       "totalGuests": "Total Guests",
       "guestsDesc": "Expected attendees"
     },
     "attendance": {
       "yes": "Attending",
       "no": "Not Attending",
-      "maybe": "Maybe"
+      "maybe": "Maybe",
+      "null": "Pending"
     },
     "table": {
       "date": "Date",

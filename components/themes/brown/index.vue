@@ -51,12 +51,16 @@
                     <div class="w-1.5 h-1.5 rounded-full bg-amber-400"></div>
                 </div>
 
-                <!-- Scroll hint -->
-                <div class="mt-16 flex flex-col items-center gap-1.5 animate-bounce opacity-40">
-                    <p class="text-xs font-sans tracking-widest">SCROLL</p>
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 9l-7 7-7-7" />
-                    </svg>
+                <!-- Open invitation button -->
+                <div class="mt-16 flex flex-col items-center gap-3">
+                    <button @click="openInvitation"
+                        class="inline-flex items-center gap-2 bg-amber-400/90 hover:bg-amber-300 active:scale-95 text-slate-900 font-semibold font-sans text-sm px-7 py-3 rounded-full shadow-lg shadow-amber-900/40 transition-all">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                        </svg>
+                        Buka Undangan
+                    </button>
                 </div>
             </div>
         </section>
@@ -121,7 +125,7 @@
                         <div class="text-3xl font-bold text-amber-50 tabular-nums" style="font-family: Georgia, serif;">
                             {{ unit.value }}</div>
                         <div class="text-amber-300/50 text-xs font-sans mt-1 tracking-widest uppercase">{{ unit.label
-                        }}</div>
+                            }}</div>
                     </div>
                 </div>
             </div>
@@ -265,7 +269,7 @@
                         <div class="bg-stone-950/60 rounded-xl p-3 flex items-center justify-between gap-3">
                             <div class="min-w-0">
                                 <p class="text-amber-300/50 text-xs font-sans mb-0.5 truncate">{{ gift.account_name
-                                }}</p>
+                                    }}</p>
                                 <p class="text-amber-50 font-mono font-bold tracking-wider text-sm">{{
                                     gift.account_number }}</p>
                             </div>
@@ -331,7 +335,7 @@
                             <div
                                 class="w-8 h-8 rounded-full bg-amber-800/50 border border-amber-600/30 flex items-center justify-center flex-shrink-0">
                                 <span class="text-amber-200 text-xs font-bold">{{ wish.guest_name?.[0]?.toUpperCase()
-                                }}</span>
+                                    }}</span>
                             </div>
                             <div class="flex-1 min-w-0">
                                 <div class="flex flex-wrap items-center gap-2 mb-1">
@@ -405,6 +409,14 @@ const supabase = useSupabaseClient()
 // ── Audio ──────────────────────────────────────────────
 const audioRef = ref<HTMLAudioElement | null>(null)
 const isPlaying = ref(false)
+
+const openInvitation = () => {
+    if (audioRef.value && !isPlaying.value) {
+        audioRef.value.play().then(() => { isPlaying.value = true }).catch(() => { })
+    }
+    const next = document.getElementById('theme-brown')?.querySelector('section:nth-child(2)')
+    next?.scrollIntoView({ behavior: 'smooth' })
+}
 
 const toggleAudio = () => {
     if (!audioRef.value) return

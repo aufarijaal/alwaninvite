@@ -281,7 +281,7 @@ export interface Database {
       wishes: {
         Row: {
           id: number;
-          attendance: string;
+          attendance: string | null;
           wedding_id: string;
           created_at: string;
           guest_name: string;
@@ -290,7 +290,7 @@ export interface Database {
         };
         Insert: {
           id?: never;
-          attendance: string;
+          attendance?: string | null;
           wedding_id?: string;
           created_at?: string;
           guest_name: string;
@@ -299,7 +299,7 @@ export interface Database {
         };
         Update: {
           id?: never;
-          attendance?: string;
+          attendance?: string | null;
           wedding_id?: string;
           created_at?: string;
           guest_name?: string;

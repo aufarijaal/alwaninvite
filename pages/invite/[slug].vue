@@ -1,54 +1,79 @@
 <script setup lang="ts">
 import type { Database } from '~/types/database.types'
+
 const route = useRoute()
 const supabase = useSupabaseClient<Database>()
-
 const slug = route.params.slug as string
 
-// State
-const wedding = ref<any>(null)
-const loading = ref(true)
-const error = ref<string | null>(null)
+const { data: wedding, error: fetchError, pending: loading } = await useAsyncData(
+    `wedding-${slug}`,
+    async () => {
+        const { data, error } = await supabase
+            .from('weddings')
+            .select(`
+                *,
+                themes (
+                    id,
+                    name,
+                    slug,
+                    is_premium
+                ),
+                audios (
+                    id,
+                    title,
+                    artist,
+                    url
+                )
+            `)
+            .eq('slug', slug)
+            .eq('is_active', true)
+            .eq('published', true)
+            .single()
 
-// Fetch wedding data with all relations
-const fetchWedding = async () => {
-    loading.value = true
-    error.value = null
-
-    const { data, error: fetchError } = await supabase
-        .from('weddings')
-        .select(`
-      *,
-      themes (
-        id,
-        name,
-        slug,
-        is_premium
-      ),
-      audios (
-        id,
-        title,
-        artist,
-        url
-      )
-    `)
-        .eq('slug', slug)
-        .eq('is_active', true)
-        .eq('published', true)
-        .single()
-
-    if (fetchError) {
-        error.value = fetchError.message
-        console.error('Error fetching wedding:', fetchError)
-    } else {
-        wedding.value = data
+        if (error) throw error
+        return data
     }
+)
 
-    loading.value = false
-}
+const error = computed(() => fetchError.value?.message ?? null)
 
-onMounted(() => {
-    fetchWedding()
+// Build absolute base URL (works on both server and client)
+const requestUrl = useRequestURL()
+const baseUrl = `${requestUrl.protocol}//${requestUrl.host}`
+
+const ogImageUrl = computed(() => {
+    if (!wedding.value) return `${baseUrl}/api/og`
+    const params = new URLSearchParams({
+        groom: wedding.value.groom_callname ?? '',
+        bride: wedding.value.bride_callname ?? '',
+    })
+    return `${baseUrl}/api/og?${params.toString()}`
+})
+
+const pageTitle = computed(() =>
+    wedding.value
+        ? `${wedding.value.groom_callname ?? ''} & ${wedding.value.bride_callname ?? ''} — Wedding Invitation`
+        : 'Wedding Invitation'
+)
+
+const pageDescription = computed(() =>
+    `You are cordially invited to the wedding of ${wedding.value?.groom_callname ?? ''} & ${wedding.value?.bride_callname ?? ''}.`
+)
+
+useSeoMeta({
+    title: pageTitle,
+    ogTitle: pageTitle,
+    description: pageDescription,
+    ogDescription: pageDescription,
+    ogImage: ogImageUrl,
+    ogImageWidth: 500,
+    ogImageHeight: 500,
+    ogType: 'website',
+    ogUrl: () => `${baseUrl}/invite/${slug}`,
+    twitterCard: 'summary_large_image',
+    twitterTitle: pageTitle,
+    twitterDescription: pageDescription,
+    twitterImage: ogImageUrl,
 })
 </script>
 
