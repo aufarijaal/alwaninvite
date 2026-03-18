@@ -42,6 +42,7 @@ const fetchUserAudios = async () => {
             .from('audios')
             .select('*')
             .eq('source_type', 'user')
+            .eq('user_id', user.value.sub)
             .order('created_at', { ascending: false })
 
         if (error) throw error

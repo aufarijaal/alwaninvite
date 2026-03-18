@@ -53,9 +53,22 @@ onMounted(() => {
 </script>
 
 <template>
-    <div class="min-h-screen bg-base-100">
+    <div class="min-h-screen">
+        <div v-if="loading" class="flex items-center justify-center min-h-screen bg-slate-900">
+            <p class="text-blue-300/60 font-sans text-sm animate-pulse">Memuat undangan...</p>
+        </div>
 
+        <div v-else-if="error" class="flex items-center justify-center min-h-screen bg-slate-900">
+            <p class="text-red-400 font-sans text-sm">Undangan tidak ditemukan.</p>
+        </div>
+
+        <template v-else-if="wedding">
+            <ThemesBlue v-if="wedding.themes?.slug === 'blue'" :invitation="wedding" />
+            <ThemesGreen v-else-if="wedding.themes?.slug === 'green'" :invitation="wedding" />
+            <ThemesBrown v-else-if="wedding.themes?.slug === 'brown'" :invitation="wedding" />
+            <ThemesSlate v-else-if="wedding.themes?.slug === 'slate'" :invitation="wedding" />
+            <ThemesIslamicGreen v-else-if="wedding.themes?.slug === 'islamic-green'" :invitation="wedding" />
+            <ThemesDefault v-else :invitation="wedding" />
+        </template>
     </div>
 </template>
-
-<style scoped></style>
