@@ -53,6 +53,10 @@
 
                 <!-- Open invitation button -->
                 <div class="mt-16 flex flex-col items-center gap-3">
+                    <div v-if="props.guest" class="text-center mb-1">
+                        <p class="text-blue-300/50 text-xs font-sans tracking-widest uppercase mb-1">Kepada Yth.</p>
+                        <p class="text-white font-semibold font-sans text-base">{{ props.guest }}</p>
+                    </div>
                     <button @click="openInvitation"
                         class="inline-flex items-center gap-2 bg-amber-400/90 hover:bg-amber-300 active:scale-95 text-slate-900 font-semibold font-sans text-sm px-7 py-3 rounded-full shadow-lg shadow-amber-900/40 transition-all">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -262,7 +266,7 @@
                                 <p class="text-blue-300/50 text-xs font-sans mb-0.5 truncate">{{ gift.account_name }}
                                 </p>
                                 <p class="text-white font-mono font-bold tracking-wider text-sm">{{ gift.account_number
-                                    }}</p>
+                                }}</p>
                             </div>
                             <button @click="copyToClipboard(gift.account_number)"
                                 class="flex-shrink-0 text-xs text-blue-300 hover:text-white font-sans border border-blue-700/50 hover:border-blue-400/50 rounded-lg px-3 py-1.5 transition-colors">
@@ -286,14 +290,15 @@
                 </div>
 
                 <!-- Form -->
-                <form @submit.prevent="submitWish"
+                <form v-if="guestValidated === true" @submit.prevent="submitWish"
                     class="bg-blue-900/30 border border-blue-700/30 rounded-2xl p-6 mb-8">
                     <div class="space-y-4">
                         <div>
                             <label class="block text-xs text-blue-300/60 font-sans mb-1.5">Nama</label>
                             <input v-model="wishForm.guest_name" type="text" placeholder="Nama Anda" required
-                                maxlength="100"
-                                class="w-full bg-blue-950/60 border border-blue-700/40 rounded-xl px-4 py-2.5 text-white placeholder-blue-300/30 font-sans text-sm focus:outline-none focus:border-blue-400/60 transition-colors" />
+                                maxlength="100" :readonly="!!props.guest"
+                                class="w-full bg-blue-950/60 border border-blue-700/40 rounded-xl px-4 py-2.5 text-white placeholder-blue-300/30 font-sans text-sm focus:outline-none focus:border-blue-400/60 transition-colors"
+                                :class="{ 'opacity-60 cursor-not-allowed select-none': !!props.guest }" />
                         </div>
                         <div>
                             <label class="block text-xs text-blue-300/60 font-sans mb-1.5">Kehadiran</label>
@@ -326,7 +331,7 @@
                             <div
                                 class="w-8 h-8 rounded-full bg-blue-700/50 border border-blue-500/30 flex items-center justify-center flex-shrink-0">
                                 <span class="text-blue-200 text-xs font-bold">{{ wish.guest_name?.[0]?.toUpperCase()
-                                    }}</span>
+                                }}</span>
                             </div>
                             <div class="flex-1 min-w-0">
                                 <div class="flex flex-wrap items-center gap-2 mb-1">
@@ -393,6 +398,7 @@
 <script setup lang="ts">
 const props = defineProps<{
     invitation: any
+    guest?: string
 }>()
 
 const supabase = useSupabaseClient()
@@ -512,7 +518,8 @@ const copyToClipboard = async (text: string) => {
 // ── Wishes ─────────────────────────────────────────────
 const wishes = ref<any[]>([])
 const submitting = ref(false)
-const wishForm = reactive({ guest_name: '', attendance: '', message: '' })
+const guestValidated = ref<boolean | null>(props.guest ? null : false)
+const wishForm = reactive({ guest_name: props.guest ?? '', attendance: '', message: '' })
 const wishPage = ref(1)
 const wishPageSize = 5
 const wishTotalPages = computed(() => Math.ceil(wishes.value.length / wishPageSize))
@@ -527,8 +534,27 @@ const fetchWishes = async () => {
         .from('wishes')
         .select('*')
         .eq('wedding_id', String(props.invitation.id))
+        .not('attendance', 'is', null)
         .order('created_at', { ascending: false })
     if (data) wishes.value = data
+}
+
+const checkGuestAccess = async () => {
+    if (!props.guest || !props.invitation?.id) {
+        guestValidated.value = false
+        return
+    }
+    const { data } = await supabase
+        .from('wishes')
+        .select('id')
+        .eq('wedding_id', String(props.invitation.id))
+        .ilike('guest_name', props.guest)
+        .is('attendance', null)
+        .limit(1)
+    guestValidated.value = !!(data && data.length > 0)
+    if (guestValidated.value) {
+        wishForm.guest_name = props.guest
+    }
 }
 
 const submitWish = async () => {
@@ -553,9 +579,9 @@ const submitWish = async () => {
 
 onMounted(() => {
     fetchWishes()
+    checkGuestAccess()
 })
 
-// ── Attendance helpers ─────────────────────────────────
 const attendanceLabel = (val: string) =>
     ({ hadir: 'Hadir', tidak_hadir: 'Tidak Hadir', mungkin: 'Mungkin' } as Record<string, string>)[val] ?? val
 

@@ -4,6 +4,7 @@ import type { Database } from '~/types/database.types'
 const route = useRoute()
 const supabase = useSupabaseClient<Database>()
 const slug = route.params.slug as string
+const toGuest = route.query.to as string | undefined
 
 const { data: wedding, error: fetchError, pending: loading } = await useAsyncData(
     `wedding-${slug}`,
@@ -75,6 +76,13 @@ useSeoMeta({
     twitterDescription: pageDescription,
     twitterImage: ogImageUrl,
 })
+
+onMounted(() => {
+    // dump guest to console for debugging
+    if (toGuest) {
+        console.log('Invitation for guest:', toGuest)
+    }
+})
 </script>
 
 <template>
@@ -88,12 +96,13 @@ useSeoMeta({
         </div>
 
         <template v-else-if="wedding">
-            <ThemesBlue v-if="wedding.themes?.slug === 'blue'" :invitation="wedding" />
-            <ThemesGreen v-else-if="wedding.themes?.slug === 'green'" :invitation="wedding" />
-            <ThemesBrown v-else-if="wedding.themes?.slug === 'brown'" :invitation="wedding" />
-            <ThemesSlate v-else-if="wedding.themes?.slug === 'slate'" :invitation="wedding" />
-            <ThemesIslamicGreen v-else-if="wedding.themes?.slug === 'islamic-green'" :invitation="wedding" />
-            <ThemesDefault v-else :invitation="wedding" />
+            <ThemesBlue v-if="wedding.themes?.slug === 'blue'" :invitation="wedding" :guest="toGuest" />
+            <ThemesGreen v-else-if="wedding.themes?.slug === 'green'" :invitation="wedding" :guest="toGuest" />
+            <ThemesBrown v-else-if="wedding.themes?.slug === 'brown'" :invitation="wedding" :guest="toGuest" />
+            <ThemesSlate v-else-if="wedding.themes?.slug === 'slate'" :invitation="wedding" :guest="toGuest" />
+            <ThemesIslamicGreen v-else-if="wedding.themes?.slug === 'islamic-green'" :invitation="wedding"
+                :guest="toGuest" />
+            <ThemesDefault v-else :invitation="wedding" :guest="toGuest" />
         </template>
     </div>
 </template>
