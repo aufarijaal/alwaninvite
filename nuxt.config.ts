@@ -1,23 +1,24 @@
-import { defineNuxtConfig } from 'nuxt/config'
+import { defineNuxtConfig } from "nuxt/config";
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  compatibilityDate: '2025-07-15',
+  compatibilityDate: "2025-07-15",
   devtools: { enabled: true },
   modules: [
-    '@nuxt/fonts',
-    '@nuxt/image',
+    "@nuxt/fonts",
+    "@nuxt/image",
     "@nuxtjs/supabase",
     "@vueuse/nuxt",
     "@nuxtjs/i18n",
   ],
-    app: {
+  app: {
     head: {
       title: "Alwan Invite",
       meta: [
         {
           name: "description",
-          content: "Create beautiful digital invitations easily with Alwan Invite.",
+          content:
+            "Create beautiful digital invitations easily with Alwan Invite.",
         },
       ],
     },
@@ -39,7 +40,7 @@ export default defineNuxtConfig({
       login: "/auth/signin",
       callback: "/auth/callback",
       include: undefined,
-      exclude: ["/"],
+      exclude: ["/", "/invite/**"],
       cookieRedirect: false,
     },
   },
@@ -62,4 +63,4 @@ export default defineNuxtConfig({
     },
   },
   ssr: true,
-})
+});

@@ -35,11 +35,11 @@
                 <!-- Names -->
                 <div class="space-y-1 mb-8">
                     <h1 class="text-6xl font-bold text-white tracking-tight" style="font-family: Georgia, serif;">
-                        {{ invitation?.bride_callname }}
+                        {{ invitation?.groom_callname }}
                     </h1>
                     <p class="text-amber-300 text-3xl font-light">&amp;</p>
                     <h1 class="text-6xl font-bold text-white tracking-tight" style="font-family: Georgia, serif;">
-                        {{ invitation?.groom_callname }}
+                        {{ invitation?.bride_callname }}
                     </h1>
                 </div>
 
@@ -66,22 +66,17 @@
             <div class="max-w-sm mx-auto text-center">
                 <p class="text-amber-300/50 text-xs tracking-[0.3em] uppercase font-sans mb-12">Yang Berbahagia</p>
 
-                <!-- Bride -->
+                <!-- Groom -->
                 <div class="mb-10">
-                    <div
-                        class="w-20 h-20 rounded-full bg-gradient-to-br from-blue-700 to-blue-950 border-2 border-blue-500/30 mx-auto mb-4 flex items-center justify-center">
-                        <svg class="w-8 h-8 text-blue-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                                d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                        </svg>
-                    </div>
-                    <p class="text-blue-300/50 text-xs font-sans tracking-widest uppercase mb-2">Mempelai Wanita</p>
+                    <img src="/img/groom_blue_face.png" alt="Mempelai Pria"
+                        class="w-20 h-20 rounded-full object-cover mx-auto mb-4 border-2 border-blue-500/30" />
+                    <p class="text-blue-300/50 text-xs font-sans tracking-widest uppercase mb-2">Mempelai Pria</p>
                     <h2 class="text-xl font-bold text-white mb-1" style="font-family: Georgia, serif;">{{
-                        invitation?.bride_fullname }}</h2>
-                    <p class="text-blue-300/70 text-sm font-sans">{{ invitation?.bride_info_1 }}</p>
-                    <p class="text-blue-300/50 text-xs font-sans mt-0.5">{{ invitation?.bride_info_2 }}</p>
-                    <p v-if="invitation?.bride_info_3" class="text-amber-300/60 text-xs font-sans mt-1">{{
-                        invitation?.bride_info_3 }}</p>
+                        invitation?.groom_fullname }}</h2>
+                    <p class="text-blue-300/70 text-sm font-sans">{{ invitation?.groom_info_1 }}</p>
+                    <p class="text-blue-300/50 text-xs font-sans mt-0.5">{{ invitation?.groom_info_2 }}</p>
+                    <p v-if="invitation?.groom_info_3" class="text-amber-300/60 text-xs font-sans mt-1">{{
+                        invitation?.groom_info_3 }}</p>
                 </div>
 
                 <!-- Divider -->
@@ -91,22 +86,17 @@
                     <div class="h-px flex-1 bg-gradient-to-r from-transparent via-blue-700/40 to-transparent"></div>
                 </div>
 
-                <!-- Groom -->
+                <!-- Bride -->
                 <div>
-                    <div
-                        class="w-20 h-20 rounded-full bg-gradient-to-br from-blue-700 to-blue-950 border-2 border-blue-500/30 mx-auto mb-4 flex items-center justify-center">
-                        <svg class="w-8 h-8 text-blue-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                                d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                        </svg>
-                    </div>
-                    <p class="text-blue-300/50 text-xs font-sans tracking-widest uppercase mb-2">Mempelai Pria</p>
+                    <img src="/img/bride_blue_face.png" alt="Mempelai Wanita"
+                        class="w-20 h-20 rounded-full object-cover mx-auto mb-4 border-2 border-blue-500/30" />
+                    <p class="text-blue-300/50 text-xs font-sans tracking-widest uppercase mb-2">Mempelai Wanita</p>
                     <h2 class="text-xl font-bold text-white mb-1" style="font-family: Georgia, serif;">{{
-                        invitation?.groom_fullname }}</h2>
-                    <p class="text-blue-300/70 text-sm font-sans">{{ invitation?.groom_info_1 }}</p>
-                    <p class="text-blue-300/50 text-xs font-sans mt-0.5">{{ invitation?.groom_info_2 }}</p>
-                    <p v-if="invitation?.groom_info_3" class="text-amber-300/60 text-xs font-sans mt-1">{{
-                        invitation?.groom_info_3 }}</p>
+                        invitation?.bride_fullname }}</h2>
+                    <p class="text-blue-300/70 text-sm font-sans">{{ invitation?.bride_info_1 }}</p>
+                    <p class="text-blue-300/50 text-xs font-sans mt-0.5">{{ invitation?.bride_info_2 }}</p>
+                    <p v-if="invitation?.bride_info_3" class="text-amber-300/60 text-xs font-sans mt-1">{{
+                        invitation?.bride_info_3 }}</p>
                 </div>
             </div>
         </section>
@@ -268,7 +258,7 @@
                                 <p class="text-blue-300/50 text-xs font-sans mb-0.5 truncate">{{ gift.account_name }}
                                 </p>
                                 <p class="text-white font-mono font-bold tracking-wider text-sm">{{ gift.account_number
-                                    }}</p>
+                                }}</p>
                             </div>
                             <button @click="copyToClipboard(gift.account_number)"
                                 class="flex-shrink-0 text-xs text-blue-300 hover:text-white font-sans border border-blue-700/50 hover:border-blue-400/50 rounded-lg px-3 py-1.5 transition-colors">
@@ -326,13 +316,13 @@
 
                 <!-- Wish List -->
                 <div v-if="wishes.length" class="space-y-4">
-                    <div v-for="wish in wishes" :key="wish.id"
+                    <div v-for="wish in paginatedWishes" :key="wish.id"
                         class="bg-blue-900/20 border border-blue-700/20 rounded-2xl p-5">
                         <div class="flex items-start gap-3">
                             <div
                                 class="w-8 h-8 rounded-full bg-blue-700/50 border border-blue-500/30 flex items-center justify-center flex-shrink-0">
                                 <span class="text-blue-200 text-xs font-bold">{{ wish.guest_name?.[0]?.toUpperCase()
-                                    }}</span>
+                                }}</span>
                             </div>
                             <div class="flex-1 min-w-0">
                                 <div class="flex flex-wrap items-center gap-2 mb-1">
@@ -346,6 +336,23 @@
                             </div>
                         </div>
                     </div>
+                </div>
+
+                <!-- Pagination -->
+                <div v-if="wishTotalPages > 1" class="flex items-center justify-center gap-3 mt-6">
+                    <button @click="wishPage--" :disabled="wishPage === 1"
+                        class="w-8 h-8 rounded-full border border-blue-700/40 text-blue-300/70 disabled:opacity-30 hover:bg-blue-800/40 transition-colors flex items-center justify-center">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <span class="text-blue-300/50 text-xs font-sans">{{ wishPage }} / {{ wishTotalPages }}</span>
+                    <button @click="wishPage++" :disabled="wishPage === wishTotalPages"
+                        class="w-8 h-8 rounded-full border border-blue-700/40 text-blue-300/70 disabled:opacity-30 hover:bg-blue-800/40 transition-colors flex items-center justify-center">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                        </svg>
+                    </button>
                 </div>
             </div>
         </section>
@@ -494,6 +501,13 @@ const copyToClipboard = async (text: string) => {
 const wishes = ref<any[]>([])
 const submitting = ref(false)
 const wishForm = reactive({ guest_name: '', attendance: '', message: '' })
+const wishPage = ref(1)
+const wishPageSize = 5
+const wishTotalPages = computed(() => Math.ceil(wishes.value.length / wishPageSize))
+const paginatedWishes = computed(() => {
+    const start = (wishPage.value - 1) * wishPageSize
+    return wishes.value.slice(start, start + wishPageSize)
+})
 
 const fetchWishes = async () => {
     if (!props.invitation?.id) return
@@ -502,7 +516,6 @@ const fetchWishes = async () => {
         .select('*')
         .eq('wedding_id', String(props.invitation.id))
         .order('created_at', { ascending: false })
-        .limit(20)
     if (data) wishes.value = data
 }
 
@@ -521,6 +534,7 @@ const submitWish = async () => {
         wishForm.guest_name = ''
         wishForm.attendance = ''
         wishForm.message = ''
+        wishPage.value = 1
         await fetchWishes()
     }
 }
