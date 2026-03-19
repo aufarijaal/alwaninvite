@@ -45,7 +45,10 @@ export default defineNuxtConfig({
     },
   },
   fonts: {
-    families: [{ name: "Inter", provider: "google" }],
+    families: [
+      { name: "Inter", provider: "google" },
+      { name: "Google Sans", provider: "google" },
+    ],
   },
   i18n: {
     defaultLocale: "en",
@@ -63,4 +66,13 @@ export default defineNuxtConfig({
     },
   },
   ssr: true,
+  vite: {
+    server: {
+      allowedHosts: [
+        "alwaninvite.my.id",
+        "localhost",
+        "174b-114-10-121-158.ngrok-free.app",
+      ],
+    },
+  },
 });

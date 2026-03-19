@@ -11,7 +11,10 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        sans: ["Inter", ...require("tailwindcss/defaultTheme").fontFamily.sans],
+        sans: [
+          "Google Sans",
+          ...require("tailwindcss/defaultTheme").fontFamily.sans,
+        ],
       },
     },
   },

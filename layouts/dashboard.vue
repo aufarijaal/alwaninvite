@@ -67,7 +67,7 @@ const navigationItems = [
                             <Heart :size="24" class="text-primary-content" />
                         </div>
                         <span v-if="sidebarOpen" class="text-lg font-bold whitespace-nowrap">{{ t('common.appName')
-                            }}</span>
+                        }}</span>
                     </NuxtLink>
                 </div>
 
@@ -81,7 +81,7 @@ const navigationItems = [
                             ]" :title="!sidebarOpen ? t(`navigation.${item.name}`) : undefined">
                                 <component :is="item.icon" :size="20" class="flex-shrink-0" />
                                 <span v-if="sidebarOpen" class="whitespace-nowrap">{{ t(`navigation.${item.name}`)
-                                    }}</span>
+                                }}</span>
                             </NuxtLink>
                         </li>
                     </ul>
@@ -143,12 +143,12 @@ const navigationItems = [
                                     <li class="menu-title">
                                         <span>{{ user?.email }}</span>
                                     </li>
-                                    <li><a>
+                                    <!-- <li><a>
                                             <User :size="18" class="mr-2" />{{ t('common.profile') }}
                                         </a></li>
                                     <li><a>
                                             <Settings :size="18" class="mr-2" />{{ t('common.settings') }}
-                                        </a></li>
+                                        </a></li> -->
                                     <li><a @click="handleLogout">
                                             <LogOut :size="18" class="mr-2" />{{ t('common.logout') }}
                                         </a></li>

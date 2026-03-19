@@ -49,9 +49,9 @@
     "viewAll": "View All",
     "noData": "No data available",
     "totalInvitations": "Total Invitations",
-    "activeInvitations": "Active Invitations",
+    "publishedInvitations": "Published Invitations",
     "totalGuests": "Total Guests",
-    "totalEvents": "Total Events",
+    "attendingGuests": "Attending Guests",
     "createInvitation": "Create Invitation",
     "manageGuests": "Manage Guests",
     "viewReports": "View Reports",
@@ -59,7 +59,9 @@
     "myEvents": "My Events",
     "guestList": "Guest List",
     "templates": "Templates",
-    "analytics": "Analytics"
+    "analytics": "Analytics",
+    "recentInvitations": "Recent Invitations",
+    "noInvitations": "No invitations yet. Create your first one!"
   },
   "navigation": {
     "home": "Home",
@@ -70,7 +72,7 @@
     "templates": "Templates",
     "settings": "Settings",
     "help": "Help",
-    "wishes": "Wishes",
+    "wishes": "Guests & Wishes",
     "rsvps": "RSVPs",
     "media": "Media"
   },
@@ -316,6 +318,10 @@
     "allWeddings": "All Weddings",
     "allAttendance": "All Attendance",
     "confirmDelete": "Are you sure you want to delete this wish?",
+    "confirmDeleteSelected": "Are you sure you want to delete {count} selected wish(es)? This action cannot be undone.",
+    "deleteSelected": "Delete Selected",
+    "clearSelection": "Clear Selection",
+    "selectedCount": "{count} selected",
     "addGuests": "Add Guests",
     "addGuestsSubtitle": "Pre-fill your guest list. Each guest will start with no attendance status until they open the invitation.",
     "guestCounter": "{count} / 500 guests",

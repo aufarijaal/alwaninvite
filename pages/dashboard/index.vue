@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { Mails, MailCheck, Users, Calendar, Plus, PlusCircle, UserPen, BarChart3, Send, CalendarPlus, UserPlus, Info, FileText } from 'lucide-vue-next'
-import {Toaster, toast} from 'vue-sonner'
+import { Mails, MailCheck, Users, CheckCircle, Plus, PlusCircle, MessageSquare } from 'lucide-vue-next'
+import type { Database } from '~/types/database.types'
 
 definePageMeta({
     layout: 'dashboard',
@@ -8,85 +8,55 @@ definePageMeta({
 })
 
 const { t } = useI18n()
+const supabase = useSupabaseClient<Database>()
 const user = useSupabaseUser()
 
-// Mock data for statistics
-const stats = ref([
-    {
-        title: 'dashboard.totalInvitations',
-        value: 12,
-        icon: Mails,
-        color: 'text-primary',
-        bgColor: 'bg-primary/10',
-    },
-    {
-        title: 'dashboard.activeInvitations',
-        value: 8,
-        icon: MailCheck,
-        color: 'text-success',
-        bgColor: 'bg-success/10',
-    },
-    {
-        title: 'dashboard.totalGuests',
-        value: 245,
-        icon: Users,
-        color: 'text-info',
-        bgColor: 'bg-info/10',
-    },
-    {
-        title: 'dashboard.totalEvents',
-        value: 5,
-        icon: Calendar,
-        color: 'text-warning',
-        bgColor: 'bg-warning/10',
-    },
-])
+// ── State ────────────────────────────────────────────────
+const loading = ref(true)
+const totalInvitations = ref(0)
+const publishedInvitations = ref(0)
+const totalGuests = ref(0)
+const attendingGuests = ref(0)
+const recentInvitations = ref<Database['public']['Tables']['weddings']['Row'][]>([])
 
-const quickActions = ref([
-    {
-        title: 'dashboard.createInvitation',
-        icon: PlusCircle,
-        color: 'btn-primary',
-        route: '/dashboard/invitations/create',
-    },
-    {
-        title: 'dashboard.manageGuests',
-        icon: UserPen,
-        color: 'btn-secondary',
-        route: '/dashboard/guests',
-    },
-    {
-        title: 'dashboard.viewReports',
-        icon: BarChart3,
-        color: 'btn-accent',
-        route: '/dashboard/analytics',
-    },
-])
+// ── Fetch ────────────────────────────────────────────────
+const fetchDashboardData = async () => {
+    if (!user.value?.sub) return
+    loading.value = true
+    try {
+        const [weddingsRes, wishesRes] = await Promise.all([
+            supabase
+                .from('weddings')
+                .select('id, title, slug, published, groom_callname, bride_callname, created_at')
+                .eq('user_id', user.value.sub)
+                .order('created_at', { ascending: false }),
+            supabase
+                .from('wishes')
+                .select('id, attendance, wedding_id, weddings!inner(user_id)')
+                .eq('weddings.user_id', user.value.sub),
+        ])
 
-// Mock recent activity
-const recentActivity = ref([
-    {
-        type: 'invitation',
-        title: 'Wedding Invitation - Sarah & John',
-        description: 'Sent to 50 guests',
-        time: '2 hours ago',
-        icon: Send,
-    },
-    {
-        type: 'event',
-        title: 'Birthday Party Event',
-        description: 'Created new event',
-        time: '5 hours ago',
-        icon: CalendarPlus,
-    },
-    {
-        type: 'guest',
-        title: 'Guest List Updated',
-        description: 'Added 15 new guests',
-        time: '1 day ago',
-        icon: UserPlus,
-    },
-])
+        const weddings = weddingsRes.data || []
+        const wishes = wishesRes.data || []
+
+        totalInvitations.value = weddings.length
+        publishedInvitations.value = weddings.filter(w => w.published).length
+        totalGuests.value = wishes.length
+        attendingGuests.value = wishes.filter(
+            (w: any) => w.attendance === 'hadir' || w.attendance === 'yes'
+        ).length
+        recentInvitations.value = weddings.slice(0, 5) as any
+    } catch (err) {
+        console.error('Error fetching dashboard data:', err)
+    } finally {
+        loading.value = false
+    }
+}
+
+const formatDate = (date: string) =>
+    new Date(date).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })
+
+onMounted(() => { fetchDashboardData() })
 </script>
 
 <template>
@@ -104,16 +74,57 @@ const recentActivity = ref([
         </div>
 
         <!-- Statistics Cards -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            <div v-for="stat in stats" :key="stat.title" class="stats shadow bg-base-100">
+        <div v-if="loading" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div v-for="i in 4" :key="i" class="stats shadow bg-base-100">
                 <div class="stat">
-                    <div class="stat-figure" :class="stat.color">
-                        <div :class="['w-12 h-12 rounded-lg flex items-center justify-center', stat.bgColor]">
-                            <component :is="stat.icon" :size="24" />
+                    <div class="skeleton h-4 w-24 mb-2"></div>
+                    <div class="skeleton h-8 w-12"></div>
+                </div>
+            </div>
+        </div>
+        <div v-else class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div class="stats shadow bg-base-100">
+                <div class="stat">
+                    <div class="stat-figure text-primary">
+                        <div class="w-12 h-12 rounded-lg flex items-center justify-center bg-primary/10">
+                            <Mails :size="24" />
                         </div>
                     </div>
-                    <div class="stat-title text-xs">{{ t(stat.title) }}</div>
-                    <div class="stat-value text-2xl">{{ stat.value }}</div>
+                    <div class="stat-title text-xs">{{ t('dashboard.totalInvitations') }}</div>
+                    <div class="stat-value text-2xl text-primary">{{ totalInvitations }}</div>
+                </div>
+            </div>
+            <div class="stats shadow bg-base-100">
+                <div class="stat">
+                    <div class="stat-figure text-success">
+                        <div class="w-12 h-12 rounded-lg flex items-center justify-center bg-success/10">
+                            <MailCheck :size="24" />
+                        </div>
+                    </div>
+                    <div class="stat-title text-xs">{{ t('dashboard.publishedInvitations') }}</div>
+                    <div class="stat-value text-2xl text-success">{{ publishedInvitations }}</div>
+                </div>
+            </div>
+            <div class="stats shadow bg-base-100">
+                <div class="stat">
+                    <div class="stat-figure text-info">
+                        <div class="w-12 h-12 rounded-lg flex items-center justify-center bg-info/10">
+                            <Users :size="24" />
+                        </div>
+                    </div>
+                    <div class="stat-title text-xs">{{ t('dashboard.totalGuests') }}</div>
+                    <div class="stat-value text-2xl text-info">{{ totalGuests }}</div>
+                </div>
+            </div>
+            <div class="stats shadow bg-base-100">
+                <div class="stat">
+                    <div class="stat-figure text-warning">
+                        <div class="w-12 h-12 rounded-lg flex items-center justify-center bg-warning/10">
+                            <CheckCircle :size="24" />
+                        </div>
+                    </div>
+                    <div class="stat-title text-xs">{{ t('dashboard.attendingGuests') }}</div>
+                    <div class="stat-value text-2xl text-warning">{{ attendingGuests }}</div>
                 </div>
             </div>
         </div>
@@ -122,89 +133,56 @@ const recentActivity = ref([
         <div class="card bg-base-100 shadow-xl">
             <div class="card-body">
                 <h2 class="card-title">{{ t('dashboard.quickActions') }}</h2>
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-4">
-                    <NuxtLink v-for="action in quickActions" :key="action.title" :to="action.route"
-                        :class="['btn btn-lg', action.color, 'flex-col h-auto py-6']">
-                        <component :is="action.icon" :size="32" />
-                        <span class="text-sm mt-2">{{ t(action.title) }}</span>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
+                    <NuxtLink to="/dashboard/invitations/create" class="btn btn-primary btn-lg flex-col h-auto py-6">
+                        <PlusCircle :size="32" />
+                        <span class="text-sm mt-2">{{ t('dashboard.createInvitation') }}</span>
+                    </NuxtLink>
+                    <NuxtLink to="/dashboard/wishes" class="btn btn-secondary btn-lg flex-col h-auto py-6">
+                        <MessageSquare :size="32" />
+                        <span class="text-sm mt-2">{{ t('navigation.wishes') }}</span>
                     </NuxtLink>
                 </div>
             </div>
         </div>
 
-        <!-- Content Grid -->
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <!-- Recent Activity -->
-            <div class="card bg-base-100 shadow-xl">
-                <div class="card-body">
-                    <div class="flex justify-between items-center">
-                        <h2 class="card-title">{{ t('dashboard.recentActivity') }}</h2>
-                        <button class="btn btn-ghost btn-sm">{{ t('dashboard.viewAll') }}</button>
-                    </div>
-                    <div class="mt-4 space-y-4">
-                        <div v-for="activity in recentActivity" :key="activity.title"
-                            class="flex items-start gap-4 p-3 rounded-lg hover:bg-base-200 transition-colors">
-                            <div class="flex-shrink-0">
-                                <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
-                                    <component :is="activity.icon" :size="20" class="text-primary" />
-                                </div>
+        <!-- Recent Invitations -->
+        <div class="card bg-base-100 shadow-xl">
+            <div class="card-body">
+                <div class="flex justify-between items-center">
+                    <h2 class="card-title">{{ t('dashboard.recentInvitations') }}</h2>
+                    <NuxtLink to="/dashboard/invitations" class="btn btn-ghost btn-sm">{{ t('dashboard.viewAll') }}
+                    </NuxtLink>
+                </div>
+                <div v-if="loading" class="mt-4 space-y-3">
+                    <div v-for="i in 3" :key="i" class="skeleton h-12 w-full rounded-lg"></div>
+                </div>
+                <div v-else-if="recentInvitations.length === 0" class="text-center py-8 text-base-content/50">
+                    <Mails :size="48" class="mx-auto mb-3 opacity-30" />
+                    <p>{{ t('dashboard.noInvitations') }}</p>
+                </div>
+                <div v-else class="mt-4 space-y-2">
+                    <NuxtLink v-for="inv in recentInvitations" :key="inv.id"
+                        :to="`/dashboard/invitations/${inv.id}/edit`"
+                        class="flex items-center justify-between p-3 rounded-lg hover:bg-base-200 transition-colors cursor-pointer">
+                        <div class="flex items-center gap-3">
+                            <div
+                                class="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
+                                <Mails :size="18" class="text-primary" />
                             </div>
-                            <div class="flex-1 min-w-0">
-                                <p class="font-semibold text-sm">{{ activity.title }}</p>
-                                <p class="text-xs text-base-content/70">{{ activity.description }}</p>
-                                <p class="text-xs text-base-content/50 mt-1">{{ activity.time }}</p>
+                            <div>
+                                <p class="font-medium text-sm">
+                                    {{ inv.title || `${(inv as any).groom_callname} & ${(inv as any).bride_callname}` }}
+                                </p>
+                                <p class="text-xs text-base-content/50">{{ formatDate(inv.created_at) }}</p>
                             </div>
                         </div>
-                    </div>
+                        <div class="badge" :class="(inv as any).published ? 'badge-success' : 'badge-ghost'">
+                            {{ (inv as any).published ? t('invitation.status.active') : t('invitation.status.draft') }}
+                        </div>
+                    </NuxtLink>
                 </div>
             </div>
-
-            <!-- Overview -->
-            <div class="card bg-base-100 shadow-xl">
-                <div class="card-body">
-                    <h2 class="card-title">{{ t('dashboard.overview') }}</h2>
-                    <div class="mt-4 space-y-4">
-                        <div class="flex items-center justify-between p-4 rounded-lg bg-base-200">
-                            <div class="flex items-center gap-3">
-                                <Mails :size="24" class="text-primary" />
-                                <span class="font-medium">{{ t('dashboard.myInvitations') }}</span>
-                            </div>
-                            <span class="badge badge-lg badge-primary">12</span>
-                        </div>
-                        <div class="flex items-center justify-between p-4 rounded-lg bg-base-200">
-                            <div class="flex items-center gap-3">
-                                <Calendar :size="24" class="text-success" />
-                                <span class="font-medium">{{ t('dashboard.myEvents') }}</span>
-                            </div>
-                            <span class="badge badge-lg badge-success">5</span>
-                        </div>
-                        <div class="flex items-center justify-between p-4 rounded-lg bg-base-200">
-                            <div class="flex items-center gap-3">
-                                <Users :size="24" class="text-info" />
-                                <span class="font-medium">{{ t('dashboard.guestList') }}</span>
-                            </div>
-                            <span class="badge badge-lg badge-info">245</span>
-                        </div>
-                        <div class="flex items-center justify-between p-4 rounded-lg bg-base-200">
-                            <div class="flex items-center gap-3">
-                                <FileText :size="24" class="text-warning" />
-                                <span class="font-medium">{{ t('dashboard.templates') }}</span>
-                            </div>
-                            <span class="badge badge-lg badge-warning">8</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Additional Info Banner -->
-        <div class="alert alert-info shadow-lg">
-            <Info :size="24" />
-            <div>
-                <h3 class="font-bold">{{ t('dashboard.title') }}</h3>
-                <div class="text-xs">{{ t('dashboard.overview') }}</div>
-            </div>
-            <button class="btn btn-sm btn-ghost">{{ t('common.settings') }}</button>
         </div>
     </div>
 </template>

@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { Download, Trash2, Calendar, Users, MessageSquare, CheckCircle, XCircle, Clock, Plus, UserPlus, ClipboardList, Copy, Check } from 'lucide-vue-next'
+import { Download, Trash2, Calendar, Users, MessageSquare, CheckCircle, XCircle, Clock, Plus, UserPlus, ClipboardList, Copy, Check, ArrowUp, ArrowDown, ArrowUpDown } from 'lucide-vue-next'
+import { useVueTable, getCoreRowModel, getSortedRowModel, createColumnHelper, FlexRender, type SortingState, type RowSelectionState } from '@tanstack/vue-table'
 import type { Database } from '~/types/database.types'
 
 definePageMeta({
@@ -235,6 +236,87 @@ const getAttendanceIcon = (attendance: string | null) => {
     }
 }
 
+// ── TanStack Table ──────────────────────────────────────
+type WishWithWedding = Database['public']['Tables']['wishes']['Row'] & {
+    weddings?: { id: string; slug: string; title: string; groom_callname?: string | null; bride_callname?: string | null } | null
+}
+
+const rowSelection = ref<RowSelectionState>({})
+const sorting = ref<SortingState>([])
+
+const columnHelper = createColumnHelper<WishWithWedding>()
+
+const columns = [
+    columnHelper.display({ id: 'select', enableSorting: false }),
+    columnHelper.accessor('created_at', {
+        id: 'date',
+        header: () => t('wishes.table.date'),
+        enableSorting: true,
+    }),
+    columnHelper.accessor('guest_name', {
+        id: 'guest_name',
+        header: () => t('wishes.table.guestName'),
+        enableSorting: true,
+    }),
+    columnHelper.accessor('attendance', {
+        id: 'attendance',
+        header: () => t('wishes.table.attendance'),
+        enableSorting: true,
+    }),
+    columnHelper.accessor('guest_count', {
+        id: 'guest_count',
+        header: () => t('wishes.table.guestCount'),
+        enableSorting: true,
+    }),
+    columnHelper.accessor('message', {
+        id: 'message',
+        header: () => t('wishes.table.message'),
+        enableSorting: false,
+    }),
+    columnHelper.display({ id: 'wedding', header: () => t('wishes.table.wedding'), enableSorting: false }),
+    columnHelper.display({ id: 'actions', header: () => t('wishes.table.actions'), enableSorting: false }),
+]
+
+const table = useVueTable({
+    get data() { return filteredWishes.value as WishWithWedding[] },
+    columns,
+    state: {
+        get rowSelection() { return rowSelection.value },
+        get sorting() { return sorting.value },
+    },
+    enableRowSelection: true,
+    onRowSelectionChange: updater => {
+        rowSelection.value = typeof updater === 'function' ? updater(rowSelection.value) : updater
+    },
+    onSortingChange: updater => {
+        sorting.value = typeof updater === 'function' ? updater(sorting.value) : updater
+    },
+    getCoreRowModel: getCoreRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+})
+
+const selectedCount = computed(() => table.getSelectedRowModel().rows.length)
+
+const deleteSelected = async () => {
+    const selectedRows = table.getSelectedRowModel().rows
+    if (!selectedRows.length) return
+    if (!confirm(t('wishes.confirmDeleteSelected', { count: selectedRows.length }))) return
+    try {
+        const ids = selectedRows.map(row => row.original.id)
+        const { error } = await supabase.from('wishes').delete().in('id', ids)
+        if (error) throw error
+        rowSelection.value = {}
+        await fetchWishes()
+    } catch (err) {
+        console.error('Error deleting wishes:', err)
+    }
+}
+
+// Clear selection when filters change
+watch([searchQuery, selectedWedding, selectedAttendance], () => {
+    rowSelection.value = {}
+})
+
 onMounted(() => {
     fetchWeddings()
     fetchWishes()
@@ -285,7 +367,7 @@ onMounted(() => {
                 <!-- Wedding selector -->
                 <div class="form-control max-w-sm mb-4">
                     <label class="label"><span class="label-text font-medium">{{ t('wishes.filterByWedding')
-                            }}</span></label>
+                    }}</span></label>
                     <select v-model="addGuestsWeddingId" class="select select-bordered">
                         <option value="">{{ t('wishes.selectWeddingFirst') }}</option>
                         <option v-for="w in weddings" :key="w.id" :value="w.id">{{ (w as any).title }}</option>
@@ -301,7 +383,7 @@ onMounted(() => {
                     <!-- Input method toggle -->
                     <div class="form-control mb-4">
                         <label class="label"><span class="label-text font-medium">{{ t('wishes.inputMethod')
-                                }}</span></label>
+                        }}</span></label>
                         <div class="join">
                             <button class="join-item btn btn-sm"
                                 :class="inputMethod === 'textarea' ? 'btn-active' : 'btn-outline'"
@@ -416,7 +498,7 @@ onMounted(() => {
                     </div>
                     <div class="form-control">
                         <label class="label"><span class="label-text">{{ t('wishes.filterByAttendance')
-                                }}</span></label>
+                        }}</span></label>
                         <select v-model="selectedAttendance" class="select select-bordered">
                             <option value="all">{{ t('wishes.allAttendance') }}</option>
                             <option value="hadir">{{ t('wishes.attendance.yes') }}</option>
@@ -440,65 +522,123 @@ onMounted(() => {
                     <h3 class="text-lg font-semibold mb-2">{{ t('wishes.empty.title') }}</h3>
                     <p class="text-base-content/60">{{ t('wishes.empty.subtitle') }}</p>
                 </div>
-                <div v-else class="overflow-x-auto">
-                    <table class="table table-zebra">
-                        <thead>
-                            <tr>
-                                <th>{{ t('wishes.table.date') }}</th>
-                                <th>{{ t('wishes.table.guestName') }}</th>
-                                <th>{{ t('wishes.table.attendance') }}</th>
-                                <th>{{ t('wishes.table.guestCount') }}</th>
-                                <th>{{ t('wishes.table.message') }}</th>
-                                <th>{{ t('wishes.table.wedding') }}</th>
-                                <th>{{ t('wishes.table.actions') }}</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr v-for="wish in filteredWishes" :key="wish.id">
-                                <td>
-                                    <div class="flex items-center gap-2 text-sm">
-                                        <Calendar :size="16" class="opacity-60" />
-                                        {{ formatDate(wish.created_at) }}
-                                    </div>
-                                </td>
-                                <td class="font-medium">{{ wish.guest_name }}</td>
-                                <td>
-                                    <div class="badge gap-1" :class="getAttendanceBadge(wish.attendance)">
-                                        <component :is="getAttendanceIcon(wish.attendance)" :size="12" />
-                                        {{ getAttendanceLabel(wish.attendance) }}
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="flex items-center gap-1">
-                                        <Users :size="16" class="opacity-60" />
-                                        {{ wish.guest_count }}
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="max-w-xs truncate text-sm" :title="wish.message || '-'">
-                                        {{ wish.message || '-' }}
-                                    </div>
-                                </td>
-                                <td class="text-sm">{{ (wish as any).weddings?.title || '-' }}</td>
-                                <td>
-                                    <div class="flex gap-1">
-                                        <!-- WhatsApp copy -->
-                                        <button class="btn btn-ghost btn-sm btn-circle"
-                                            :class="copiedWishId === wish.id ? 'text-success' : 'text-base-content/60'"
-                                            :title="t('wishes.copyWhatsapp')" @click="copyWhatsapp(wish)">
-                                            <Check v-if="copiedWishId === wish.id" :size="16" />
-                                            <Copy v-else :size="16" />
-                                        </button>
-                                        <!-- Delete -->
-                                        <button class="btn btn-ghost btn-sm btn-circle text-error"
-                                            @click="deleteWish(wish.id)">
-                                            <Trash2 :size="16" />
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+                <div v-else class="space-y-3">
+                    <!-- Bulk actions toolbar -->
+                    <div v-if="selectedCount > 0"
+                        class="flex items-center gap-3 p-3 bg-base-200 rounded-lg border border-base-300">
+                        <span class="text-sm font-medium">
+                            {{ t('wishes.selectedCount', { count: selectedCount }) }}
+                        </span>
+                        <button @click="deleteSelected" class="btn btn-error btn-sm gap-2">
+                            <Trash2 :size="14" />
+                            {{ t('wishes.deleteSelected') }}
+                        </button>
+                        <button @click="rowSelection = {}" class="btn btn-ghost btn-sm">
+                            {{ t('wishes.clearSelection') }}
+                        </button>
+                    </div>
+
+                    <!-- Table -->
+                    <div class="overflow-x-auto">
+                        <table class="table table-zebra">
+                            <thead>
+                                <tr v-for="headerGroup in table.getHeaderGroups()" :key="headerGroup.id">
+                                    <th v-for="header in headerGroup.headers" :key="header.id">
+                                        <!-- Select-all checkbox -->
+                                        <template v-if="header.column.id === 'select'">
+                                            <input type="checkbox" class="checkbox checkbox-sm"
+                                                :checked="table.getIsAllRowsSelected()"
+                                                :indeterminate="table.getIsSomeRowsSelected() && !table.getIsAllRowsSelected()"
+                                                @change="table.toggleAllRowsSelected()" />
+                                        </template>
+                                        <!-- Sortable header -->
+                                        <template v-else-if="header.column.getCanSort()">
+                                            <div class="flex items-center gap-1 cursor-pointer select-none"
+                                                @click="header.column.toggleSorting()">
+                                                <FlexRender :render="header.column.columnDef.header"
+                                                    :props="header.getContext()" />
+                                                <component
+                                                    :is="header.column.getIsSorted() === 'asc' ? ArrowUp : header.column.getIsSorted() === 'desc' ? ArrowDown : ArrowUpDown"
+                                                    :size="14"
+                                                    :class="{ 'opacity-40': !header.column.getIsSorted() }" />
+                                            </div>
+                                        </template>
+                                        <!-- Non-sortable header -->
+                                        <template v-else>
+                                            <FlexRender :render="header.column.columnDef.header"
+                                                :props="header.getContext()" />
+                                        </template>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="row in table.getRowModel().rows" :key="row.id"
+                                    :class="{ 'bg-primary/5': row.getIsSelected() }">
+                                    <td v-for="cell in row.getVisibleCells()" :key="cell.id">
+                                        <!-- Row checkbox -->
+                                        <template v-if="cell.column.id === 'select'">
+                                            <input type="checkbox" class="checkbox checkbox-sm"
+                                                :checked="row.getIsSelected()" :disabled="!row.getCanSelect()"
+                                                @change="row.toggleSelected()" />
+                                        </template>
+                                        <!-- Date -->
+                                        <template v-else-if="cell.column.id === 'date'">
+                                            <div class="flex items-center gap-2 text-sm">
+                                                <Calendar :size="16" class="opacity-60" />
+                                                {{ formatDate(row.original.created_at) }}
+                                            </div>
+                                        </template>
+                                        <!-- Guest Name -->
+                                        <template v-else-if="cell.column.id === 'guest_name'">
+                                            <span class="font-medium">{{ row.original.guest_name }}</span>
+                                        </template>
+                                        <!-- Attendance badge -->
+                                        <template v-else-if="cell.column.id === 'attendance'">
+                                            <div class="badge gap-1"
+                                                :class="getAttendanceBadge(row.original.attendance)">
+                                                <component :is="getAttendanceIcon(row.original.attendance)"
+                                                    :size="12" />
+                                                {{ getAttendanceLabel(row.original.attendance) }}
+                                            </div>
+                                        </template>
+                                        <!-- Guest count -->
+                                        <template v-else-if="cell.column.id === 'guest_count'">
+                                            <div class="flex items-center gap-1">
+                                                <Users :size="16" class="opacity-60" />
+                                                {{ row.original.guest_count }}
+                                            </div>
+                                        </template>
+                                        <!-- Message -->
+                                        <template v-else-if="cell.column.id === 'message'">
+                                            <div class="max-w-xs truncate text-sm" :title="row.original.message || '-'">
+                                                {{ row.original.message || '-' }}
+                                            </div>
+                                        </template>
+                                        <!-- Wedding -->
+                                        <template v-else-if="cell.column.id === 'wedding'">
+                                            <span class="text-sm">{{ row.original.weddings?.title || '-' }}</span>
+                                        </template>
+                                        <!-- Actions -->
+                                        <template v-else-if="cell.column.id === 'actions'">
+                                            <div class="flex gap-1">
+                                                <button class="btn btn-ghost btn-sm btn-circle"
+                                                    :class="copiedWishId === row.original.id ? 'text-success' : 'text-base-content/60'"
+                                                    :title="t('wishes.copyWhatsapp')"
+                                                    @click="copyWhatsapp(row.original)">
+                                                    <Check v-if="copiedWishId === row.original.id" :size="16" />
+                                                    <Copy v-else :size="16" />
+                                                </button>
+                                                <button class="btn btn-ghost btn-sm btn-circle text-error"
+                                                    @click="deleteWish(row.original.id)">
+                                                    <Trash2 :size="16" />
+                                                </button>
+                                            </div>
+                                        </template>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>

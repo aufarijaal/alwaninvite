@@ -49,9 +49,9 @@
     "viewAll": "Lihat Semua",
     "noData": "Tidak ada data",
     "totalInvitations": "Total Undangan",
-    "activeInvitations": "Undangan Aktif",
+    "publishedInvitations": "Undangan Dipublikasikan",
     "totalGuests": "Total Tamu",
-    "totalEvents": "Total Acara",
+    "attendingGuests": "Tamu Hadir",
     "createInvitation": "Buat Undangan",
     "manageGuests": "Kelola Tamu",
     "viewReports": "Lihat Laporan",
@@ -59,7 +59,9 @@
     "myEvents": "Acara Saya",
     "guestList": "Daftar Tamu",
     "templates": "Template",
-    "analytics": "Analitik"
+    "analytics": "Analitik",
+    "recentInvitations": "Undangan Terbaru",
+    "noInvitations": "Belum ada undangan. Buat yang pertama!"
   },
   "navigation": {
     "home": "Beranda",
@@ -70,7 +72,7 @@
     "templates": "Template",
     "settings": "Pengaturan",
     "help": "Bantuan",
-    "wishes": "Ucapan",
+    "wishes": "Tamu & Ucapan",
     "rsvps": "RSVPs",
     "media": "Media"
   },
@@ -316,6 +318,10 @@
     "allWeddings": "Semua Pernikahan",
     "allAttendance": "Semua Kehadiran",
     "confirmDelete": "Apakah Anda yakin ingin menghapus ucapan ini?",
+    "confirmDeleteSelected": "Apakah Anda yakin ingin menghapus {count} ucapan yang dipilih? Tindakan ini tidak dapat dibatalkan.",
+    "deleteSelected": "Hapus yang Dipilih",
+    "clearSelection": "Batalkan Pilihan",
+    "selectedCount": "{count} dipilih",
     "addGuests": "Tambah Tamu",
     "addGuestsSubtitle": "Isi daftar tamu Anda terlebih dahulu. Setiap tamu akan dimulai tanpa status kehadiran hingga mereka membuka undangan.",
     "guestCounter": "{count} / 500 tamu",
