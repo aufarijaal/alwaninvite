@@ -307,6 +307,72 @@
       "subtitle": "Upload your first audio file to get started"
     }
   },
+  "homepage": {
+    "badge": "Digital Invitations Made Simple",
+    "heroTitle": "Beautiful invitations",
+    "heroTitleHighlight": "for every moment",
+    "heroSubtitle": "Create stunning digital invitations in minutes. Share with a link, track RSVPs, and make every occasion unforgettable.",
+    "startFree": "Start for free",
+    "floatingGuests": "Total Guests",
+    "floatingOpened": "Opened",
+    "features": {
+      "badge": "Features",
+      "title": "Everything you need",
+      "subtitle": "From design to delivery, Alwan Invite handles every part of the invitation process.",
+      "templates": {
+        "title": "Beautiful Templates",
+        "description": "Choose from dozens of professionally designed invitation templates for every occasion."
+      },
+      "guests": {
+        "title": "Guest Management",
+        "description": "Track RSVPs, manage your guest list, and send reminders all from one place."
+      },
+      "analytics": {
+        "title": "Real-time Analytics",
+        "description": "See who opened your invitation, RSVP rates, and engagement metrics instantly."
+      },
+      "media": {
+        "title": "Media Library",
+        "description": "Upload photos, videos and memories to make your invitation truly personal."
+      },
+      "shareable": {
+        "title": "Shareable Links",
+        "description": "Share your invitation with a single link via WhatsApp, email, or social media."
+      },
+      "secure": {
+        "title": "Secure & Private",
+        "description": "Your data is protected. Control who can view your invitation with privacy settings."
+      }
+    },
+    "howItWorks": {
+      "badge": "How it works",
+      "title": "Up and running in minutes",
+      "subtitle": "Creating and sharing your invitation has never been this simple.",
+      "choose": {
+        "title": "Choose a Template",
+        "description": "Pick from our curated collection of elegant designs."
+      },
+      "customize": {
+        "title": "Customize Details",
+        "description": "Add your event info, photos, and personal touches."
+      },
+      "share": {
+        "title": "Share & Track",
+        "description": "Send your link and watch RSVPs roll in real-time."
+      }
+    },
+    "cta": {
+      "title": "Ready to create your invitation?",
+      "subtitle": "Join thousands of people who use Alwan Invite to celebrate life's most important moments.",
+      "button": "Get started for free"
+    },
+    "footer": {
+      "rights": "All rights reserved.",
+      "privacy": "Privacy",
+      "terms": "Terms",
+      "contact": "Contact"
+    }
+  },
   "wishes": {
     "title": "Wishes & RSVP",
     "subtitle": "Manage guest wishes and attendance responses",

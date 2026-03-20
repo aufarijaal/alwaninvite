@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import { Heart, CheckCircle } from 'lucide-vue-next'
 
 const user = useSupabaseUser()
 const { t } = useI18n()
 
-// Get redirect path from cookies
 const cookieName = useRuntimeConfig().public.supabase.cookieName
 const redirectPath = useCookie(`${cookieName}-redirect-path`).value
 
@@ -13,9 +13,7 @@ const status = ref<'authenticating' | 'redirecting'>('authenticating')
 watch(user, () => {
     if (user.value) {
         status.value = 'redirecting'
-        // Clear cookie
         useCookie(`${cookieName}-redirect-path`).value = null
-        // Add slight delay for better UX
         setTimeout(() => {
             navigateTo(redirectPath || '/dashboard')
         }, 500)
@@ -24,65 +22,56 @@ watch(user, () => {
 </script>
 
 <template>
-    <div
-        class="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary/10 via-base-200 to-secondary/10">
-        <div class="text-center space-y-8 p-8">
-            <!-- Animated Logo/Icon -->
-            <div class="flex justify-center">
-                <div class="relative">
-                    <!-- Spinning outer ring -->
+    <div class="min-h-screen bg-white flex items-center justify-center px-6 relative overflow-hidden">
+        <!-- Background blobs -->
+        <div class="absolute inset-0 -z-10">
+            <div
+                class="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[500px] bg-gradient-to-b from-emerald-50 to-transparent rounded-full blur-3xl opacity-70" />
+            <div class="absolute bottom-0 left-0 w-80 h-80 bg-teal-50 rounded-full blur-3xl opacity-60" />
+            <div class="absolute top-20 right-0 w-64 h-64 bg-emerald-50 rounded-full blur-3xl opacity-50" />
+        </div>
+
+        <div class="w-full max-w-sm text-center">
+            <!-- Logo -->
+            <div class="flex items-center justify-center gap-2 mb-12">
+                <div
+                    class="w-8 h-8 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-lg flex items-center justify-center">
+                    <Heart :size="16" class="text-white" fill="white" />
+                </div>
+                <span class="font-semibold text-gray-900">Alwan Invite</span>
+            </div>
+
+            <!-- Spinner / Check icon -->
+            <div class="flex justify-center mb-8">
+                <div v-if="status === 'authenticating'" class="relative w-16 h-16">
+                    <div class="absolute inset-0 rounded-full border-4 border-gray-100" />
                     <div
-                        class="absolute inset-0 rounded-full border-4 border-t-primary border-r-transparent border-b-transparent border-l-transparent animate-spin w-24 h-24">
+                        class="absolute inset-0 rounded-full border-4 border-t-emerald-500 border-r-transparent border-b-transparent border-l-transparent animate-spin" />
+                    <div class="absolute inset-0 flex items-center justify-center">
+                        <div class="w-8 h-8 rounded-full bg-emerald-50 flex items-center justify-center">
+                            <Heart :size="14" class="text-emerald-500" fill="currentColor" />
+                        </div>
                     </div>
-                    <!-- Pulsing inner circle -->
-                    <div
-                        class="relative w-24 h-24 rounded-full bg-primary/10 flex items-center justify-center animate-pulse">
-                        <svg v-if="status === 'authenticating'" xmlns="http://www.w3.org/2000/svg"
-                            class="h-12 w-12 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                        </svg>
-                        <svg v-else xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-success animate-bounce"
-                            fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                    </div>
+                </div>
+                <div v-else
+                    class="w-16 h-16 rounded-full bg-emerald-50 border border-emerald-100 flex items-center justify-center animate-bounce-once">
+                    <CheckCircle :size="32" class="text-emerald-500" />
                 </div>
             </div>
 
-            <!-- Status Messages -->
-            <div class="space-y-4">
-                <div v-if="status === 'authenticating'" class="animate-fade-in">
-                    <h1 class="text-3xl font-bold text-base-content mb-2">
-                        {{ t('auth.callback.processing') }}
-                    </h1>
-                    <p class="text-base-content/70">
-                        {{ t('common.loading') }}
-                    </p>
-                </div>
-
-                <div v-else class="animate-fade-in">
-                    <h1 class="text-3xl font-bold text-success mb-2">
-                        {{ t('auth.callback.success') }}
-                    </h1>
-                    <p class="text-base-content/70">
-                        {{ t('common.loading') }}
-                    </p>
-                </div>
-
-                <!-- Loading dots animation -->
-                <div class="flex justify-center space-x-2">
-                    <div class="w-2 h-2 bg-primary rounded-full animate-bounce" style="animation-delay: 0ms"></div>
-                    <div class="w-2 h-2 bg-primary rounded-full animate-bounce" style="animation-delay: 150ms"></div>
-                    <div class="w-2 h-2 bg-primary rounded-full animate-bounce" style="animation-delay: 300ms"></div>
-                </div>
+            <!-- Text -->
+            <div class="animate-fade-in">
+                <h1 class="text-2xl font-bold text-gray-900 mb-2">
+                    {{ status === 'authenticating' ? t('auth.callback.processing') : t('auth.callback.success') }}
+                </h1>
+                <p class="text-sm text-gray-400">{{ t('common.loading') }}</p>
             </div>
 
             <!-- Progress bar -->
-            <div class="w-64 mx-auto">
-                <div class="h-1 bg-base-300 rounded-full overflow-hidden">
-                    <div class="h-full bg-primary animate-progress-bar"></div>
+            <div class="mt-10 w-48 mx-auto">
+                <div class="h-1 bg-gray-100 rounded-full overflow-hidden">
+                    <div
+                        class="h-full bg-gradient-to-r from-emerald-500 to-teal-500 animate-progress-bar rounded-full" />
                 </div>
             </div>
         </div>
@@ -93,7 +82,7 @@ watch(user, () => {
 @keyframes fade-in {
     from {
         opacity: 0;
-        transform: translateY(-10px);
+        transform: translateY(8px);
     }
 
     to {
@@ -112,11 +101,31 @@ watch(user, () => {
     }
 }
 
+@keyframes bounce-once {
+
+    0%,
+    100% {
+        transform: scale(1);
+    }
+
+    40% {
+        transform: scale(1.15);
+    }
+
+    60% {
+        transform: scale(0.95);
+    }
+}
+
 .animate-fade-in {
-    animation: fade-in 0.5s ease-out;
+    animation: fade-in 0.4s ease-out;
 }
 
 .animate-progress-bar {
     animation: progress-bar 2s ease-in-out infinite;
+}
+
+.animate-bounce-once {
+    animation: bounce-once 0.5s ease-out;
 }
 </style>

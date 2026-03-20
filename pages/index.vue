@@ -12,46 +12,54 @@ import {
     Shield,
 } from 'lucide-vue-next'
 
-const { t } = useI18n()
+const { t, setLocale: _setLocale, locale } = useI18n()
+const localeOptions = [{ code: 'en' as const }, { code: 'id' as const }]
+const currentLocale = computed(() => locale.value)
 
-const features = [
+const availableLocales = computed(() => localeOptions)
+
+async function setLocale(code: 'en' | 'id') {
+    await _setLocale(code)
+}
+
+const features = computed(() => [
     {
         icon: Sparkles,
-        title: 'Beautiful Templates',
-        description: 'Choose from dozens of professionally designed invitation templates for every occasion.',
+        title: t('homepage.features.templates.title'),
+        description: t('homepage.features.templates.description'),
     },
     {
         icon: Users,
-        title: 'Guest Management',
-        description: 'Track RSVPs, manage your guest list, and send reminders all from one place.',
+        title: t('homepage.features.guests.title'),
+        description: t('homepage.features.guests.description'),
     },
     {
         icon: BarChart3,
-        title: 'Real-time Analytics',
-        description: 'See who opened your invitation, RSVP rates, and engagement metrics instantly.',
+        title: t('homepage.features.analytics.title'),
+        description: t('homepage.features.analytics.description'),
     },
     {
         icon: ImageIcon,
-        title: 'Media Library',
-        description: 'Upload photos, videos and memories to make your invitation truly personal.',
+        title: t('homepage.features.media.title'),
+        description: t('homepage.features.media.description'),
     },
     {
         icon: Globe,
-        title: 'Shareable Links',
-        description: 'Share your invitation with a single link via WhatsApp, email, or social media.',
+        title: t('homepage.features.shareable.title'),
+        description: t('homepage.features.shareable.description'),
     },
     {
         icon: Shield,
-        title: 'Secure & Private',
-        description: 'Your data is protected. Control who can view your invitation with privacy settings.',
+        title: t('homepage.features.secure.title'),
+        description: t('homepage.features.secure.description'),
     },
-]
+])
 
-const steps = [
-    { number: '01', title: 'Choose a Template', description: 'Pick from our curated collection of elegant designs.' },
-    { number: '02', title: 'Customize Details', description: 'Add your event info, photos, and personal touches.' },
-    { number: '03', title: 'Share & Track', description: 'Send your link and watch RSVPs roll in real-time.' },
-]
+const steps = computed(() => [
+    { number: '01', title: t('homepage.howItWorks.choose.title'), description: t('homepage.howItWorks.choose.description') },
+    { number: '02', title: t('homepage.howItWorks.customize.title'), description: t('homepage.howItWorks.customize.description') },
+    { number: '03', title: t('homepage.howItWorks.share.title'), description: t('homepage.howItWorks.share.description') },
+])
 </script>
 
 <template>
@@ -70,11 +78,11 @@ const steps = [
                 <div class="flex items-center gap-3">
                     <NuxtLink to="/dashboard"
                         class="text-sm text-gray-600 hover:text-gray-900 transition-colors px-3 py-2 rounded-lg hover:bg-gray-100">
-                        Dashboard
+                        {{ t('navigation.dashboard') }}
                     </NuxtLink>
                     <NuxtLink to="/auth/signin"
                         class="text-sm font-medium bg-gray-900 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors">
-                        Get Started
+                        {{ t('homepage.startFree') }}
                     </NuxtLink>
                 </div>
             </div>
@@ -94,27 +102,26 @@ const steps = [
                 <div
                     class="inline-flex items-center gap-2 bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-full px-4 py-1.5 text-sm font-medium mb-8">
                     <Zap :size="14" />
-                    Digital Invitations Made Simple
+                    {{ t('homepage.badge') }}
                 </div>
 
                 <h1 class="text-6xl sm:text-7xl font-bold tracking-tight leading-tight mb-6">
-                    Beautiful invitations
+                    {{ t('homepage.heroTitle') }}
                     <span class="relative">
                         <span
                             class="relative z-10 bg-gradient-to-r from-emerald-500 to-teal-600 bg-clip-text text-transparent">
-                            for every moment</span>
+                            {{ t('homepage.heroTitleHighlight') }}</span>
                     </span>
                 </h1>
 
                 <p class="text-xl text-gray-500 max-w-2xl mx-auto mb-10 leading-relaxed">
-                    Create stunning digital invitations in minutes. Share with a link, track RSVPs, and make every
-                    occasion unforgettable.
+                    {{ t('homepage.heroSubtitle') }}
                 </p>
 
                 <div class="flex flex-col sm:flex-row gap-4 justify-center">
                     <NuxtLink to="/auth/signin"
                         class="inline-flex items-center justify-center gap-2 bg-gray-900 text-white text-base font-medium px-8 py-4 rounded-xl hover:bg-gray-700 transition-all hover:shadow-lg hover:-translate-y-0.5">
-                        Start for free
+                        {{ t('homepage.startFree') }}
                         <ArrowRight :size="18" />
                     </NuxtLink>
                 </div>
@@ -147,7 +154,7 @@ const steps = [
                         <Users :size="18" class="text-emerald-600" />
                     </div>
                     <div>
-                        <div class="text-xs text-gray-400">Total Guests</div>
+                        <div class="text-xs text-gray-400">{{ t('homepage.floatingGuests') }}</div>
                         <div class="text-sm font-bold text-gray-900">248 RSVPs</div>
                     </div>
                 </div>
@@ -157,7 +164,7 @@ const steps = [
                         <BarChart3 :size="18" class="text-teal-600" />
                     </div>
                     <div>
-                        <div class="text-xs text-gray-400">Opened</div>
+                        <div class="text-xs text-gray-400">{{ t('homepage.floatingOpened') }}</div>
                         <div class="text-sm font-bold text-gray-900">96% rate</div>
                     </div>
                 </div>
@@ -172,11 +179,12 @@ const steps = [
                 <div class="text-center mb-16">
                     <div
                         class="inline-flex items-center gap-2 bg-gray-100 text-gray-600 rounded-full px-4 py-1.5 text-sm font-medium mb-4">
-                        Features
+                        {{ t('homepage.features.badge') }}
                     </div>
-                    <h2 class="text-4xl sm:text-5xl font-bold tracking-tight mb-4">Everything you need</h2>
+                    <h2 class="text-4xl sm:text-5xl font-bold tracking-tight mb-4">{{ t('homepage.features.title') }}
+                    </h2>
                     <p class="text-lg text-gray-500 max-w-xl mx-auto">
-                        From design to delivery, Alwan Invite handles every part of the invitation process.
+                        {{ t('homepage.features.subtitle') }}
                     </p>
                 </div>
 
@@ -201,11 +209,12 @@ const steps = [
                 <div class="text-center mb-16">
                     <div
                         class="inline-flex items-center gap-2 bg-white text-gray-600 border border-gray-200 rounded-full px-4 py-1.5 text-sm font-medium mb-4">
-                        How it works
+                        {{ t('homepage.howItWorks.badge') }}
                     </div>
-                    <h2 class="text-4xl sm:text-5xl font-bold tracking-tight mb-4">Up and running in minutes</h2>
+                    <h2 class="text-4xl sm:text-5xl font-bold tracking-tight mb-4">{{ t('homepage.howItWorks.title') }}
+                    </h2>
                     <p class="text-lg text-gray-500 max-w-xl mx-auto">
-                        Creating and sharing your invitation has never been this simple.
+                        {{ t('homepage.howItWorks.subtitle') }}
                     </p>
                 </div>
 
@@ -235,13 +244,13 @@ const steps = [
                             class="w-14 h-14 bg-white/10 backdrop-blur rounded-2xl flex items-center justify-center mx-auto mb-6">
                             <Heart :size="28" class="text-white" fill="white" />
                         </div>
-                        <h2 class="text-4xl font-bold text-white mb-4">Ready to create your invitation?</h2>
+                        <h2 class="text-4xl font-bold text-white mb-4">{{ t('homepage.cta.title') }}</h2>
                         <p class="text-gray-400 text-lg mb-8 max-w-lg mx-auto">
-                            Join thousands of people who use Alwan Invite to celebrate life's most important moments.
+                            {{ t('homepage.cta.subtitle') }}
                         </p>
                         <NuxtLink to="/auth/signin"
                             class="inline-flex items-center gap-2 bg-white text-gray-900 font-semibold px-8 py-4 rounded-xl hover:bg-gray-100 transition-all hover:shadow-lg hover:-translate-y-0.5 text-base">
-                            Get started for free
+                            {{ t('homepage.cta.button') }}
                             <ArrowRight :size="18" />
                         </NuxtLink>
 
@@ -260,11 +269,17 @@ const steps = [
                     </div>
                     <span class="font-semibold text-gray-900">Alwan Invite</span>
                 </div>
-                <p class="text-sm text-gray-400">© {{ new Date().getFullYear() }} Alwan Invite. All rights reserved.</p>
+                <p class="text-sm text-gray-400">© {{ new Date().getFullYear() }} Alwan Invite. {{
+                    t('homepage.footer.rights') }}</p>
                 <div class="flex items-center gap-5 text-sm text-gray-400">
-                    <a href="#" class="hover:text-gray-700 transition-colors">Privacy</a>
-                    <a href="#" class="hover:text-gray-700 transition-colors">Terms</a>
-                    <a href="#" class="hover:text-gray-700 transition-colors">Contact</a>
+                    <a href="#" class="hover:text-gray-700 transition-colors">{{ t('homepage.footer.privacy') }}</a>
+                    <a href="#" class="hover:text-gray-700 transition-colors">{{ t('homepage.footer.terms') }}</a>
+                    <a href="#" class="hover:text-gray-700 transition-colors">{{ t('homepage.footer.contact') }}</a>
+                    <span class="text-gray-200">|</span>
+                    <button v-for="locale in availableLocales" :key="locale.code" @click="setLocale(locale.code)"
+                        :class="['transition-colors', locale.code === currentLocale ? 'text-gray-900 font-semibold' : 'hover:text-gray-700']">
+                        {{ locale.code.toUpperCase() }}
+                    </button>
                 </div>
             </div>
         </footer>

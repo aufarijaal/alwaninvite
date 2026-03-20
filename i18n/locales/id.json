@@ -307,6 +307,72 @@
       "subtitle": "Unggah file audio pertama Anda untuk memulai"
     }
   },
+  "homepage": {
+    "badge": "Undangan Digital yang Mudah",
+    "heroTitle": "Undangan indah",
+    "heroTitleHighlight": "untuk setiap momen",
+    "heroSubtitle": "Buat undangan digital memukau dalam hitungan menit. Bagikan dengan tautan, lacak RSVP, dan jadikan setiap acara tak terlupakan.",
+    "startFree": "Mulai gratis",
+    "floatingGuests": "Total Tamu",
+    "floatingOpened": "Dibuka",
+    "features": {
+      "badge": "Fitur",
+      "title": "Semua yang Anda butuhkan",
+      "subtitle": "Dari desain hingga pengiriman, Alwan Invite menangani setiap bagian dari proses undangan.",
+      "templates": {
+        "title": "Template Cantik",
+        "description": "Pilih dari puluhan template undangan yang dirancang secara profesional untuk setiap kesempatan."
+      },
+      "guests": {
+        "title": "Manajemen Tamu",
+        "description": "Lacak RSVP, kelola daftar tamu, dan kirim pengingat semua dari satu tempat."
+      },
+      "analytics": {
+        "title": "Analitik Real-time",
+        "description": "Lihat siapa yang membuka undangan Anda, tingkat RSVP, dan metrik keterlibatan secara instan."
+      },
+      "media": {
+        "title": "Perpustakaan Media",
+        "description": "Unggah foto, video, dan kenangan untuk membuat undangan Anda benar-benar personal."
+      },
+      "shareable": {
+        "title": "Tautan yang Dapat Dibagikan",
+        "description": "Bagikan undangan Anda dengan satu tautan melalui WhatsApp, email, atau media sosial."
+      },
+      "secure": {
+        "title": "Aman & Privat",
+        "description": "Data Anda terlindungi. Kendalikan siapa yang dapat melihat undangan Anda dengan pengaturan privasi."
+      }
+    },
+    "howItWorks": {
+      "badge": "Cara kerjanya",
+      "title": "Siap berjalan dalam hitungan menit",
+      "subtitle": "Membuat dan berbagi undangan Anda tidak pernah semudah ini.",
+      "choose": {
+        "title": "Pilih Template",
+        "description": "Pilih dari koleksi desain elegan yang kami kurasi."
+      },
+      "customize": {
+        "title": "Sesuaikan Detail",
+        "description": "Tambahkan info acara, foto, dan sentuhan pribadi Anda."
+      },
+      "share": {
+        "title": "Bagikan & Lacak",
+        "description": "Kirim tautan Anda dan saksikan RSVP masuk secara real-time."
+      }
+    },
+    "cta": {
+      "title": "Siap membuat undangan Anda?",
+      "subtitle": "Bergabung dengan ribuan orang yang menggunakan Alwan Invite untuk merayakan momen terpenting dalam hidup.",
+      "button": "Mulai gratis sekarang"
+    },
+    "footer": {
+      "rights": "Hak cipta dilindungi.",
+      "privacy": "Privasi",
+      "terms": "Ketentuan",
+      "contact": "Kontak"
+    }
+  },
   "wishes": {
     "title": "Ucapan & RSVP",
     "subtitle": "Kelola ucapan tamu dan konfirmasi kehadiran",
