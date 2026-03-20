@@ -19,7 +19,9 @@
 
             <div class="relative z-10 max-w-sm mx-auto w-full">
                 <!-- Ornament top -->
-                <div class="flex items-center justify-center gap-2 mb-6">
+                <div v-motion :initial="{ opacity: 0, y: -30 }"
+                    :enter="{ opacity: 1, y: 0, transition: { duration: 0.7, delay: 0.1 } }"
+                    class="flex items-center justify-center gap-2 mb-6">
                     <div class="h-px w-10 bg-amber-400/40"></div>
                     <svg class="w-5 h-5 text-amber-400/70" viewBox="0 0 24 24" fill="currentColor">
                         <path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z" />
@@ -28,12 +30,18 @@
                 </div>
 
                 <!-- Bismillah -->
-                <p class="text-amber-300/90 text-xl mb-2 tracking-wide" style="font-family: serif;">بِسْمِ اللَّهِ
-                    الرَّحْمَنِ الرَّحِيمِ</p>
-                <p class="text-amber-200/50 text-xs tracking-[0.3em] uppercase font-sans mb-10">Undangan Pernikahan</p>
+                <div v-motion :initial="{ opacity: 0 }"
+                    :enter="{ opacity: 1, transition: { duration: 0.8, delay: 0.25 } }">
+                    <p class="text-amber-300/90 text-xl mb-2 tracking-wide" style="font-family: serif;">بِسْمِ اللَّهِ
+                        الرَّحْمَنِ الرَّحِيمِ</p>
+                    <p class="text-amber-200/50 text-xs tracking-[0.3em] uppercase font-sans mb-10">Undangan Pernikahan
+                    </p>
+                </div>
 
                 <!-- Names -->
-                <div class="space-y-1 mb-8">
+                <div v-motion :initial="{ opacity: 0, scale: 0.85 }"
+                    :enter="{ opacity: 1, scale: 1, transition: { type: 'spring', stiffness: 80, damping: 14, delay: 0.4 } }"
+                    class="space-y-1 mb-8">
                     <h1 class="text-6xl font-bold text-amber-50 tracking-tight" style="font-family: Georgia, serif;">
                         {{ invitation?.groom_callname }}
                     </h1>
@@ -44,7 +52,8 @@
                 </div>
 
                 <!-- Date pill -->
-                <div
+                <div v-motion :initial="{ opacity: 0, y: 20 }"
+                    :enter="{ opacity: 1, y: 0, transition: { duration: 0.6, delay: 0.6 } }"
                     class="inline-flex items-center gap-3 bg-amber-900/40 border border-amber-700/30 rounded-full px-5 py-2">
                     <div class="w-1.5 h-1.5 rounded-full bg-amber-400"></div>
                     <p class="text-amber-100/80 text-xs font-sans tracking-widest">{{ formatDate(mainEventDate) }}</p>
@@ -52,7 +61,9 @@
                 </div>
 
                 <!-- Open invitation button -->
-                <div class="mt-16 flex flex-col items-center gap-3">
+                <div v-motion :initial="{ opacity: 0, y: 30 }"
+                    :enter="{ opacity: 1, y: 0, transition: { duration: 0.6, delay: 0.8 } }"
+                    class="mt-16 flex flex-col items-center gap-3">
                     <div v-if="props.guest" class="text-center mb-1">
                         <p class="text-amber-300/50 text-xs font-sans tracking-widest uppercase mb-1">Kepada Yth.</p>
                         <p class="text-amber-50 font-semibold font-sans text-base">{{ props.guest }}</p>
@@ -70,12 +81,12 @@
         </section>
 
         <!-- ===== COUPLE SECTION ===== -->
-        <section class="bg-stone-900 py-20 px-6">
+        <section data-aos="fade-up" class="bg-stone-900 py-20 px-6">
             <div class="max-w-sm mx-auto text-center">
                 <p class="text-amber-400/50 text-xs tracking-[0.3em] uppercase font-sans mb-12">Yang Berbahagia</p>
 
                 <!-- Groom -->
-                <div class="mb-10">
+                <div data-aos="fade-right" data-aos-delay="100" class="mb-10">
                     <div
                         class="w-20 h-20 rounded-full bg-gradient-to-br from-amber-800 to-stone-950 border-2 border-amber-600/30 mx-auto mb-4 flex items-center justify-center">
                         <svg class="w-8 h-8 text-amber-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -100,7 +111,7 @@
                 </div>
 
                 <!-- Bride -->
-                <div>
+                <div data-aos="fade-left" data-aos-delay="200">
                     <div
                         class="w-20 h-20 rounded-full bg-gradient-to-br from-amber-800 to-stone-950 border-2 border-amber-600/30 mx-auto mb-4 flex items-center justify-center">
                         <svg class="w-8 h-8 text-amber-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -120,7 +131,7 @@
         </section>
 
         <!-- ===== COUNTDOWN ===== -->
-        <section class="bg-gradient-to-b from-stone-900 to-amber-950 py-16 px-6">
+        <section data-aos="fade-up" class="bg-gradient-to-b from-stone-900 to-amber-950 py-16 px-6">
             <div class="max-w-sm mx-auto text-center">
                 <p class="text-amber-400/50 text-xs tracking-[0.3em] uppercase font-sans mb-8">Menuju Hari Bahagia</p>
                 <div class="grid grid-cols-4 gap-3">
@@ -129,14 +140,14 @@
                         <div class="text-3xl font-bold text-amber-50 tabular-nums" style="font-family: Georgia, serif;">
                             {{ unit.value }}</div>
                         <div class="text-amber-300/50 text-xs font-sans mt-1 tracking-widest uppercase">{{ unit.label
-                        }}</div>
+                            }}</div>
                     </div>
                 </div>
             </div>
         </section>
 
         <!-- ===== EVENTS ===== -->
-        <section class="bg-amber-950 py-20 px-6">
+        <section data-aos="fade-up" class="bg-amber-950 py-20 px-6">
             <div class="max-w-sm mx-auto">
                 <div class="text-center mb-12">
                     <p class="text-amber-400/50 text-xs tracking-[0.3em] uppercase font-sans mb-3">Rangkaian Acara</p>
@@ -144,7 +155,7 @@
                 </div>
 
                 <div class="space-y-5">
-                    <div v-for="event in invitation?.events" :key="event.type"
+                    <div v-for="event in invitation?.events" :key="event.type" data-aos="fade-up" data-aos-delay="100"
                         class="bg-amber-900/30 border border-amber-800/30 rounded-2xl p-6 backdrop-blur">
                         <div class="flex items-start gap-4">
                             <!-- Icon -->
@@ -164,14 +175,14 @@
 
                             <!-- Details -->
                             <div class="flex-1 min-w-0">
-                                <h3 class="text-base font-bold text-amber-50 mb-1">{{ event.title }}</h3>
-                                <p class="text-amber-300/70 text-xs font-sans mb-0.5">{{
+                                <h3 class="text-lg font-bold text-amber-50 mb-1">{{ event.title }}</h3>
+                                <p class="text-amber-300/90 text-sm font-medium font-sans mb-0.5">{{
                                     formatEventDate(event.start_time) }}</p>
-                                <p class="text-amber-300/50 text-xs font-sans mb-3">
+                                <p class="text-amber-300/70 text-sm font-medium font-sans mb-3">
                                     {{ formatTime(event.start_time) }} – {{ formatTime(event.end_time) }} WIB
                                 </p>
-                                <p class="text-amber-50/90 text-sm font-semibold mb-0.5">{{ event.location_name }}</p>
-                                <p class="text-amber-300/50 text-xs font-sans leading-relaxed mb-3">{{
+                                <p class="text-amber-50/90 text-base font-semibold mb-0.5">{{ event.location_name }}</p>
+                                <p class="text-amber-300/60 text-sm font-sans leading-relaxed mb-3">{{
                                     event.location_address }}</p>
                                 <a :href="event.map_url" target="_blank" rel="noopener noreferrer"
                                     class="inline-flex items-center gap-1.5 text-xs text-amber-400 hover:text-amber-300 font-sans transition-colors">
@@ -191,7 +202,7 @@
         </section>
 
         <!-- ===== LIVESTREAM ===== -->
-        <section v-if="invitation?.livestream_is_active" class="bg-stone-900 py-16 px-6">
+        <section v-if="invitation?.livestream_is_active" data-aos="fade-up" class="bg-stone-900 py-16 px-6">
             <div class="max-w-sm mx-auto text-center">
                 <p class="text-amber-400/50 text-xs tracking-[0.3em] uppercase font-sans mb-3">Saksikan Secara Langsung
                 </p>
@@ -237,7 +248,8 @@
         </section>
 
         <!-- ===== GIFTS ===== -->
-        <section v-if="invitation?.gifts?.length" class="bg-gradient-to-b from-stone-900 to-amber-950 py-16 px-6">
+        <section v-if="invitation?.gifts?.length" data-aos="fade-up"
+            class="bg-gradient-to-b from-stone-900 to-amber-950 py-16 px-6">
             <div class="max-w-sm mx-auto">
                 <div class="text-center mb-10">
                     <p class="text-amber-400/50 text-xs tracking-[0.3em] uppercase font-sans mb-3">Hadiah Pernikahan</p>
@@ -248,8 +260,8 @@
                 </div>
 
                 <div class="space-y-4">
-                    <div v-for="gift in invitation.gifts" :key="gift.account_number"
-                        class="bg-amber-900/30 border border-amber-800/30 rounded-2xl p-5">
+                    <div v-for="gift in invitation.gifts" :key="gift.account_number" data-aos="zoom-in"
+                        data-aos-delay="100" class="bg-amber-900/30 border border-amber-800/30 rounded-2xl p-5">
                         <div class="flex items-center gap-3 mb-3">
                             <div
                                 class="w-10 h-10 rounded-xl bg-amber-900/60 border border-amber-700/30 flex items-center justify-center">
@@ -273,7 +285,7 @@
                         <div class="bg-stone-950/60 rounded-xl p-3 flex items-center justify-between gap-3">
                             <div class="min-w-0">
                                 <p class="text-amber-300/50 text-xs font-sans mb-0.5 truncate">{{ gift.account_name
-                                }}</p>
+                                    }}</p>
                                 <p class="text-amber-50 font-mono font-bold tracking-wider text-sm">{{
                                     gift.account_number }}</p>
                             </div>
@@ -288,14 +300,18 @@
         </section>
 
         <!-- ===== WISHES / RSVP ===== -->
-        <section class="bg-amber-950 py-20 px-6">
+        <section data-aos="fade-up" class="bg-amber-950 py-20 px-6">
             <div class="max-w-sm mx-auto">
-                <div class="text-center mb-10">
-                    <p class="text-amber-400/50 text-xs tracking-[0.3em] uppercase font-sans mb-3">Ucapan &amp; Doa</p>
-                    <h2 class="text-2xl font-bold text-amber-50 mb-2" style="font-family: Georgia, serif;">Kirim Ucapan
-                    </h2>
-                    <p class="text-amber-300/50 text-sm font-sans">Sampaikan doa dan ucapan terbaik untuk kedua
-                        mempelai</p>
+                <div class="text-center" :class="guestValidated === true ? 'mb-10' : 'mb-6'">
+                    <p class="text-amber-400/50 text-xs tracking-[0.3em] uppercase font-sans"
+                        :class="guestValidated === true ? 'mb-3' : ''">Ucapan &amp; Doa</p>
+                    <template v-if="guestValidated === true">
+                        <h2 class="text-2xl font-bold text-amber-50 mb-2" style="font-family: Georgia, serif;">Kirim
+                            Ucapan
+                        </h2>
+                        <p class="text-amber-300/50 text-sm font-sans">Sampaikan doa dan ucapan terbaik untuk kedua
+                            mempelai</p>
+                    </template>
                 </div>
 
                 <!-- Form -->
@@ -340,7 +356,7 @@
                             <div
                                 class="w-8 h-8 rounded-full bg-amber-800/50 border border-amber-600/30 flex items-center justify-center flex-shrink-0">
                                 <span class="text-amber-200 text-xs font-bold">{{ wish.guest_name?.[0]?.toUpperCase()
-                                }}</span>
+                                    }}</span>
                             </div>
                             <div class="flex-1 min-w-0">
                                 <div class="flex flex-wrap items-center gap-2 mb-1">
@@ -354,6 +370,12 @@
                             </div>
                         </div>
                     </div>
+                </div>
+
+                <!-- Empty State -->
+                <div v-else class="text-center py-10">
+                    <p class="text-amber-300/50 text-sm font-sans">Belum ada ucapan.
+                    </p>
                 </div>
 
                 <!-- Pagination -->
@@ -376,7 +398,7 @@
         </section>
 
         <!-- ===== FOOTER ===== -->
-        <footer class="bg-stone-950 py-10 px-6 text-center border-t border-amber-900/30">
+        <footer data-aos="fade-up" class="bg-stone-950 py-10 px-6 text-center border-t border-amber-900/30">
             <p class="text-amber-300/40 text-xs font-sans mb-1">Dibuat dengan ♥ menggunakan</p>
             <p class="text-amber-500/70 text-sm font-semibold font-sans">Alwan Invite</p>
         </footer>

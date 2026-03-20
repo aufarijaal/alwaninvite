@@ -100,9 +100,6 @@ onMounted(() => {
             <ThemesGreen v-else-if="wedding.themes?.slug === 'green'" :invitation="wedding" :guest="toGuest" />
             <ThemesBrown v-else-if="wedding.themes?.slug === 'brown'" :invitation="wedding" :guest="toGuest" />
             <ThemesSlate v-else-if="wedding.themes?.slug === 'slate'" :invitation="wedding" :guest="toGuest" />
-            <ThemesIslamicGreen v-else-if="wedding.themes?.slug === 'islamic-green'" :invitation="wedding"
-                :guest="toGuest" />
-            <ThemesDefault v-else :invitation="wedding" :guest="toGuest" />
         </template>
     </div>
 </template>

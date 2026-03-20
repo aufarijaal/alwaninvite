@@ -10,6 +10,7 @@ export default defineNuxtConfig({
     "@nuxtjs/supabase",
     "@vueuse/nuxt",
     "@nuxtjs/i18n",
+    "@vueuse/motion/nuxt",
   ],
   app: {
     head: {

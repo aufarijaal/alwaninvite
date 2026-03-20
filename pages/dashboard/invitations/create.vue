@@ -1,7 +1,6 @@
 <script setup lang="ts">
-import { Plus, Trash2, Save, Eye, Music, Play, Pause, X, Download, ImageOff } from 'lucide-vue-next'
+import { Plus, Trash2, Save, Music, Play, Pause, X, ImageOff } from 'lucide-vue-next'
 import type { Database } from '~/types/database.types'
-import { mockInvitations, getMockInvitationNames } from '~/utils/mockInvitationData'
 
 definePageMeta({
     middleware: 'auth',
@@ -62,10 +61,7 @@ const saving = ref(false)
 const themes = ref<Database['public']['Tables']['themes']['Row'][]>([])
 const audios = ref<Database['public']['Tables']['audios']['Row'][]>([])
 const errors = ref<Record<string, string>>({})
-const showJsonPreview = ref(false)
-const showMockDataModal = ref(false)
 const showThemeModal = ref(false)
-const showPreviewModal = ref(false)
 
 // Audio selection modal state
 const showAudioModal = ref(false)
@@ -310,69 +306,17 @@ onUnmounted(() => {
         audioElement.value = null
     }
 })
-
-// Load Mock Data
-const loadMockData = (mockName: string) => {
-    const mockData = mockInvitations[mockName as keyof typeof mockInvitations]
-    if (mockData) {
-        form.value = { ...mockData }
-        showMockDataModal.value = false
-    }
-}
-
-const mockDataNames = getMockInvitationNames()
-
-// Computed
-const jsonPreview = computed(() => {
-    return JSON.stringify(form.value, null, 2)
-})
 </script>
 
 <template>
     <div class="max-w-5xl mx-auto space-y-6 pb-10">
         <!-- Page Header -->
-        <div class="flex flex-col md:flex-row md:justify-between md:items-center gap-4">
-            <div>
-                <h1 class="text-3xl font-bold">{{ t('invitation.create.title') }}</h1>
-                <p class="text-base-content/70 mt-1">{{ t('invitation.create.subtitle') }}</p>
-            </div>
-            <div class="flex gap-2">
-                <button type="button" @click="showPreviewModal = true" class="btn btn-primary btn-sm">
-                    <Eye :size="16" />
-                    {{ t('invitation.actions.preview') }}
-                </button>
-                <button type="button" @click="showMockDataModal = true" class="btn btn-outline btn-sm">
-                    <Download :size="16" />
-                    Load Mock Data
-                </button>
-                <button type="button" @click="showJsonPreview = !showJsonPreview" class="btn btn-ghost btn-sm">
-                    <Eye :size="16" />
-                    {{ t('invitation.create.viewJson') }}
-                </button>
-            </div>
+        <div>
+            <h1 class="text-3xl font-bold">{{ t('invitation.create.title') }}</h1>
+            <p class="text-base-content/70 mt-1">{{ t('invitation.create.subtitle') }}</p>
         </div>
 
-        <!-- Preview Modal -->
-        <div v-if="showPreviewModal" class="modal modal-open">
-            <div class="modal-box max-w-7xl h-[90vh] p-0 flex flex-col">
-                <div class="flex justify-between items-center p-4 border-b border-base-300">
-                    <h3 class="font-bold text-lg">{{ t('invitation.actions.preview') }}</h3>
-                    <button type="button" @click="showPreviewModal = false" class="btn btn-ghost btn-sm btn-circle">
-                        <X :size="20" />
-                    </button>
-                </div>
 
-                <div class="flex-1 bg-base-200 flex items-center justify-center">
-                    <!-- Iframe or preview content will go here -->
-                    <div class="text-center text-base-content/60">
-                        <Eye :size="64" class="mx-auto mb-4 opacity-30" />
-                        <p class="text-lg">Preview coming soon</p>
-                        <p class="text-sm mt-2">The invitation preview will appear here</p>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-backdrop" @click="showPreviewModal = false"></div>
-        </div>
 
         <!-- Theme Selection Modal -->
         <div v-if="showThemeModal" class="modal modal-open">
@@ -394,7 +338,7 @@ const jsonPreview = computed(() => {
                             <div v-else class="w-full h-full flex flex-col items-center justify-center">
                                 <ImageOff :size="48" class="opacity-20" />
                                 <span class="text-sm text-base-content/30 mt-2">{{ t('invitation.previewUnavailable')
-                                    }}</span>
+                                }}</span>
                             </div>
                         </figure>
                         <div class="card-body p-4">
@@ -422,49 +366,7 @@ const jsonPreview = computed(() => {
             <div class="modal-backdrop" @click="showThemeModal = false"></div>
         </div>
 
-        <!-- Mock Data Selection Modal -->
-        <div v-if="showMockDataModal" class="modal modal-open">
-            <div class="modal-box">
-                <div class="flex justify-between items-center mb-4">
-                    <h3 class="font-bold text-lg">Load Mock Invitation Data</h3>
-                    <button type="button" @click="showMockDataModal = false" class="btn btn-ghost btn-sm btn-circle">
-                        <X :size="20" />
-                    </button>
-                </div>
 
-                <p class="text-sm text-base-content/70 mb-4">
-                    Select a mock invitation template to quickly populate the form with sample data.
-                </p>
-
-                <div class="space-y-2">
-                    <button v-for="mockName in mockDataNames" :key="mockName" type="button"
-                        @click="loadMockData(mockName)" class="btn btn-outline w-full justify-start capitalize">
-                        <Download :size="16" />
-                        {{ mockName.replace('-', ' ') }}
-                    </button>
-                </div>
-
-                <div class="modal-action">
-                    <button type="button" @click="showMockDataModal = false" class="btn btn-ghost">
-                        Cancel
-                    </button>
-                </div>
-            </div>
-            <div class="modal-backdrop" @click="showMockDataModal = false"></div>
-        </div>
-
-        <!-- JSON Preview Modal -->
-        <div v-if="showJsonPreview" class="card bg-base-200 shadow-xl">
-            <div class="card-body">
-                <div class="flex justify-between items-center mb-2">
-                    <h3 class="font-bold">{{ t('invitation.create.jsonPreview') }}</h3>
-                    <button type="button" @click="showJsonPreview = false" class="btn btn-ghost btn-sm">{{
-                        t('common.close')
-                    }}</button>
-                </div>
-                <pre class="text-xs overflow-auto max-h-96 bg-base-100 p-4 rounded">{{ jsonPreview }}</pre>
-            </div>
-        </div>
 
         <!-- Form -->
         <form @submit.prevent="submitForm" class="space-y-6">
@@ -744,7 +646,7 @@ const jsonPreview = computed(() => {
                                         :class="{ 'input-error': errors[`event_title_${index}`] }" />
                                     <label v-if="errors[`event_title_${index}`]" class="label">
                                         <span class="label-text-alt text-error">{{ errors[`event_title_${index}`]
-                                        }}</span>
+                                            }}</span>
                                     </label>
                                 </div>
 
@@ -757,7 +659,7 @@ const jsonPreview = computed(() => {
                                         :class="{ 'input-error': errors[`event_start_${index}`] }" />
                                     <label v-if="errors[`event_start_${index}`]" class="label">
                                         <span class="label-text-alt text-error">{{ errors[`event_start_${index}`]
-                                        }}</span>
+                                            }}</span>
                                     </label>
                                 </div>
 
@@ -780,14 +682,14 @@ const jsonPreview = computed(() => {
                                         :class="{ 'input-error': errors[`event_location_${index}`] }" />
                                     <label v-if="errors[`event_location_${index}`]" class="label">
                                         <span class="label-text-alt text-error">{{ errors[`event_location_${index}`]
-                                        }}</span>
+                                            }}</span>
                                     </label>
                                 </div>
 
                                 <div class="form-control">
                                     <label class="label">
                                         <span class="label-text font-medium">{{ t('invitation.fields.locationAddress')
-                                        }}</span>
+                                            }}</span>
                                     </label>
                                     <input v-model="event.location_address" type="text"
                                         :placeholder="t('invitation.placeholders.locationAddress')"
@@ -841,7 +743,7 @@ const jsonPreview = computed(() => {
                                 <div class="form-control">
                                     <label class="label">
                                         <span class="label-text font-medium">{{ t('invitation.fields.giftType')
-                                        }}</span>
+                                            }}</span>
                                     </label>
                                     <select v-model="gift.type" class="select select-bordered">
                                         <option value="bank">{{ t('invitation.giftTypes.bank') }}</option>
@@ -855,7 +757,7 @@ const jsonPreview = computed(() => {
                                 <div class="form-control">
                                     <label class="label">
                                         <span class="label-text font-medium">{{ t('invitation.fields.provider')
-                                        }}</span>
+                                            }}</span>
                                     </label>
                                     <input v-model="gift.provider" type="text"
                                         :placeholder="t('invitation.placeholders.provider')"
@@ -865,7 +767,7 @@ const jsonPreview = computed(() => {
                                 <div class="form-control">
                                     <label class="label">
                                         <span class="label-text font-medium">{{ t('invitation.fields.accountName')
-                                        }}</span>
+                                            }}</span>
                                     </label>
                                     <input v-model="gift.account_name" type="text"
                                         :placeholder="t('invitation.placeholders.accountName')"
@@ -875,7 +777,7 @@ const jsonPreview = computed(() => {
                                 <div class="form-control">
                                     <label class="label">
                                         <span class="label-text font-medium">{{ t('invitation.fields.accountNumber')
-                                        }}</span>
+                                            }}</span>
                                     </label>
                                     <input v-model="gift.account_number" type="text"
                                         :placeholder="t('invitation.placeholders.accountNumber')"
@@ -1098,15 +1000,18 @@ const jsonPreview = computed(() => {
                         <NuxtLink to="/dashboard/invitations" class="btn btn-ghost">
                             {{ t('common.cancel') }}
                         </NuxtLink>
-
-                        <button type="submit" class="btn btn-primary" :disabled="saving">
-                            <Save v-if="!saving" :size="20" />
-                            <span v-if="saving" class="loading loading-spinner"></span>
-                            {{ saving ? t('common.saving') : t('common.save') }}
-                        </button>
                     </div>
                 </div>
             </div>
         </form>
+    </div>
+
+    <!-- Floating Save Button -->
+    <div class="fixed bottom-6 right-6 z-50">
+        <button type="button" @click="submitForm" class="btn btn-primary shadow-lg" :disabled="saving">
+            <Save v-if="!saving" :size="20" />
+            <span v-if="saving" class="loading loading-spinner"></span>
+            {{ saving ? t('common.saving') : t('common.save') }}
+        </button>
     </div>
 </template>
