@@ -62,13 +62,12 @@ const form = ref({
 // State
 const loading = ref(true)
 const saving = ref(false)
+const originalSlug = ref('')
 const themes = ref<Database['public']['Tables']['themes']['Row'][]>([])
 const audios = ref<Database['public']['Tables']['audios']['Row'][]>([])
 const errors = ref<Record<string, string>>({})
-const showJsonPreview = ref(false)
 const showMockDataModal = ref(false)
 const showThemeModal = ref(false)
-const showPreviewModal = ref(false)
 
 // Audio selection modal state
 const showAudioModal = ref(false)
@@ -94,6 +93,7 @@ const fetchInvitation = async () => {
         }
 
         // Populate form with existing data
+        originalSlug.value = data.slug
         form.value = {
             slug: data.slug,
             title: data.title || '',
@@ -227,6 +227,8 @@ const submitForm = async () => {
     }
 
     saving.value = true
+    console.group(`[Edit Invitation] id: ${invitationId.value}, slug: "${form.value.slug}"`)
+    console.log('[1/3] Updating wedding record...')
 
     try {
         const { data, error } = await supabase
@@ -263,16 +265,59 @@ const submitForm = async () => {
             .eq('user_id', user.value?.sub)
 
         if (error) throw error
+        console.log('[1/3] ✅ Wedding record updated.')
 
-        // Success - redirect to invitations list
+        // Step 2: Regenerate OG image (non-fatal)
+        console.log('[2/3] Regenerating OG thumbnail...')
+        try {
+            // If slug changed, remove the old OG image first
+            if (originalSlug.value && originalSlug.value !== form.value.slug) {
+                console.log(`[2/3] Slug changed (${originalSlug.value} → ${form.value.slug}), removing old OG image...`)
+                const { error: removeError } = await supabase.storage
+                    .from('images')
+                    .remove([`invitations/${originalSlug.value}/og.png`])
+                if (removeError) {
+                    console.warn('[2/3] ⚠️ Failed to remove old OG image:', removeError.message)
+                } else {
+                    console.log('[2/3] Old OG image removed.')
+                }
+            }
+
+            const arrayBuffer = await $fetch<ArrayBuffer>('/api/generate-og', {
+                method: 'POST',
+                body: { bride: form.value.bride_callname, groom: form.value.groom_callname },
+                responseType: 'arrayBuffer',
+            })
+            console.log('[2/3] OG image generated. Size:', arrayBuffer.byteLength, 'bytes. Uploading...')
+            const file = new Blob([arrayBuffer], { type: 'image/png' })
+            const { error: uploadError } = await supabase.storage
+                .from('images')
+                .upload(`invitations/${form.value.slug}/og.png`, file, {
+                    contentType: 'image/png',
+                    upsert: true,
+                })
+            if (uploadError) {
+                console.warn('[2/3] ❌ OG image upload failed:', uploadError.message)
+            } else {
+                console.log('[2/3] ✅ OG image uploaded successfully.')
+                originalSlug.value = form.value.slug
+            }
+        } catch (ogErr: any) {
+            console.warn('[2/3] ❌ OG image generation failed:', ogErr?.message ?? ogErr)
+        }
+
+        // Step 3: Redirect
+        console.log('[3/3] Redirecting to invitations list...')
+        console.groupEnd()
         await router.push('/dashboard/invitations')
     } catch (err: any) {
+        console.error('[1/3] ❌ Failed to update wedding record:', err)
+        console.groupEnd()
         if (err.code === '23505') {
             errors.value.slug = 'This slug is already taken. Please choose another one.'
         } else {
             alert(err.message || t('error.generic'))
         }
-        console.error('Error updating invitation:', err)
     } finally {
         saving.value = false
     }
@@ -364,10 +409,6 @@ const loadMockData = (mockName: string) => {
 
 const mockDataNames = getMockInvitationNames()
 
-// Computed
-const jsonPreview = computed(() => {
-    return JSON.stringify(form.value, null, 2)
-})
 </script>
 
 <template>
@@ -384,38 +425,7 @@ const jsonPreview = computed(() => {
                     <h1 class="text-3xl font-bold">{{ t('invitation.edit.title') }}</h1>
                     <p class="text-base-content/70 mt-1">{{ t('invitation.edit.subtitle') }}</p>
                 </div>
-                <div class="flex gap-2">
-                    <button type="button" @click="showPreviewModal = true" class="btn btn-primary btn-sm">
-                        <Eye :size="16" />
-                        {{ t('invitation.actions.preview') }}
-                    </button>
-                    <button type="button" @click="showJsonPreview = !showJsonPreview" class="btn btn-ghost btn-sm">
-                        <Eye :size="16" />
-                        {{ t('invitation.create.viewJson') }}
-                    </button>
-                </div>
-            </div>
 
-            <!-- Preview Modal -->
-            <div v-if="showPreviewModal" class="modal modal-open">
-                <div class="modal-box max-w-7xl h-[90vh] p-0 flex flex-col">
-                    <div class="flex justify-between items-center p-4 border-b border-base-300">
-                        <h3 class="font-bold text-lg">{{ t('invitation.actions.preview') }}</h3>
-                        <button type="button" @click="showPreviewModal = false" class="btn btn-ghost btn-sm btn-circle">
-                            <X :size="20" />
-                        </button>
-                    </div>
-
-                    <div class="flex-1 bg-base-200 flex items-center justify-center">
-                        <!-- Iframe or preview content will go here -->
-                        <div class="text-center text-base-content/60">
-                            <Eye :size="64" class="mx-auto mb-4 opacity-30" />
-                            <p class="text-lg">Preview coming soon</p>
-                            <p class="text-sm mt-2">The invitation preview will appear here</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-backdrop" @click="showPreviewModal = false"></div>
             </div>
 
             <!-- Theme Selection Modal -->
@@ -465,19 +475,6 @@ const jsonPreview = computed(() => {
                     </div>
                 </div>
                 <div class="modal-backdrop" @click="showThemeModal = false"></div>
-            </div>
-
-            <!-- JSON Preview Modal -->
-            <div v-if="showJsonPreview" class="card bg-base-200 shadow-xl">
-                <div class="card-body">
-                    <div class="flex justify-between items-center mb-2">
-                        <h3 class="font-bold">{{ t('invitation.create.jsonPreview') }}</h3>
-                        <button type="button" @click="showJsonPreview = false" class="btn btn-ghost btn-sm">{{
-                            t('common.close')
-                        }}</button>
-                    </div>
-                    <pre class="text-xs overflow-auto max-h-96 bg-base-100 p-4 rounded">{{ jsonPreview }}</pre>
-                </div>
             </div>
 
             <!-- Form -->
@@ -1130,16 +1127,19 @@ const jsonPreview = computed(() => {
                             <NuxtLink to="/dashboard/invitations" class="btn btn-ghost">
                                 {{ t('common.cancel') }}
                             </NuxtLink>
-
-                            <button type="submit" class="btn btn-primary" :disabled="saving">
-                                <Save v-if="!saving" :size="20" />
-                                <span v-if="saving" class="loading loading-spinner"></span>
-                                {{ saving ? t('common.saving') : t('common.save') }}
-                            </button>
                         </div>
                     </div>
                 </div>
             </form>
         </template>
+    </div>
+
+    <!-- Floating Save Button -->
+    <div class="fixed bottom-6 right-6 z-50">
+        <button type="button" @click="submitForm" class="btn btn-primary shadow-lg" :disabled="saving">
+            <Save v-if="!saving" :size="20" />
+            <span v-if="saving" class="loading loading-spinner"></span>
+            {{ saving ? t('common.saving') : t('common.save') }}
+        </button>
     </div>
 </template>

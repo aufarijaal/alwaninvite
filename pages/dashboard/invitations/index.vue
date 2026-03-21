@@ -50,19 +50,39 @@ const fetchInvitations = async () => {
 const deleteInvitation = async (id: number) => {
   if (!confirm(t('invitation.confirmDelete'))) return
 
+  const invitation = invitations.value.find(inv => inv.id === id)
+  console.group(`[Delete Invitation] id: ${id}, slug: "${invitation?.slug}"`)
+
   try {
+    console.log('[1/2] Deleting wedding record...')
     const { error: deleteError } = await supabase
       .from('weddings')
       .delete()
       .eq('id', id)
 
     if (deleteError) throw deleteError
+    console.log('[1/2] ✅ Wedding record deleted.')
 
+    // Remove OG image from storage (non-fatal)
+    if (invitation?.slug) {
+      console.log('[2/2] Removing OG image from storage...')
+      const { error: storageError } = await supabase.storage
+        .from('images')
+        .remove([`invitations/${invitation.slug}/og.png`])
+      if (storageError) {
+        console.warn('[2/2] ❌ Failed to remove OG image:', storageError.message)
+      } else {
+        console.log('[2/2] ✅ OG image removed.')
+      }
+    }
+
+    console.groupEnd()
     // Remove from list
     invitations.value = invitations.value.filter(inv => inv.id !== id)
   } catch (err: any) {
+    console.error('[1/2] ❌ Failed to delete invitation:', err)
+    console.groupEnd()
     alert(err.message || t('error.generic'))
-    console.error('Error deleting invitation:', err)
   }
 }
 

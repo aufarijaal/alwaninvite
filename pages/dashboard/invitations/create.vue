@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { Plus, Trash2, Save, Music, Play, Pause, X, ImageOff } from 'lucide-vue-next'
+import { Plus, Trash2, Save, Music, Play, Pause, X, ImageOff, Eye } from 'lucide-vue-next'
 import type { Database } from '~/types/database.types'
+import { mockInvitations } from '~/utils/mockInvitationData'
 
 definePageMeta({
     middleware: 'auth',
@@ -167,8 +168,11 @@ const submitForm = async () => {
     }
 
     saving.value = true
+    console.group(`[Create Invitation] slug: "${form.value.slug}"`)
 
     try {
+        // Step 1: Insert wedding record
+        console.log('[1/3] Inserting wedding record...')
         const { data, error } = await supabase
             .from('weddings')
             .insert({
@@ -204,16 +208,45 @@ const submitForm = async () => {
             .single()
 
         if (error) throw error
+        console.log('[1/3] ✅ Wedding record created. ID:', data?.id)
 
-        // Success - redirect to invitations list
+        // Step 2: Generate OG image (non-fatal)
+        console.log('[2/3] Generating OG thumbnail...')
+        try {
+            const arrayBuffer = await $fetch<ArrayBuffer>('/api/generate-og', {
+                method: 'POST',
+                body: { bride: form.value.bride_callname, groom: form.value.groom_callname },
+                responseType: 'arrayBuffer',
+            })
+            console.log('[2/3] OG image generated. Size:', arrayBuffer.byteLength, 'bytes. Uploading...')
+            const file = new Blob([arrayBuffer], { type: 'image/png' })
+            const { error: uploadError } = await supabase.storage
+                .from('images')
+                .upload(`invitations/${form.value.slug}/og.png`, file, {
+                    contentType: 'image/png',
+                    upsert: true,
+                })
+            if (uploadError) {
+                console.warn('[2/3] ❌ OG image upload failed:', uploadError.message)
+            } else {
+                console.log('[2/3] ✅ OG image uploaded successfully.')
+            }
+        } catch (ogErr: any) {
+            console.warn('[2/3] ❌ OG image generation failed:', ogErr?.message ?? ogErr)
+        }
+
+        // Step 3: Redirect
+        console.log('[3/3] Redirecting to invitations list...')
+        console.groupEnd()
         await router.push('/dashboard/invitations')
     } catch (err: any) {
+        console.error('[1/3] ❌ Failed to create wedding record:', err)
+        console.groupEnd()
         if (err.code === '23505') {
             errors.value.slug = 'This slug is already taken. Please choose another one.'
         } else {
             alert(err.message || t('error.generic'))
         }
-        console.error('Error creating invitation:', err)
     } finally {
         saving.value = false
     }
@@ -299,6 +332,15 @@ const removeSelectedAudio = () => {
     form.value.audio_id = null
 }
 
+// Fill form with mock data
+const mockExamples = Object.keys(mockInvitations) as Array<keyof typeof mockInvitations>
+
+const fillWithMockData = (index: number) => {
+    const key = mockExamples[index]
+    const mock = mockInvitations[key]
+    Object.assign(form.value, { ...mock })
+}
+
 // Cleanup audio on unmount
 onUnmounted(() => {
     if (audioElement.value) {
@@ -314,6 +356,15 @@ onUnmounted(() => {
         <div>
             <h1 class="text-3xl font-bold">{{ t('invitation.create.title') }}</h1>
             <p class="text-base-content/70 mt-1">{{ t('invitation.create.subtitle') }}</p>
+        </div>
+
+        <!-- Mock Data Examples -->
+        <div class="flex flex-wrap gap-2 items-center">
+            <span class="text-sm text-base-content/60">Fill with example:</span>
+            <button v-for="(key, index) in mockExamples" :key="key" type="button" @click="fillWithMockData(index)"
+                class="btn btn-xs btn-outline">
+                Example {{ index + 1 }}
+            </button>
         </div>
 
 
@@ -338,7 +389,7 @@ onUnmounted(() => {
                             <div v-else class="w-full h-full flex flex-col items-center justify-center">
                                 <ImageOff :size="48" class="opacity-20" />
                                 <span class="text-sm text-base-content/30 mt-2">{{ t('invitation.previewUnavailable')
-                                }}</span>
+                                    }}</span>
                             </div>
                         </figure>
                         <div class="card-body p-4">
@@ -646,7 +697,7 @@ onUnmounted(() => {
                                         :class="{ 'input-error': errors[`event_title_${index}`] }" />
                                     <label v-if="errors[`event_title_${index}`]" class="label">
                                         <span class="label-text-alt text-error">{{ errors[`event_title_${index}`]
-                                            }}</span>
+                                        }}</span>
                                     </label>
                                 </div>
 
@@ -659,7 +710,7 @@ onUnmounted(() => {
                                         :class="{ 'input-error': errors[`event_start_${index}`] }" />
                                     <label v-if="errors[`event_start_${index}`]" class="label">
                                         <span class="label-text-alt text-error">{{ errors[`event_start_${index}`]
-                                            }}</span>
+                                        }}</span>
                                     </label>
                                 </div>
 
@@ -682,14 +733,14 @@ onUnmounted(() => {
                                         :class="{ 'input-error': errors[`event_location_${index}`] }" />
                                     <label v-if="errors[`event_location_${index}`]" class="label">
                                         <span class="label-text-alt text-error">{{ errors[`event_location_${index}`]
-                                            }}</span>
+                                        }}</span>
                                     </label>
                                 </div>
 
                                 <div class="form-control">
                                     <label class="label">
                                         <span class="label-text font-medium">{{ t('invitation.fields.locationAddress')
-                                            }}</span>
+                                        }}</span>
                                     </label>
                                     <input v-model="event.location_address" type="text"
                                         :placeholder="t('invitation.placeholders.locationAddress')"
@@ -743,7 +794,7 @@ onUnmounted(() => {
                                 <div class="form-control">
                                     <label class="label">
                                         <span class="label-text font-medium">{{ t('invitation.fields.giftType')
-                                            }}</span>
+                                        }}</span>
                                     </label>
                                     <select v-model="gift.type" class="select select-bordered">
                                         <option value="bank">{{ t('invitation.giftTypes.bank') }}</option>
@@ -757,7 +808,7 @@ onUnmounted(() => {
                                 <div class="form-control">
                                     <label class="label">
                                         <span class="label-text font-medium">{{ t('invitation.fields.provider')
-                                            }}</span>
+                                        }}</span>
                                     </label>
                                     <input v-model="gift.provider" type="text"
                                         :placeholder="t('invitation.placeholders.provider')"
@@ -767,7 +818,7 @@ onUnmounted(() => {
                                 <div class="form-control">
                                     <label class="label">
                                         <span class="label-text font-medium">{{ t('invitation.fields.accountName')
-                                            }}</span>
+                                        }}</span>
                                     </label>
                                     <input v-model="gift.account_name" type="text"
                                         :placeholder="t('invitation.placeholders.accountName')"
@@ -777,7 +828,7 @@ onUnmounted(() => {
                                 <div class="form-control">
                                     <label class="label">
                                         <span class="label-text font-medium">{{ t('invitation.fields.accountNumber')
-                                            }}</span>
+                                        }}</span>
                                     </label>
                                     <input v-model="gift.account_number" type="text"
                                         :placeholder="t('invitation.placeholders.accountNumber')"

@@ -44,11 +44,10 @@ const baseUrl = `${requestUrl.protocol}//${requestUrl.host}`
 
 const ogImageUrl = computed(() => {
     if (!wedding.value) return `${baseUrl}/api/og`
-    const params = new URLSearchParams({
-        groom: wedding.value.groom_callname ?? '',
-        bride: wedding.value.bride_callname ?? '',
-    })
-    return `${baseUrl}/api/og?${params.toString()}`
+    const { data } = supabase.storage
+        .from('images')
+        .getPublicUrl(`invitations/${slug}/og.png`)
+    return data.publicUrl
 })
 
 const pageTitle = computed(() =>

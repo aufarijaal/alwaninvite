@@ -4,12 +4,11 @@ import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 
 export default defineEventHandler(async (event) => {
-  const query = getQuery(event);
+  const body = await readBody(event);
 
-  const bride = (query.bride as string) || "Fulanah";
-  const groom = (query.groom as string) || "Fulan";
+  const bride = (body.bride as string) || "Fulanah";
+  const groom = (body.groom as string) || "Fulan";
 
-  // Load font
   const fontPath = join(process.cwd(), "public/fonts/PlayfairDisplay-Bold.ttf");
   const fontData = await readFile(fontPath);
 
@@ -28,30 +27,50 @@ export default defineEventHandler(async (event) => {
           color: "#2c2c2c",
           fontFamily: "Playfair",
           textAlign: "center",
-          padding: "40px",
+          padding: "48px",
         },
         children: [
-          // Title
           {
             type: "div",
             props: {
               children: "Wedding Invitation",
               style: {
-                fontSize: 36,
-                marginBottom: 20,
+                fontSize: 30,
+                marginBottom: 24,
+                opacity: 0.6,
+                letterSpacing: "0.08em",
               },
             },
           },
-
-          // Names
           {
             type: "div",
             props: {
-              children: `${bride} & ${groom}`,
+              children: bride,
               style: {
-                fontSize: 64,
+                fontSize: 60,
                 fontWeight: "bold",
-                marginBottom: 30,
+                marginBottom: 8,
+              },
+            },
+          },
+          {
+            type: "div",
+            props: {
+              children: "&",
+              style: {
+                fontSize: 36,
+                marginBottom: 8,
+                opacity: 0.5,
+              },
+            },
+          },
+          {
+            type: "div",
+            props: {
+              children: groom,
+              style: {
+                fontSize: 60,
+                fontWeight: "bold",
               },
             },
           },
@@ -76,7 +95,7 @@ export default defineEventHandler(async (event) => {
   const png = resvg.render().asPng();
 
   setHeader(event, "Content-Type", "image/png");
-  setHeader(event, "Cache-Control", "public, max-age=86400");
+  setHeader(event, "Cache-Control", "no-store");
 
   return png;
 });

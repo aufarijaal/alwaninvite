@@ -3,6 +3,7 @@ import { Edit, Eye, Trash2, Globe, Users } from 'lucide-vue-next'
 import type { Database } from '~/types/database.types'
 
 const { t } = useI18n()
+const supabase = useSupabaseClient()
 
 interface Props {
     invitation: Database['public']['Tables']['weddings']['Row']
@@ -25,10 +26,34 @@ const formatDate = (dateString: string) => {
 const handleDelete = () => {
     emit('delete', props.invitation.id)
 }
+
+const thumbnailUrl = computed(() => {
+    const { data } = supabase.storage
+        .from('images')
+        .getPublicUrl(`invitations/${props.invitation.slug}/og.png`)
+    return data.publicUrl
+})
+
+const imgError = ref(false)
 </script>
 
 <template>
     <div class="card bg-base-100 shadow-xl hover:shadow-2xl transition-shadow">
+        <!-- OG Thumbnail -->
+        <figure class="relative h-40 bg-base-200 overflow-hidden rounded-t-2xl">
+            <img v-if="!imgError" :src="thumbnailUrl" :alt="invitation.title || invitation.slug"
+                class="w-full h-full object-cover" @error="imgError = true" />
+            <div v-else class="w-full h-full flex flex-col items-center justify-center gap-1 opacity-30">
+                <Eye :size="32" />
+                <span class="text-xs">No preview</span>
+            </div>
+            <div :class="[
+                'absolute top-2 right-2 badge badge-sm',
+                invitation.published ? 'badge-success' : 'badge-ghost'
+            ]">
+                {{ invitation.published ? t('invitation.status.active') : t('invitation.status.draft') }}
+            </div>
+        </figure>
         <div class="card-body">
             <!-- Header -->
             <div class="flex justify-between items-start mb-3">
@@ -39,12 +64,6 @@ const handleDelete = () => {
                     <div class="text-sm text-base-content/60">
                         {{ formatDate(invitation.created_at) }}
                     </div>
-                </div>
-                <div :class="[
-                    'badge',
-                    invitation.published ? 'badge-success' : 'badge-ghost'
-                ]">
-                    {{ invitation.published ? t('invitation.status.active') : t('invitation.status.draft') }}
                 </div>
             </div>
 

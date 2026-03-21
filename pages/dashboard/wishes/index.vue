@@ -90,7 +90,7 @@ const copyWhatsapp = async (wish: Database['public']['Tables']['wishes']['Row'])
     const groomName = weddingData?.groom_callname ?? ''
     const brideName = weddingData?.bride_callname ?? ''
     const slug = weddingData?.slug ?? ''
-    const inviteUrl = `${window.location.origin}/invite/${slug}`
+    const inviteUrl = `${window.location.origin}/invite/${slug}?to=${encodeURIComponent(wish.guest_name).replace(/%20/g, '+')}`
 
     const message =
         `Assalamu'alaikum Wr. Wb.\n\n` +
@@ -103,7 +103,7 @@ const copyWhatsapp = async (wish: Database['public']['Tables']['wishes']['Row'])
 
     await navigator.clipboard.writeText(message)
     copiedWishId.value = wish.id
-    setTimeout(() => { copiedWishId.value = null }, 2000)
+    setTimeout(() => { copiedWishId.value = null }, 3000)
 }
 
 // ── Debounce search ─────────────────────────────────────
@@ -336,11 +336,11 @@ onMounted(() => {
                     <UserPlus :size="16" />
                     {{ t('wishes.addGuests') }}
                 </button>
-                <button @click="exportToCSV" class="btn btn-outline btn-sm gap-2"
+                <!-- <button @click="exportToCSV" class="btn btn-outline btn-sm gap-2"
                     :disabled="filteredWishes.length === 0">
                     <Download :size="16" />
                     {{ t('wishes.exportCSV') }}
-                </button>
+                </button> -->
             </div>
         </div>
 
@@ -367,7 +367,7 @@ onMounted(() => {
                 <!-- Wedding selector -->
                 <div class="form-control max-w-sm mb-4">
                     <label class="label"><span class="label-text font-medium">{{ t('wishes.filterByWedding')
-                    }}</span></label>
+                            }}</span></label>
                     <select v-model="addGuestsWeddingId" class="select select-bordered">
                         <option value="">{{ t('wishes.selectWeddingFirst') }}</option>
                         <option v-for="w in weddings" :key="w.id" :value="w.id">{{ (w as any).title }}</option>
@@ -383,7 +383,7 @@ onMounted(() => {
                     <!-- Input method toggle -->
                     <div class="form-control mb-4">
                         <label class="label"><span class="label-text font-medium">{{ t('wishes.inputMethod')
-                        }}</span></label>
+                                }}</span></label>
                         <div class="join">
                             <button class="join-item btn btn-sm"
                                 :class="inputMethod === 'textarea' ? 'btn-active' : 'btn-outline'"
@@ -498,7 +498,7 @@ onMounted(() => {
                     </div>
                     <div class="form-control">
                         <label class="label"><span class="label-text">{{ t('wishes.filterByAttendance')
-                        }}</span></label>
+                                }}</span></label>
                         <select v-model="selectedAttendance" class="select select-bordered">
                             <option value="all">{{ t('wishes.allAttendance') }}</option>
                             <option value="hadir">{{ t('wishes.attendance.yes') }}</option>
@@ -620,14 +620,23 @@ onMounted(() => {
                                         </template>
                                         <!-- Actions -->
                                         <template v-else-if="cell.column.id === 'actions'">
-                                            <div class="flex gap-1">
-                                                <button class="btn btn-ghost btn-sm btn-circle"
-                                                    :class="copiedWishId === row.original.id ? 'text-success' : 'text-base-content/60'"
-                                                    :title="t('wishes.copyWhatsapp')"
-                                                    @click="copyWhatsapp(row.original)">
-                                                    <Check v-if="copiedWishId === row.original.id" :size="16" />
-                                                    <Copy v-else :size="16" />
-                                                </button>
+                                            <div class="flex gap-1 items-center">
+                                                <div class="tooltip tooltip-left"
+                                                    :data-tip="copiedWishId === row.original.id ? t('wishes.whatsappCopied') : t('wishes.copyWhatsapp')">
+                                                    <button
+                                                        class="btn btn-sm gap-1.5 transition-all duration-200 min-w-[4.5rem]"
+                                                        :class="copiedWishId === row.original.id
+                                                            ? 'btn-success'
+                                                            : 'btn-outline border-green-500 text-green-600 hover:bg-green-500 hover:border-green-500 hover:text-white dark:text-green-400 dark:border-green-500 dark:hover:bg-green-600'"
+                                                        @click="copyWhatsapp(row.original)">
+                                                        <Check v-if="copiedWishId === row.original.id" :size="14" />
+                                                        <Copy v-else :size="14" />
+                                                        <span class="text-xs font-medium">
+                                                            {{ copiedWishId === row.original.id ?
+                                                                t('wishes.whatsappCopied') : 'Copy WA' }}
+                                                        </span>
+                                                    </button>
+                                                </div>
                                                 <button class="btn btn-ghost btn-sm btn-circle text-error"
                                                     @click="deleteWish(row.original.id)">
                                                     <Trash2 :size="16" />
