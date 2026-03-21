@@ -285,7 +285,7 @@ const submitForm = async () => {
 
             const arrayBuffer = await $fetch<ArrayBuffer>('/api/generate-og', {
                 method: 'POST',
-                body: { bride: form.value.bride_callname, groom: form.value.groom_callname },
+                body: { bride: form.value.bride_callname, groom: form.value.groom_callname, theme: selectedTheme.value?.name ?? '' },
                 responseType: 'arrayBuffer',
             })
             console.log('[2/3] OG image generated. Size:', arrayBuffer.byteLength, 'bytes. Uploading...')
@@ -449,7 +449,7 @@ const mockDataNames = getMockInvitationNames()
                                     <ImageOff :size="48" class="opacity-20" />
                                     <span class="text-sm text-base-content/30 mt-2">{{
                                         t('invitation.previewUnavailable')
-                                    }}</span>
+                                        }}</span>
                                 </div>
                             </figure>
                             <div class="card-body p-4">
@@ -766,7 +766,7 @@ const mockDataNames = getMockInvitationNames()
                                             :class="{ 'input-error': errors[`event_title_${index}`] }" />
                                         <label v-if="errors[`event_title_${index}`]" class="label">
                                             <span class="label-text-alt text-error">{{ errors[`event_title_${index}`]
-                                                }}</span>
+                                            }}</span>
                                         </label>
                                     </div>
 
@@ -780,14 +780,14 @@ const mockDataNames = getMockInvitationNames()
                                             :class="{ 'input-error': errors[`event_start_${index}`] }" />
                                         <label v-if="errors[`event_start_${index}`]" class="label">
                                             <span class="label-text-alt text-error">{{ errors[`event_start_${index}`]
-                                                }}</span>
+                                            }}</span>
                                         </label>
                                     </div>
 
                                     <div class="form-control">
                                         <label class="label">
                                             <span class="label-text font-medium">{{ t('invitation.fields.endTime')
-                                                }}</span>
+                                            }}</span>
                                         </label>
                                         <input v-model="event.end_time" type="datetime-local"
                                             class="input input-bordered" />
@@ -805,7 +805,7 @@ const mockDataNames = getMockInvitationNames()
                                             :class="{ 'input-error': errors[`event_location_${index}`] }" />
                                         <label v-if="errors[`event_location_${index}`]" class="label">
                                             <span class="label-text-alt text-error">{{ errors[`event_location_${index}`]
-                                                }}</span>
+                                            }}</span>
                                         </label>
                                     </div>
 
@@ -813,7 +813,7 @@ const mockDataNames = getMockInvitationNames()
                                         <label class="label">
                                             <span class="label-text font-medium">{{
                                                 t('invitation.fields.locationAddress')
-                                            }}</span>
+                                                }}</span>
                                         </label>
                                         <input v-model="event.location_address" type="text"
                                             :placeholder="t('invitation.placeholders.locationAddress')"
@@ -823,7 +823,7 @@ const mockDataNames = getMockInvitationNames()
                                     <div class="form-control md:col-span-2">
                                         <label class="label">
                                             <span class="label-text font-medium">{{ t('invitation.fields.mapUrl')
-                                                }}</span>
+                                            }}</span>
                                         </label>
                                         <input v-model="event.map_url" type="url"
                                             :placeholder="t('invitation.placeholders.mapUrl')"
@@ -842,7 +842,7 @@ const mockDataNames = getMockInvitationNames()
                             <div>
                                 <h2 class="card-title text-xl">{{ t('invitation.steps.gifts') }}</h2>
                                 <p class="text-sm text-base-content/60 mt-1">{{ t('invitation.helpers.giftsOptional')
-                                    }}</p>
+                                }}</p>
                             </div>
                             <button type="button" @click="addGift" class="btn btn-primary btn-sm">
                                 <Plus :size="16" />
@@ -869,7 +869,7 @@ const mockDataNames = getMockInvitationNames()
                                     <div class="form-control">
                                         <label class="label">
                                             <span class="label-text font-medium">{{ t('invitation.fields.giftType')
-                                                }}</span>
+                                            }}</span>
                                         </label>
                                         <select v-model="gift.type" class="select select-bordered">
                                             <option value="bank">{{ t('invitation.giftTypes.bank') }}</option>
@@ -883,7 +883,7 @@ const mockDataNames = getMockInvitationNames()
                                     <div class="form-control">
                                         <label class="label">
                                             <span class="label-text font-medium">{{ t('invitation.fields.provider')
-                                                }}</span>
+                                            }}</span>
                                         </label>
                                         <input v-model="gift.provider" type="text"
                                             :placeholder="t('invitation.placeholders.provider')"
@@ -893,7 +893,7 @@ const mockDataNames = getMockInvitationNames()
                                     <div class="form-control">
                                         <label class="label">
                                             <span class="label-text font-medium">{{ t('invitation.fields.accountName')
-                                                }}</span>
+                                            }}</span>
                                         </label>
                                         <input v-model="gift.account_name" type="text"
                                             :placeholder="t('invitation.placeholders.accountName')"
@@ -903,7 +903,7 @@ const mockDataNames = getMockInvitationNames()
                                     <div class="form-control">
                                         <label class="label">
                                             <span class="label-text font-medium">{{ t('invitation.fields.accountNumber')
-                                                }}</span>
+                                            }}</span>
                                         </label>
                                         <input v-model="gift.account_number" type="text"
                                             :placeholder="t('invitation.placeholders.accountNumber')"
@@ -954,7 +954,7 @@ const mockDataNames = getMockInvitationNames()
                             <div class="form-control">
                                 <label class="label">
                                     <span class="label-text font-medium">{{ t('invitation.fields.streamStartTime')
-                                        }}</span>
+                                    }}</span>
                                 </label>
                                 <input v-model="form.livestream_start_time" type="time" class="input input-bordered" />
                             </div>

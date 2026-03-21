@@ -215,7 +215,7 @@ const submitForm = async () => {
         try {
             const arrayBuffer = await $fetch<ArrayBuffer>('/api/generate-og', {
                 method: 'POST',
-                body: { bride: form.value.bride_callname, groom: form.value.groom_callname },
+                body: { bride: form.value.bride_callname, groom: form.value.groom_callname, theme: selectedTheme.value?.name ?? '' },
                 responseType: 'arrayBuffer',
             })
             console.log('[2/3] OG image generated. Size:', arrayBuffer.byteLength, 'bytes. Uploading...')
@@ -389,7 +389,7 @@ onUnmounted(() => {
                             <div v-else class="w-full h-full flex flex-col items-center justify-center">
                                 <ImageOff :size="48" class="opacity-20" />
                                 <span class="text-sm text-base-content/30 mt-2">{{ t('invitation.previewUnavailable')
-                                    }}</span>
+                                }}</span>
                             </div>
                         </figure>
                         <div class="card-body p-4">
@@ -697,7 +697,7 @@ onUnmounted(() => {
                                         :class="{ 'input-error': errors[`event_title_${index}`] }" />
                                     <label v-if="errors[`event_title_${index}`]" class="label">
                                         <span class="label-text-alt text-error">{{ errors[`event_title_${index}`]
-                                        }}</span>
+                                            }}</span>
                                     </label>
                                 </div>
 
@@ -710,7 +710,7 @@ onUnmounted(() => {
                                         :class="{ 'input-error': errors[`event_start_${index}`] }" />
                                     <label v-if="errors[`event_start_${index}`]" class="label">
                                         <span class="label-text-alt text-error">{{ errors[`event_start_${index}`]
-                                        }}</span>
+                                            }}</span>
                                     </label>
                                 </div>
 
@@ -733,14 +733,14 @@ onUnmounted(() => {
                                         :class="{ 'input-error': errors[`event_location_${index}`] }" />
                                     <label v-if="errors[`event_location_${index}`]" class="label">
                                         <span class="label-text-alt text-error">{{ errors[`event_location_${index}`]
-                                        }}</span>
+                                            }}</span>
                                     </label>
                                 </div>
 
                                 <div class="form-control">
                                     <label class="label">
                                         <span class="label-text font-medium">{{ t('invitation.fields.locationAddress')
-                                        }}</span>
+                                            }}</span>
                                     </label>
                                     <input v-model="event.location_address" type="text"
                                         :placeholder="t('invitation.placeholders.locationAddress')"
@@ -794,7 +794,7 @@ onUnmounted(() => {
                                 <div class="form-control">
                                     <label class="label">
                                         <span class="label-text font-medium">{{ t('invitation.fields.giftType')
-                                        }}</span>
+                                            }}</span>
                                     </label>
                                     <select v-model="gift.type" class="select select-bordered">
                                         <option value="bank">{{ t('invitation.giftTypes.bank') }}</option>
@@ -808,7 +808,7 @@ onUnmounted(() => {
                                 <div class="form-control">
                                     <label class="label">
                                         <span class="label-text font-medium">{{ t('invitation.fields.provider')
-                                        }}</span>
+                                            }}</span>
                                     </label>
                                     <input v-model="gift.provider" type="text"
                                         :placeholder="t('invitation.placeholders.provider')"
@@ -818,7 +818,7 @@ onUnmounted(() => {
                                 <div class="form-control">
                                     <label class="label">
                                         <span class="label-text font-medium">{{ t('invitation.fields.accountName')
-                                        }}</span>
+                                            }}</span>
                                     </label>
                                     <input v-model="gift.account_name" type="text"
                                         :placeholder="t('invitation.placeholders.accountName')"
@@ -828,7 +828,7 @@ onUnmounted(() => {
                                 <div class="form-control">
                                     <label class="label">
                                         <span class="label-text font-medium">{{ t('invitation.fields.accountNumber')
-                                        }}</span>
+                                            }}</span>
                                     </label>
                                     <input v-model="gift.account_number" type="text"
                                         :placeholder="t('invitation.placeholders.accountNumber')"
