@@ -141,7 +141,7 @@
                         <div class="text-3xl font-bold text-white tabular-nums" style="font-family: Georgia, serif;">{{
                             unit.value }}</div>
                         <div class="text-emerald-300/50 text-xs font-sans mt-1 tracking-widest uppercase">{{ unit.label
-                        }}</div>
+                            }}</div>
                     </div>
                 </div>
             </div>
@@ -286,9 +286,9 @@
                         <div class="bg-emerald-950/60 rounded-xl p-3 flex items-center justify-between gap-3">
                             <div class="min-w-0">
                                 <p class="text-emerald-300/50 text-xs font-sans mb-0.5 truncate">{{ gift.account_name
-                                }}</p>
+                                    }}</p>
                                 <p class="text-white font-mono font-bold tracking-wider text-sm">{{ gift.account_number
-                                }}</p>
+                                    }}</p>
                             </div>
                             <button @click="copyToClipboard(gift.account_number)"
                                 class="flex-shrink-0 text-xs text-emerald-300 hover:text-white font-sans border border-green-700/50 hover:border-emerald-400/50 rounded-lg px-3 py-1.5 transition-colors">
@@ -356,7 +356,7 @@
                             <div
                                 class="w-8 h-8 rounded-full bg-emerald-700/50 border border-emerald-500/30 flex items-center justify-center flex-shrink-0">
                                 <span class="text-emerald-200 text-xs font-bold">{{ wish.guest_name?.[0]?.toUpperCase()
-                                }}</span>
+                                    }}</span>
                             </div>
                             <div class="flex-1 min-w-0">
                                 <div class="flex flex-wrap items-center gap-2 mb-1">
@@ -440,6 +440,7 @@ const audioRef = ref<HTMLAudioElement | null>(null)
 const isPlaying = ref(false)
 
 const openInvitation = () => {
+    document.documentElement.style.overflow = ''
     if (audioRef.value && !isPlaying.value) {
         audioRef.value.play().then(() => { isPlaying.value = true }).catch(() => { })
     }
@@ -459,6 +460,7 @@ const toggleAudio = () => {
 }
 
 onMounted(() => {
+    document.documentElement.style.overflow = 'hidden'
     if (props.invitation?.autoplay && audioRef.value) {
         audioRef.value.play().then(() => {
             isPlaying.value = true
@@ -466,6 +468,10 @@ onMounted(() => {
             // autoplay blocked by browser — user can tap the FAB
         })
     }
+})
+
+onUnmounted(() => {
+    document.documentElement.style.overflow = ''
 })
 
 // ── Date helpers ───────────────────────────────────────
