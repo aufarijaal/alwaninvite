@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Download, Trash2, Calendar, Users, MessageSquare, CheckCircle, XCircle, Clock, Plus, UserPlus, ClipboardList, Copy, Check, ArrowUp, ArrowDown, ArrowUpDown } from 'lucide-vue-next'
+import { Download, Trash2, Calendar, Users, MessageSquare, CheckCircle, XCircle, Clock, Plus, UserPlus, ClipboardList, Copy, Check, ArrowUp, ArrowDown, ArrowUpDown, Settings2, RotateCcw } from 'lucide-vue-next'
 import { useVueTable, getCoreRowModel, getSortedRowModel, createColumnHelper, FlexRender, type SortingState, type RowSelectionState } from '@tanstack/vue-table'
 import type { Database } from '~/types/database.types'
 
@@ -86,14 +86,20 @@ const saveGuests = async () => {
 const copiedWishId = ref<number | null>(null)
 
 const copyWhatsapp = async (wish: Database['public']['Tables']['wishes']['Row']) => {
-    const weddingData = (wish as any).weddings as { groom_callname?: string; bride_callname?: string; slug?: string } | null
+    const weddingData = (wish as any).weddings as { id?: number | string; groom_callname?: string; bride_callname?: string; slug?: string } | null
     const groomName = weddingData?.groom_callname ?? ''
     const brideName = weddingData?.bride_callname ?? ''
     const slug = weddingData?.slug ?? ''
     const inviteUrl = `${window.location.origin}/invite/${slug}?to=${encodeURIComponent(wish.guest_name).replace(/%20/g, '+')}`
 
-    const message =
-        `Assalamu'alaikum Wr. Wb.\n\n` +
+    const wedding = weddings.value.find(w => String(w.id) === String(weddingData?.id))
+    const customTemplate = (wedding as any)?.wa_message_template as string | null | undefined
+
+    const message = customTemplate
+        ? customTemplate
+            .replace(/\[guest\]/g, wish.guest_name)
+            .replace(/\[link\]/g, inviteUrl)
+        : `Assalamu'alaikum Wr. Wb.\n\n` +
         `Kepada Yth.\n*${wish.guest_name}*\n\n` +
         `Dengan penuh kebahagiaan, kami mengundang Bapak/Ibu/Saudara/i untuk hadir dalam pernikahan kami:\n\n` +
         `💍 *${groomName}* & *${brideName}*\n\n` +
@@ -104,6 +110,131 @@ const copyWhatsapp = async (wish: Database['public']['Tables']['wishes']['Row'])
     await navigator.clipboard.writeText(message)
     copiedWishId.value = wish.id
     setTimeout(() => { copiedWishId.value = null }, 3000)
+}
+
+// ── WA Message Template dialog ───────────────────────────
+const waTemplateModal = ref<HTMLDialogElement | null>(null)
+const waTemplateTextareaRef = ref<HTMLTextAreaElement | null>(null)
+const waTemplateWeddingId = ref('')
+const waTemplateText = ref('')
+const waTemplateSaving = ref(false)
+const waTemplateSaved = ref(false)
+
+const buildDefaultWaTemplate = (groomName: string, brideName: string) =>
+    `Assalamu'alaikum Wr. Wb.\n\nKepada Yth.\n*[guest]*\n\nDengan penuh kebahagiaan, kami mengundang Bapak/Ibu/Saudara/i untuk hadir dalam pernikahan kami:\n\n💍 *${groomName}* & *${brideName}*\n\nUntuk detail acara, silakan buka undangan digital kami:\n[link]\n\nMerupakan suatu kehormatan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir.\n\nWassalamu'alaikum Wr. Wb.`
+
+const selectedWaWedding = computed(() =>
+    weddings.value.find(w => String(w.id) === String(waTemplateWeddingId.value))
+)
+
+watch(waTemplateWeddingId, (wid) => {
+    if (!wid) { waTemplateText.value = ''; return }
+    const wedding = weddings.value.find(w => String(w.id) === String(wid))
+    const existing = (wedding as any)?.wa_message_template as string | null | undefined
+    waTemplateText.value = existing ||
+        buildDefaultWaTemplate(
+            wedding?.groom_callname || t('wishes.waTemplate.groomPlaceholder'),
+            wedding?.bride_callname || t('wishes.waTemplate.bridePlaceholder')
+        )
+})
+
+const waTemplatePreview = computed(() => {
+    if (!waTemplateText.value) return ''
+    const slug = selectedWaWedding.value?.slug || 'your-wedding'
+    const origin = typeof window !== 'undefined' ? window.location.origin : 'https://example.com'
+    return waTemplateText.value
+        .replace(/\[guest\]/g, 'Ahmad Fauzi')
+        .replace(/\[link\]/g, `${origin}/invite/${slug}?to=Ahmad+Fauzi`)
+})
+
+const openWaTemplateDialog = () => {
+    waTemplateWeddingId.value = ''
+    waTemplateText.value = ''
+    waTemplateSaved.value = false
+    waTemplateModal.value?.showModal()
+}
+
+const insertVariable = (variable: string) => {
+    const textarea = waTemplateTextareaRef.value
+    if (textarea) {
+        const start = textarea.selectionStart ?? waTemplateText.value.length
+        const end = textarea.selectionEnd ?? waTemplateText.value.length
+        waTemplateText.value = waTemplateText.value.slice(0, start) + variable + waTemplateText.value.slice(end)
+        nextTick(() => {
+            textarea.selectionStart = textarea.selectionEnd = start + variable.length
+            textarea.focus()
+        })
+    } else {
+        waTemplateText.value += variable
+    }
+}
+
+const resetWaTemplate = () => {
+    const wedding = selectedWaWedding.value
+    waTemplateText.value = buildDefaultWaTemplate(
+        wedding?.groom_callname || t('wishes.waTemplate.groomPlaceholder'),
+        wedding?.bride_callname || t('wishes.waTemplate.bridePlaceholder')
+    )
+}
+
+const waPrebuiltTemplates = computed(() => {
+    const g = selectedWaWedding.value?.groom_callname || t('wishes.waTemplate.groomPlaceholder')
+    const b = selectedWaWedding.value?.bride_callname || t('wishes.waTemplate.bridePlaceholder')
+    return {
+        id: [
+            {
+                label: t('wishes.waTemplate.prebuilt.id1'),
+                body: `Assalamu'alaikum Wr. Wb.\n\nKepada Yth.\n*[guest]*\n\nDengan penuh kebahagiaan, kami mengundang Bapak/Ibu/Saudara/i untuk hadir dalam pernikahan kami:\n\n💍 *${g}* & *${b}*\n\nUntuk detail acara, silakan buka undangan digital kami:\n[link]\n\nMerupakan suatu kehormatan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir.\n\nWassalamu'alaikum Wr. Wb.`,
+            },
+            {
+                label: t('wishes.waTemplate.prebuilt.id2'),
+                body: `Yth. *[guest]*\n\nKami dengan penuh sukacita mengundang Bapak/Ibu/Saudara/i untuk turut merayakan hari istimewa kami:\n\n💍 Pernikahan *${g}* & *${b}*\n\nKehadiran Anda akan menjadi kebahagiaan tersendiri bagi kami. Untuk informasi lengkap, silakan kunjungi undangan kami:\n[link]\n\nAtas kehadiran dan doa restu Anda, kami ucapkan terima kasih.`,
+            },
+            {
+                label: t('wishes.waTemplate.prebuilt.id3'),
+                body: `Halo *[guest]* 👋\n\nAda kabar bahagia nih — kami akan menikah! 🎉\n\n💍 *${g}* & *${b}*\n\nYuk lihat detail acaranya di undangan digital kami:\n[link]\n\nBakal seneng banget kalau kamu bisa hadir! 😊`,
+            },
+        ],
+        en: [
+            {
+                label: t('wishes.waTemplate.prebuilt.en1'),
+                body: `Assalamu'alaikum Wr. Wb.\n\nDear *[guest]*,\n\nWith great joy, we invite you to celebrate the wedding of:\n\n💍 *${g}* & *${b}*\n\nPlease find the complete details in our digital invitation:\n[link]\n\nIt would be our greatest honour to have you with us on our special day.\n\nWassalamu'alaikum Wr. Wb.`,
+            },
+            {
+                label: t('wishes.waTemplate.prebuilt.en2'),
+                body: `Dear *[guest]*,\n\nWe joyfully invite you to join us in celebrating our wedding:\n\n💍 *${g}* & *${b}*\n\nFor event details, please open our digital invitation:\n[link]\n\nYour presence would mean the world to us. We look forward to celebrating with you!`,
+            },
+            {
+                label: t('wishes.waTemplate.prebuilt.en3'),
+                body: `Hey *[guest]* 👋\n\nExciting news — we're getting married! 🎉\n\n💍 *${g}* & *${b}*\n\nCheck out all the details in our digital invitation:\n[link]\n\nWe'd love to have you there! 😊`,
+            },
+        ],
+    }
+})
+
+const applyPrebuilt = (body: string) => {
+    waTemplateText.value = body
+    nextTick(() => waTemplateTextareaRef.value?.focus())
+}
+
+const saveWaTemplate = async () => {
+    if (!waTemplateWeddingId.value || !waTemplateText.value) return
+    waTemplateSaving.value = true
+    try {
+        const { error } = await supabase
+            .from('weddings')
+            .update({ wa_message_template: waTemplateText.value } as any)
+            .eq('id', waTemplateWeddingId.value)
+        if (error) throw error
+        const idx = weddings.value.findIndex(w => String(w.id) === String(waTemplateWeddingId.value))
+        if (idx !== -1) (weddings.value[idx] as any).wa_message_template = waTemplateText.value
+        waTemplateSaved.value = true
+        setTimeout(() => { waTemplateSaved.value = false }, 3000)
+    } catch (err) {
+        console.error('Error saving WA template:', err)
+    } finally {
+        waTemplateSaving.value = false
+    }
 }
 
 // ── Debounce search ─────────────────────────────────────
@@ -118,7 +249,7 @@ const fetchWeddings = async () => {
     if (!user.value?.sub) return
     const { data } = await supabase
         .from('weddings')
-        .select('id, slug, title, groom_callname, bride_callname, user_id')
+        .select('id, slug, title, groom_callname, bride_callname, user_id, wa_message_template')
         .eq('user_id', user.value.sub)
         .order('created_at', { ascending: false })
     weddings.value = (data as any) || []
@@ -331,7 +462,11 @@ onMounted(() => {
                 <h1 class="text-3xl font-bold">{{ t('wishes.title') }}</h1>
                 <p class="text-base-content/70 mt-1">{{ t('wishes.subtitle') }}</p>
             </div>
-            <div class="flex gap-2">
+            <div class="flex gap-2 flex-wrap">
+                <button @click="openWaTemplateDialog" class="btn btn-outline btn-sm gap-2">
+                    <Settings2 :size="16" />
+                    {{ t('wishes.waTemplate.buttonLabel') }}
+                </button>
                 <button @click="showAddGuests = !showAddGuests" class="btn btn-primary btn-sm gap-2">
                     <UserPlus :size="16" />
                     {{ t('wishes.addGuests') }}
@@ -652,4 +787,116 @@ onMounted(() => {
             </div>
         </div>
     </div>
+
+    <!-- WA Template Dialog -->
+    <dialog ref="waTemplateModal" class="modal">
+        <div class="modal-box max-w-2xl w-full">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="font-bold text-lg flex items-center gap-2">
+                    <Settings2 :size="20" />
+                    {{ t('wishes.waTemplate.title') }}
+                </h3>
+                <form method="dialog">
+                    <button class="btn btn-ghost btn-sm btn-circle">✕</button>
+                </form>
+            </div>
+
+            <!-- Wedding selector -->
+            <div class="form-control mb-4">
+                <label class="label">
+                    <span class="label-text font-medium">{{ t('wishes.waTemplate.selectWedding') }}</span>
+                </label>
+                <select v-model="waTemplateWeddingId" class="select select-bordered">
+                    <option value="">{{ t('wishes.selectWeddingFirst') }}</option>
+                    <option v-for="w in weddings" :key="w.id" :value="String(w.id)">{{ (w as any).title }}</option>
+                </select>
+            </div>
+
+            <template v-if="waTemplateWeddingId">
+                <!-- Variable chips -->
+                <div class="mb-4 p-3 bg-base-200 rounded-xl">
+                    <p class="text-sm font-medium mb-2">{{ t('wishes.waTemplate.insertVariable') }}</p>
+                    <div class="flex gap-2 flex-wrap mb-2">
+                        <button class="btn btn-sm btn-outline gap-1.5" type="button" @click="insertVariable('[guest]')">
+                            <Users :size="14" />
+                            {{ t('wishes.waTemplate.guestName') }}
+                        </button>
+                        <button class="btn btn-sm btn-outline gap-1.5" type="button" @click="insertVariable('[link]')">
+                            <MessageSquare :size="14" />
+                            {{ t('wishes.waTemplate.invitationLink') }}
+                        </button>
+                    </div>
+                    <p class="text-xs text-base-content/50">{{ t('wishes.waTemplate.variableHint') }}</p>
+                </div>
+
+                <!-- Pre-built templates -->
+                <div class="mb-4 p-3 bg-base-200 rounded-xl">
+                    <p class="text-sm font-medium mb-0.5">{{ t('wishes.waTemplate.prebuiltTitle') }}</p>
+                    <p class="text-xs text-base-content/50 mb-3">{{ t('wishes.waTemplate.prebuiltHint') }}</p>
+                    <div class="space-y-2">
+                        <div class="flex items-center gap-2 flex-wrap">
+                            <span class="text-xs text-base-content/50 w-20 shrink-0">{{
+                                t('wishes.waTemplate.prebuilt.sectionId') }}</span>
+                            <button v-for="tpl in waPrebuiltTemplates.id" :key="tpl.label"
+                                class="btn btn-xs btn-outline"
+                                :class="waTemplateText === tpl.body ? 'btn-active btn-primary' : ''" type="button"
+                                @click="applyPrebuilt(tpl.body)">
+                                {{ tpl.label }}
+                            </button>
+                        </div>
+                        <div class="flex items-center gap-2 flex-wrap">
+                            <span class="text-xs text-base-content/50 w-20 shrink-0">{{
+                                t('wishes.waTemplate.prebuilt.sectionEn') }}</span>
+                            <button v-for="tpl in waPrebuiltTemplates.en" :key="tpl.label"
+                                class="btn btn-xs btn-outline"
+                                :class="waTemplateText === tpl.body ? 'btn-active btn-primary' : ''" type="button"
+                                @click="applyPrebuilt(tpl.body)">
+                                {{ tpl.label }}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Message textarea -->
+                <div class="form-control mb-4">
+                    <label class="label">
+                        <span class="label-text font-medium">{{ t('wishes.waTemplate.messageLabel') }}</span>
+                    </label>
+                    <textarea ref="waTemplateTextareaRef" v-model="waTemplateText"
+                        class="textarea textarea-bordered h-48 text-sm"
+                        :placeholder="t('wishes.waTemplate.messagePlaceholder')"></textarea>
+                </div>
+                <div v-if="waTemplatePreview" class="mb-4">
+                    <p class="text-sm font-medium mb-2">{{ t('wishes.waTemplate.preview') }}</p>
+                    <div
+                        class="bg-base-200 rounded-lg p-3 text-sm whitespace-pre-wrap font-mono text-base-content/80 max-h-48 overflow-y-auto border border-base-300">
+                        {{ waTemplatePreview }}</div>
+                </div>
+
+                <!-- Actions -->
+                <div class="flex items-center justify-between pt-2">
+                    <button class="btn btn-ghost btn-sm gap-2" type="button" @click="resetWaTemplate">
+                        <RotateCcw :size="14" />
+                        {{ t('wishes.waTemplate.resetDefault') }}
+                    </button>
+                    <div class="flex items-center gap-2">
+                        <span v-if="waTemplateSaved" class="text-sm text-success font-medium">{{
+                            t('wishes.waTemplate.saved') }}</span>
+                        <button class="btn btn-primary btn-sm gap-2" :disabled="!waTemplateText || waTemplateSaving"
+                            type="button" @click="saveWaTemplate">
+                            <span v-if="waTemplateSaving" class="loading loading-spinner loading-xs"></span>
+                            <Check v-else :size="14" />
+                            {{ waTemplateSaving ? t('common.saving') : t('common.save') }}
+                        </button>
+                    </div>
+                </div>
+            </template>
+
+            <div v-else class="text-sm text-base-content/50 italic py-2">{{ t('wishes.waTemplate.selectWeddingHint') }}
+            </div>
+        </div>
+        <form method="dialog" class="modal-backdrop">
+            <button>close</button>
+        </form>
+    </dialog>
 </template>

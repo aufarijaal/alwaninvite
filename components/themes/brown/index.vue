@@ -140,7 +140,7 @@
                         <div class="text-3xl font-bold text-amber-50 tabular-nums" style="font-family: Georgia, serif;">
                             {{ unit.value }}</div>
                         <div class="text-amber-300/50 text-xs font-sans mt-1 tracking-widest uppercase">{{ unit.label
-                        }}</div>
+                            }}</div>
                     </div>
                 </div>
             </div>
@@ -179,7 +179,8 @@
                                 <p class="text-amber-300/90 text-sm font-medium font-sans mb-0.5">{{
                                     formatEventDate(event.start_time) }}</p>
                                 <p class="text-amber-300/70 text-sm font-medium font-sans mb-3">
-                                    {{ formatTime(event.start_time) }} – {{ formatTime(event.end_time) }} WIB
+                                    {{ formatTime(event.start_time) }}{{ event.type !== 'ceremony' ? ` –
+                                    ${event.end_time ? formatTime(event.end_time) : 'Selesai'}` : '' }} WIB
                                 </p>
                                 <p class="text-amber-50/90 text-base font-semibold mb-0.5">{{ event.location_name }}</p>
                                 <p class="text-amber-300/60 text-sm font-sans leading-relaxed mb-3">{{
@@ -285,7 +286,7 @@
                         <div class="bg-stone-950/60 rounded-xl p-3 flex items-center justify-between gap-3">
                             <div class="min-w-0">
                                 <p class="text-amber-300/50 text-xs font-sans mb-0.5 truncate">{{ gift.account_name
-                                }}</p>
+                                    }}</p>
                                 <p class="text-amber-50 font-mono font-bold tracking-wider text-sm">{{
                                     gift.account_number }}</p>
                             </div>
@@ -356,7 +357,7 @@
                             <div
                                 class="w-8 h-8 rounded-full bg-amber-800/50 border border-amber-600/30 flex items-center justify-center flex-shrink-0">
                                 <span class="text-amber-200 text-xs font-bold">{{ wish.guest_name?.[0]?.toUpperCase()
-                                }}</span>
+                                    }}</span>
                             </div>
                             <div class="flex-1 min-w-0">
                                 <div class="flex flex-wrap items-center gap-2 mb-1">

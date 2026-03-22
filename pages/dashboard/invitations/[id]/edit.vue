@@ -38,6 +38,7 @@ const form = ref({
         title: string
         start_time: string
         end_time: string
+        end_time_open: boolean
         location_name: string
         location_address: string
         map_url: string
@@ -110,7 +111,7 @@ const fetchInvitation = async () => {
             groom_info_1: data.groom_info_1 || '',
             groom_info_2: data.groom_info_2 || '',
             groom_info_3: data.groom_info_3 || '',
-            events: (data.events as any) || [],
+            events: ((data.events as any) || []).map((e: any) => ({ ...e, end_time_open: !e.end_time })),
             gifts: (data.gifts as any) || [],
             livestream_platform: data.livestream_platform,
             livestream_url: data.livestream_url || '',
@@ -160,6 +161,7 @@ const addEvent = () => {
         title: '',
         start_time: '',
         end_time: '',
+        end_time_open: true,
         location_name: '',
         location_address: '',
         map_url: ''
@@ -249,7 +251,7 @@ const submitForm = async () => {
                 groom_info_1: form.value.groom_info_1 || null,
                 groom_info_2: form.value.groom_info_2 || null,
                 groom_info_3: form.value.groom_info_3 || null,
-                events: form.value.events as any,
+                events: form.value.events.map(({ end_time_open, ...event }) => event) as any,
                 gifts: form.value.gifts as any,
                 livestream_platform: form.value.livestream_platform,
                 livestream_url: form.value.livestream_url || null,
@@ -449,7 +451,7 @@ const mockDataNames = getMockInvitationNames()
                                     <ImageOff :size="48" class="opacity-20" />
                                     <span class="text-sm text-base-content/30 mt-2">{{
                                         t('invitation.previewUnavailable')
-                                        }}</span>
+                                    }}</span>
                                 </div>
                             </figure>
                             <div class="card-body p-4">
@@ -747,7 +749,8 @@ const mockDataNames = getMockInvitationNames()
                                             <span class="label-text font-medium">{{ t('invitation.fields.eventType') }}
                                                 *</span>
                                         </label>
-                                        <select v-model="event.type" class="select select-bordered">
+                                        <select v-model="event.type" class="select select-bordered"
+                                            @change="() => { if (event.type === 'ceremony') { event.end_time = ''; event.end_time_open = true } }">
                                             <option value="ceremony">{{ t('invitation.eventTypes.ceremony') }}</option>
                                             <option value="reception">{{ t('invitation.eventTypes.reception') }}
                                             </option>
@@ -766,7 +769,7 @@ const mockDataNames = getMockInvitationNames()
                                             :class="{ 'input-error': errors[`event_title_${index}`] }" />
                                         <label v-if="errors[`event_title_${index}`]" class="label">
                                             <span class="label-text-alt text-error">{{ errors[`event_title_${index}`]
-                                            }}</span>
+                                                }}</span>
                                         </label>
                                     </div>
 
@@ -780,17 +783,24 @@ const mockDataNames = getMockInvitationNames()
                                             :class="{ 'input-error': errors[`event_start_${index}`] }" />
                                         <label v-if="errors[`event_start_${index}`]" class="label">
                                             <span class="label-text-alt text-error">{{ errors[`event_start_${index}`]
-                                            }}</span>
+                                                }}</span>
                                         </label>
                                     </div>
 
-                                    <div class="form-control">
+                                    <div v-if="event.type !== 'ceremony'" class="form-control">
                                         <label class="label">
                                             <span class="label-text font-medium">{{ t('invitation.fields.endTime')
-                                            }}</span>
+                                                }}</span>
                                         </label>
                                         <input v-model="event.end_time" type="datetime-local"
-                                            class="input input-bordered" />
+                                            class="input input-bordered" :disabled="event.end_time_open" />
+                                        <label class="label cursor-pointer justify-start gap-2 pt-1">
+                                            <input v-model="event.end_time_open" type="checkbox"
+                                                class="checkbox checkbox-sm checkbox-primary"
+                                                @change="() => { if (event.end_time_open) event.end_time = '' }" />
+                                            <span class="label-text text-sm">{{ t('invitation.fields.endTimeOpen')
+                                                }}</span>
+                                        </label>
                                     </div>
 
                                     <div class="form-control" :data-field="`event_location_${index}`">
@@ -805,7 +815,7 @@ const mockDataNames = getMockInvitationNames()
                                             :class="{ 'input-error': errors[`event_location_${index}`] }" />
                                         <label v-if="errors[`event_location_${index}`]" class="label">
                                             <span class="label-text-alt text-error">{{ errors[`event_location_${index}`]
-                                            }}</span>
+                                                }}</span>
                                         </label>
                                     </div>
 
@@ -813,7 +823,7 @@ const mockDataNames = getMockInvitationNames()
                                         <label class="label">
                                             <span class="label-text font-medium">{{
                                                 t('invitation.fields.locationAddress')
-                                                }}</span>
+                                            }}</span>
                                         </label>
                                         <input v-model="event.location_address" type="text"
                                             :placeholder="t('invitation.placeholders.locationAddress')"
@@ -823,7 +833,7 @@ const mockDataNames = getMockInvitationNames()
                                     <div class="form-control md:col-span-2">
                                         <label class="label">
                                             <span class="label-text font-medium">{{ t('invitation.fields.mapUrl')
-                                            }}</span>
+                                                }}</span>
                                         </label>
                                         <input v-model="event.map_url" type="url"
                                             :placeholder="t('invitation.placeholders.mapUrl')"
@@ -842,7 +852,7 @@ const mockDataNames = getMockInvitationNames()
                             <div>
                                 <h2 class="card-title text-xl">{{ t('invitation.steps.gifts') }}</h2>
                                 <p class="text-sm text-base-content/60 mt-1">{{ t('invitation.helpers.giftsOptional')
-                                }}</p>
+                                    }}</p>
                             </div>
                             <button type="button" @click="addGift" class="btn btn-primary btn-sm">
                                 <Plus :size="16" />
@@ -869,7 +879,7 @@ const mockDataNames = getMockInvitationNames()
                                     <div class="form-control">
                                         <label class="label">
                                             <span class="label-text font-medium">{{ t('invitation.fields.giftType')
-                                            }}</span>
+                                                }}</span>
                                         </label>
                                         <select v-model="gift.type" class="select select-bordered">
                                             <option value="bank">{{ t('invitation.giftTypes.bank') }}</option>
@@ -883,7 +893,7 @@ const mockDataNames = getMockInvitationNames()
                                     <div class="form-control">
                                         <label class="label">
                                             <span class="label-text font-medium">{{ t('invitation.fields.provider')
-                                            }}</span>
+                                                }}</span>
                                         </label>
                                         <input v-model="gift.provider" type="text"
                                             :placeholder="t('invitation.placeholders.provider')"
@@ -893,7 +903,7 @@ const mockDataNames = getMockInvitationNames()
                                     <div class="form-control">
                                         <label class="label">
                                             <span class="label-text font-medium">{{ t('invitation.fields.accountName')
-                                            }}</span>
+                                                }}</span>
                                         </label>
                                         <input v-model="gift.account_name" type="text"
                                             :placeholder="t('invitation.placeholders.accountName')"
@@ -903,7 +913,7 @@ const mockDataNames = getMockInvitationNames()
                                     <div class="form-control">
                                         <label class="label">
                                             <span class="label-text font-medium">{{ t('invitation.fields.accountNumber')
-                                            }}</span>
+                                                }}</span>
                                         </label>
                                         <input v-model="gift.account_number" type="text"
                                             :placeholder="t('invitation.placeholders.accountNumber')"
@@ -954,7 +964,7 @@ const mockDataNames = getMockInvitationNames()
                             <div class="form-control">
                                 <label class="label">
                                     <span class="label-text font-medium">{{ t('invitation.fields.streamStartTime')
-                                    }}</span>
+                                        }}</span>
                                 </label>
                                 <input v-model="form.livestream_start_time" type="time" class="input input-bordered" />
                             </div>

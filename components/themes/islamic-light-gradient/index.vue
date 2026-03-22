@@ -192,7 +192,8 @@
                                 <p class="text-purple-500/90 text-sm font-medium font-sans mb-0.5">{{
                                     formatEventDate(event.start_time) }}</p>
                                 <p class="text-purple-400/80 text-sm font-medium font-sans mb-3">
-                                    {{ formatTime(event.start_time) }} – {{ formatTime(event.end_time) }} WIB
+                                    {{ formatTime(event.start_time) }}{{ event.type !== 'ceremony' ? ` –
+                                    ${event.end_time ? formatTime(event.end_time) : 'Selesai'}` : '' }} WIB
                                 </p>
                                 <p class="text-slate-700 text-base font-semibold mb-0.5">{{ event.location_name }}</p>
                                 <p class="text-slate-400 text-sm font-sans leading-relaxed mb-3">{{
@@ -244,7 +245,7 @@
                             </svg>
                         </div>
                         <span class="text-slate-700 font-semibold capitalize">{{ invitation.livestream_platform
-                        }}</span>
+                            }}</span>
                     </div>
                     <p class="text-slate-500 text-sm font-sans">{{
                         formatLivestreamDate(invitation.livestream_event_date) }}</p>
@@ -372,7 +373,7 @@
                             <div
                                 class="w-8 h-8 rounded-full bg-gradient-to-br from-violet-200 to-pink-200 border border-purple-200/50 flex items-center justify-center flex-shrink-0">
                                 <span class="text-purple-600 text-xs font-bold">{{ wish.guest_name?.[0]?.toUpperCase()
-                                }}</span>
+                                    }}</span>
                             </div>
                             <div class="flex-1 min-w-0">
                                 <div class="flex flex-wrap items-center gap-2 mb-1">

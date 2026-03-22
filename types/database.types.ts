@@ -191,6 +191,7 @@ export interface Database {
           autoplay: boolean;
           loop: boolean;
           is_active: boolean;
+          wa_message_template: string | null;
         };
         Insert: {
           id?: never;
@@ -222,6 +223,7 @@ export interface Database {
           autoplay?: boolean;
           loop?: boolean;
           is_active?: boolean;
+          wa_message_template?: string | null;
         };
         Update: {
           id?: never;
@@ -253,6 +255,7 @@ export interface Database {
           autoplay?: boolean;
           loop?: boolean;
           is_active?: boolean;
+          wa_message_template?: string | null;
         };
         Relationships: [
           {

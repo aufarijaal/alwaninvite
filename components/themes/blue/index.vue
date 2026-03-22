@@ -169,7 +169,8 @@
                                 <p class="text-blue-300/90 text-sm font-medium font-sans mb-0.5">{{
                                     formatEventDate(event.start_time) }}</p>
                                 <p class="text-blue-300/70 text-sm font-medium font-sans mb-3">
-                                    {{ formatTime(event.start_time) }} – {{ formatTime(event.end_time) }} WIB
+                                    {{ formatTime(event.start_time) }}{{ event.type !== 'ceremony' ? ` –
+                                    ${event.end_time ? formatTime(event.end_time) : 'Selesai'}` : '' }} WIB
                                 </p>
                                 <p class="text-white/90 text-base font-semibold mb-0.5">{{ event.location_name }}</p>
                                 <p class="text-blue-300/60 text-sm font-sans leading-relaxed mb-3">{{
@@ -278,7 +279,7 @@
                                 <p class="text-blue-300/50 text-xs font-sans mb-0.5 truncate">{{ gift.account_name }}
                                 </p>
                                 <p class="text-white font-mono font-bold tracking-wider text-sm">{{ gift.account_number
-                                    }}</p>
+                                }}</p>
                             </div>
                             <button @click="copyToClipboard(gift.account_number)"
                                 class="flex-shrink-0 text-xs text-blue-300 hover:text-white font-sans border border-blue-700/50 hover:border-blue-400/50 rounded-lg px-3 py-1.5 transition-colors">
@@ -347,7 +348,7 @@
                             <div
                                 class="w-8 h-8 rounded-full bg-blue-700/50 border border-blue-500/30 flex items-center justify-center flex-shrink-0">
                                 <span class="text-blue-200 text-xs font-bold">{{ wish.guest_name?.[0]?.toUpperCase()
-                                    }}</span>
+                                }}</span>
                             </div>
                             <div class="flex-1 min-w-0">
                                 <div class="flex flex-wrap items-center gap-2 mb-1">
