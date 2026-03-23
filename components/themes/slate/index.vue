@@ -32,8 +32,7 @@
                 <!-- Bismillah -->
                 <div v-motion :initial="{ opacity: 0 }"
                     :enter="{ opacity: 1, transition: { duration: 0.8, delay: 0.25 } }">
-                    <p class="text-slate-300/80 text-xl mb-2 tracking-wide" style="font-family: serif;">بِسْمِ اللَّهِ
-                        الرَّحْمَنِ الرَّحِيمِ</p>
+                    <SvgBismillahWord class="mx-auto w-32 text-slate-300" />
                     <p class="text-slate-400/50 text-xs tracking-[0.3em] uppercase font-sans mb-10">Undangan Pernikahan
                     </p>
                 </div>
@@ -347,6 +346,12 @@
                     </div>
                 </form>
 
+                <!-- Auto-Reply Message -->
+                <div v-if="wishAutoReply"
+                    class="bg-slate-800/40 border border-slate-500/30 rounded-xl p-4 mb-6 text-center">
+                    <p class="text-slate-200 text-sm font-sans leading-relaxed">{{ wishAutoReply }}</p>
+                </div>
+
                 <!-- Wish List -->
                 <div v-if="wishes.length" class="space-y-4">
                     <div v-for="wish in paginatedWishes" :key="wish.id"
@@ -438,7 +443,6 @@ const audioRef = ref<HTMLAudioElement | null>(null)
 const isPlaying = ref(false)
 
 const openInvitation = () => {
-    document.documentElement.style.overflow = ''
     if (audioRef.value && !isPlaying.value) {
         audioRef.value.play().then(() => { isPlaying.value = true }).catch(() => { })
     }
@@ -458,7 +462,6 @@ const toggleAudio = () => {
 }
 
 onMounted(() => {
-    document.documentElement.style.overflow = 'hidden'
     if (props.invitation?.autoplay && audioRef.value) {
         audioRef.value.play().then(() => {
             isPlaying.value = true
@@ -468,31 +471,32 @@ onMounted(() => {
     }
 })
 
-onUnmounted(() => {
-    document.documentElement.style.overflow = ''
-})
+
 
 // ── Date helpers ───────────────────────────────────────
+const sundayAsAhad = computed(() => !!(props.invitation?.user_config as any)?.sunday_as_ahad)
+const applyAhad = (str: string) => sundayAsAhad.value ? str.replace(/\bMinggu\b/g, 'Ahad') : str
+
 const formatDate = (dateStr: string | null | undefined) => {
     if (!dateStr) return ''
-    return new Date(dateStr).toLocaleDateString('id-ID', {
+    return applyAhad(new Date(dateStr).toLocaleDateString('id-ID', {
         weekday: 'long', day: 'numeric', month: 'long', year: 'numeric',
-    })
+    }))
 }
 
 const formatEventDate = (dateStr: string) =>
-    new Date(dateStr).toLocaleDateString('id-ID', {
+    applyAhad(new Date(dateStr).toLocaleDateString('id-ID', {
         weekday: 'long', day: 'numeric', month: 'long', year: 'numeric',
-    })
+    }))
 
 const formatTime = (dateStr: string) =>
     new Date(dateStr).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })
 
 const formatLivestreamDate = (dateStr: string | null | undefined) => {
     if (!dateStr) return ''
-    return new Date(dateStr).toLocaleDateString('id-ID', {
+    return applyAhad(new Date(dateStr).toLocaleDateString('id-ID', {
         weekday: 'long', day: 'numeric', month: 'long', year: 'numeric',
-    })
+    }))
 }
 
 // ── Derived values ─────────────────────────────────────
@@ -554,6 +558,7 @@ const copyToClipboard = async (text: string) => {
 // ── Wishes ─────────────────────────────────────────────
 const wishes = ref<any[]>([])
 const submitting = ref(false)
+const wishAutoReply = ref('')
 const guestValidated = ref<boolean | null>(props.guest ? null : false)
 const wishForm = reactive({ guest_name: props.guest ?? '', attendance: '', message: '' })
 const wishPage = ref(1)
@@ -593,9 +598,27 @@ const checkGuestAccess = async () => {
     }
 }
 
+const fireConfetti = async () => {
+    if (!import.meta.client) return
+    const { confetti } = await import('@tsparticles/confetti')
+    const emoji1 = (props.invitation?.user_config as any)?.confetti_emoji_1 || '🙏'
+    const emoji2 = (props.invitation?.user_config as any)?.confetti_emoji_2 || '❤️'
+    const base = {
+        shapes: ['emoji'],
+        shapeOptions: { emoji: { value: [emoji1, emoji2].filter(Boolean) } },
+        disableForReducedMotion: false,
+        scalar: 2,
+        flat: true,
+    }
+    await confetti({ count: 80, angle: 60, spread: 60, startVelocity: 65, gravity: 0.2, decay: 0.93, ticks: 300, position: { x: 0, y: 65 }, ...base })
+    await confetti({ count: 80, angle: 120, spread: 60, startVelocity: 65, gravity: 0.2, decay: 0.93, ticks: 300, position: { x: 100, y: 65 }, ...base })
+    await confetti({ count: 120, spread: 100, startVelocity: 60, gravity: 0.25, decay: 0.94, ticks: 350, position: { x: 50, y: 60 }, ...base })
+}
+
 const submitWish = async () => {
     if (!props.invitation?.id) return
     submitting.value = true
+    wishAutoReply.value = ''
     const { error } = await supabase.from('wishes').insert({
         wedding_id: String(props.invitation.id),
         guest_name: wishForm.guest_name,
@@ -610,6 +633,11 @@ const submitWish = async () => {
         wishForm.message = ''
         wishPage.value = 1
         await fetchWishes()
+        if ((props.invitation?.user_config as any)?.confetti_on_wish !== false) {
+            fireConfetti()
+        }
+        const autoReply = (props.invitation?.user_config as any)?.wish_auto_reply
+        if (autoReply) wishAutoReply.value = autoReply
     }
 }
 

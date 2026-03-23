@@ -192,6 +192,7 @@ export interface Database {
           loop: boolean;
           is_active: boolean;
           wa_message_template: string | null;
+          user_config: Json | null;
         };
         Insert: {
           id?: never;
@@ -224,6 +225,7 @@ export interface Database {
           loop?: boolean;
           is_active?: boolean;
           wa_message_template?: string | null;
+          user_config?: Json | null;
         };
         Update: {
           id?: never;
@@ -256,6 +258,7 @@ export interface Database {
           loop?: boolean;
           is_active?: boolean;
           wa_message_template?: string | null;
+          user_config?: Json | null;
         };
         Relationships: [
           {

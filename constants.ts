@@ -4,7 +4,7 @@ export const themes = [
   // { text: "cupcake", name: "cupcake" },
   // { text: "bumblebee", name: "bumblebee" },
   // { text: "emerald", name: "emerald" },
-  { text: "Light", name: "emerald" },
+  { text: "Light", name: "corporate" },
   // { text: "synthwave", name: "synthwave" },
   // { text: "retro", name: "retro" },
   // { text: "cyberpunk", name: "cyberpunk" },

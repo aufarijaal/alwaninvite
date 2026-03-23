@@ -1,5 +1,8 @@
 <script setup lang="ts">
 import { Plus, Trash2, Save, Eye, Music, Play, Pause, X, Download, ImageOff } from 'lucide-vue-next'
+import FpFormDateTimePicker from '~/components/flatpickr/FpFormDateTimePicker.vue'
+import FpFormDatePicker from '~/components/flatpickr/FpFormDatePicker.vue'
+import FpFormTimePicker from '~/components/flatpickr/FpFormTimePicker.vue'
 import type { Database } from '~/types/database.types'
 import { mockInvitations, getMockInvitationNames } from '~/utils/mockInvitationData'
 
@@ -57,7 +60,12 @@ const form = ref({
     audio_id: null as number | null,
     autoplay: true,
     loop: true,
-    is_active: true
+    is_active: true,
+    confetti_on_wish: true,
+    confetti_emoji_1: '🙏',
+    confetti_emoji_2: '❤️',
+    wish_auto_reply: '',
+    sunday_as_ahad: false
 })
 
 // State
@@ -67,6 +75,7 @@ const originalSlug = ref('')
 const themes = ref<Database['public']['Tables']['themes']['Row'][]>([])
 const audios = ref<Database['public']['Tables']['audios']['Row'][]>([])
 const errors = ref<Record<string, string>>({})
+const isDev = import.meta.dev
 const showMockDataModal = ref(false)
 const showThemeModal = ref(false)
 
@@ -121,7 +130,12 @@ const fetchInvitation = async () => {
             audio_id: data.audio_id,
             autoplay: data.autoplay,
             loop: data.loop,
-            is_active: data.is_active
+            is_active: data.is_active,
+            confetti_on_wish: (data.user_config as any)?.confetti_on_wish ?? true,
+            confetti_emoji_1: (data.user_config as any)?.confetti_emoji_1 || '🙏',
+            confetti_emoji_2: (data.user_config as any)?.confetti_emoji_2 || '❤️',
+            wish_auto_reply: (data.user_config as any)?.wish_auto_reply || '',
+            sunday_as_ahad: (data.user_config as any)?.sunday_as_ahad ?? false
         }
     } catch (err: any) {
         console.error('Error fetching invitation:', err)
@@ -261,7 +275,14 @@ const submitForm = async () => {
                 audio_id: form.value.audio_id,
                 autoplay: form.value.autoplay,
                 loop: form.value.loop,
-                is_active: form.value.is_active
+                is_active: form.value.is_active,
+                user_config: {
+                    confetti_on_wish: form.value.confetti_on_wish,
+                    confetti_emoji_1: form.value.confetti_emoji_1 || '🙏',
+                    confetti_emoji_2: form.value.confetti_emoji_2 || '❤️',
+                    wish_auto_reply: form.value.wish_auto_reply || '',
+                    sunday_as_ahad: form.value.sunday_as_ahad
+                } as any
             })
             .eq('id', invitationId.value)
             .eq('user_id', user.value?.sub)
@@ -404,7 +425,7 @@ onUnmounted(() => {
 const loadMockData = (mockName: string) => {
     const mockData = mockInvitations[mockName as keyof typeof mockInvitations]
     if (mockData) {
-        form.value = { ...mockData }
+        form.value = { ...form.value, ...mockData }
         showMockDataModal.value = false
     }
 }
@@ -427,7 +448,32 @@ const mockDataNames = getMockInvitationNames()
                     <h1 class="text-3xl font-bold">{{ t('invitation.edit.title') }}</h1>
                     <p class="text-base-content/70 mt-1">{{ t('invitation.edit.subtitle') }}</p>
                 </div>
+                <!-- Dev-only mock data button -->
+                <div v-if="isDev">
+                    <button type="button" @click="showMockDataModal = true"
+                        class="btn btn-xs btn-outline border-dashed border-warning text-warning">
+                        <span class="font-mono">DEV</span> Load Mock Data
+                    </button>
+                </div>
+            </div>
 
+            <!-- Dev-only: Mock Data Modal -->
+            <div v-if="isDev && showMockDataModal" class="modal modal-open">
+                <div class="modal-box">
+                    <h3 class="font-bold text-lg mb-4">Load Mock Data</h3>
+                    <div class="flex flex-col gap-2">
+                        <button v-for="name in mockDataNames" :key="name" type="button" @click="loadMockData(name)"
+                            class="btn btn-outline btn-sm justify-start">
+                            {{ name }}
+                        </button>
+                    </div>
+                    <div class="modal-action">
+                        <button type="button" @click="showMockDataModal = false" class="btn btn-ghost">
+                            Cancel
+                        </button>
+                    </div>
+                </div>
+                <div class="modal-backdrop" @click="showMockDataModal = false"></div>
             </div>
 
             <!-- Theme Selection Modal -->
@@ -451,7 +497,7 @@ const mockDataNames = getMockInvitationNames()
                                     <ImageOff :size="48" class="opacity-20" />
                                     <span class="text-sm text-base-content/30 mt-2">{{
                                         t('invitation.previewUnavailable')
-                                    }}</span>
+                                        }}</span>
                                 </div>
                             </figure>
                             <div class="card-body p-4">
@@ -769,7 +815,7 @@ const mockDataNames = getMockInvitationNames()
                                             :class="{ 'input-error': errors[`event_title_${index}`] }" />
                                         <label v-if="errors[`event_title_${index}`]" class="label">
                                             <span class="label-text-alt text-error">{{ errors[`event_title_${index}`]
-                                                }}</span>
+                                            }}</span>
                                         </label>
                                     </div>
 
@@ -778,28 +824,27 @@ const mockDataNames = getMockInvitationNames()
                                             <span class="label-text font-medium">{{ t('invitation.fields.startTime') }}
                                                 *</span>
                                         </label>
-                                        <input v-model="event.start_time" type="datetime-local"
-                                            class="input input-bordered"
-                                            :class="{ 'input-error': errors[`event_start_${index}`] }" />
+                                        <FpFormDateTimePicker v-model="event.start_time"
+                                            :has-error="!!errors[`event_start_${index}`]" />
                                         <label v-if="errors[`event_start_${index}`]" class="label">
                                             <span class="label-text-alt text-error">{{ errors[`event_start_${index}`]
-                                                }}</span>
+                                            }}</span>
                                         </label>
                                     </div>
 
                                     <div v-if="event.type !== 'ceremony'" class="form-control">
                                         <label class="label">
                                             <span class="label-text font-medium">{{ t('invitation.fields.endTime')
-                                                }}</span>
+                                            }}</span>
                                         </label>
-                                        <input v-model="event.end_time" type="datetime-local"
-                                            class="input input-bordered" :disabled="event.end_time_open" />
+                                        <FpFormDateTimePicker v-model="event.end_time"
+                                            :disabled="event.end_time_open" />
                                         <label class="label cursor-pointer justify-start gap-2 pt-1">
                                             <input v-model="event.end_time_open" type="checkbox"
                                                 class="checkbox checkbox-sm checkbox-primary"
                                                 @change="() => { if (event.end_time_open) event.end_time = '' }" />
                                             <span class="label-text text-sm">{{ t('invitation.fields.endTimeOpen')
-                                                }}</span>
+                                            }}</span>
                                         </label>
                                     </div>
 
@@ -815,7 +860,7 @@ const mockDataNames = getMockInvitationNames()
                                             :class="{ 'input-error': errors[`event_location_${index}`] }" />
                                         <label v-if="errors[`event_location_${index}`]" class="label">
                                             <span class="label-text-alt text-error">{{ errors[`event_location_${index}`]
-                                                }}</span>
+                                            }}</span>
                                         </label>
                                     </div>
 
@@ -823,7 +868,7 @@ const mockDataNames = getMockInvitationNames()
                                         <label class="label">
                                             <span class="label-text font-medium">{{
                                                 t('invitation.fields.locationAddress')
-                                            }}</span>
+                                                }}</span>
                                         </label>
                                         <input v-model="event.location_address" type="text"
                                             :placeholder="t('invitation.placeholders.locationAddress')"
@@ -833,7 +878,7 @@ const mockDataNames = getMockInvitationNames()
                                     <div class="form-control md:col-span-2">
                                         <label class="label">
                                             <span class="label-text font-medium">{{ t('invitation.fields.mapUrl')
-                                                }}</span>
+                                            }}</span>
                                         </label>
                                         <input v-model="event.map_url" type="url"
                                             :placeholder="t('invitation.placeholders.mapUrl')"
@@ -852,7 +897,7 @@ const mockDataNames = getMockInvitationNames()
                             <div>
                                 <h2 class="card-title text-xl">{{ t('invitation.steps.gifts') }}</h2>
                                 <p class="text-sm text-base-content/60 mt-1">{{ t('invitation.helpers.giftsOptional')
-                                    }}</p>
+                                }}</p>
                             </div>
                             <button type="button" @click="addGift" class="btn btn-primary btn-sm">
                                 <Plus :size="16" />
@@ -879,7 +924,7 @@ const mockDataNames = getMockInvitationNames()
                                     <div class="form-control">
                                         <label class="label">
                                             <span class="label-text font-medium">{{ t('invitation.fields.giftType')
-                                                }}</span>
+                                            }}</span>
                                         </label>
                                         <select v-model="gift.type" class="select select-bordered">
                                             <option value="bank">{{ t('invitation.giftTypes.bank') }}</option>
@@ -893,7 +938,7 @@ const mockDataNames = getMockInvitationNames()
                                     <div class="form-control">
                                         <label class="label">
                                             <span class="label-text font-medium">{{ t('invitation.fields.provider')
-                                                }}</span>
+                                            }}</span>
                                         </label>
                                         <input v-model="gift.provider" type="text"
                                             :placeholder="t('invitation.placeholders.provider')"
@@ -903,7 +948,7 @@ const mockDataNames = getMockInvitationNames()
                                     <div class="form-control">
                                         <label class="label">
                                             <span class="label-text font-medium">{{ t('invitation.fields.accountName')
-                                                }}</span>
+                                            }}</span>
                                         </label>
                                         <input v-model="gift.account_name" type="text"
                                             :placeholder="t('invitation.placeholders.accountName')"
@@ -913,7 +958,7 @@ const mockDataNames = getMockInvitationNames()
                                     <div class="form-control">
                                         <label class="label">
                                             <span class="label-text font-medium">{{ t('invitation.fields.accountNumber')
-                                                }}</span>
+                                            }}</span>
                                         </label>
                                         <input v-model="gift.account_number" type="text"
                                             :placeholder="t('invitation.placeholders.accountNumber')"
@@ -958,15 +1003,15 @@ const mockDataNames = getMockInvitationNames()
                                 <label class="label">
                                     <span class="label-text font-medium">{{ t('invitation.fields.eventDate') }}</span>
                                 </label>
-                                <input v-model="form.livestream_event_date" type="date" class="input input-bordered" />
+                                <FpFormDatePicker v-model="form.livestream_event_date" />
                             </div>
 
                             <div class="form-control">
                                 <label class="label">
                                     <span class="label-text font-medium">{{ t('invitation.fields.streamStartTime')
-                                        }}</span>
+                                    }}</span>
                                 </label>
-                                <input v-model="form.livestream_start_time" type="time" class="input input-bordered" />
+                                <FpFormTimePicker v-model="form.livestream_start_time" />
                             </div>
 
                             <div class="form-control">
@@ -1126,6 +1171,64 @@ const mockDataNames = getMockInvitationNames()
                                     <span class="label-text font-medium">{{ t('invitation.fields.loop') }}</span>
                                 </label>
                             </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Additional Settings -->
+                <div class="card bg-base-100 shadow-xl">
+                    <div class="card-body">
+                        <h2 class="card-title text-lg">{{ t('invitation.sections.additionalSettings') }}</h2>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="form-control">
+                                <label class="label cursor-pointer justify-start gap-4">
+                                    <input v-model="form.confetti_on_wish" type="checkbox"
+                                        class="checkbox checkbox-primary" />
+                                    <span class="label-text font-medium">{{ t('invitation.fields.confettiOnWish')
+                                    }}</span>
+                                </label>
+                                <p class="text-xs text-base-content/50 ml-10">{{ t('invitation.helpers.confettiOnWish')
+                                }}</p>
+                            </div>
+                            <div class="form-control">
+                                <label class="label cursor-pointer justify-start gap-4">
+                                    <input v-model="form.sunday_as_ahad" type="checkbox"
+                                        class="checkbox checkbox-primary" />
+                                    <span class="label-text font-medium">{{ t('invitation.fields.sundayAsAhad')
+                                        }}</span>
+                                </label>
+                                <p class="text-xs text-base-content/50 ml-10">{{ t('invitation.helpers.sundayAsAhad') }}
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Confetti Emoji -->
+                        <div v-if="form.confetti_on_wish" class="mt-4">
+                            <label class="label">
+                                <span class="label-text font-medium">{{ t('invitation.fields.confettiEmoji1') }} &amp;
+                                    {{
+                                        t('invitation.fields.confettiEmoji2') }}</span>
+                            </label>
+                            <p class="text-xs text-base-content/50 mb-2">{{ t('invitation.helpers.confettiEmoji') }}</p>
+                            <div class="flex items-center gap-3">
+                                <input v-model="form.confetti_emoji_1" type="text" maxlength="8"
+                                    :placeholder="t('invitation.placeholders.confettiEmoji1')"
+                                    class="input input-bordered w-24 text-center text-2xl" />
+                                <input v-model="form.confetti_emoji_2" type="text" maxlength="8"
+                                    :placeholder="t('invitation.placeholders.confettiEmoji2')"
+                                    class="input input-bordered w-24 text-center text-2xl" />
+                            </div>
+                        </div>
+
+                        <!-- Auto-Reply Message -->
+                        <div class="mt-4">
+                            <label class="label">
+                                <span class="label-text font-medium">{{ t('invitation.fields.wishAutoReply') }}</span>
+                            </label>
+                            <textarea v-model="form.wish_auto_reply" rows="2" maxlength="300"
+                                :placeholder="t('invitation.placeholders.wishAutoReply')"
+                                class="textarea textarea-bordered w-full"></textarea>
+                            <p class="text-xs text-base-content/50 mt-1">{{ t('invitation.helpers.wishAutoReply') }}</p>
                         </div>
                     </div>
                 </div>

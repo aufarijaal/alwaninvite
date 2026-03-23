@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Menu, Languages, User, Settings, LogOut, LayoutDashboard, Mails, Calendar, Users, FileText, HelpCircle, Heart, ChevronLeft, ChevronRight } from 'lucide-vue-next'
+import { Menu, Languages, User, Settings, LogOut, LayoutDashboard, Mails, Calendar, Users, FileText, HelpCircle, Heart, ChevronLeft, ChevronRight, Sparkles } from 'lucide-vue-next'
 
 const { t, locale, setLocale } = useI18n()
 const localeCodes = ['en', 'id'] as const
@@ -44,7 +44,11 @@ const navigationItems = [
     { name: 'dashboard', icon: LayoutDashboard, route: '/dashboard' },
     { name: 'invitations', icon: Mails, route: '/dashboard/invitations' },
     { name: 'wishes', icon: Heart, route: '/dashboard/wishes' },
-    { name: 'media', icon: FileText, route: '/dashboard/media' }
+    { name: 'media', icon: FileText, route: '/dashboard/media' },
+    ...(import.meta.dev ? [
+        { name: 'test', icon: Calendar, route: '/dashboard/test' },
+        { name: 'confettiTest', icon: Sparkles, route: '/dashboard/confetti-test' }
+    ] : [])
 ]
 </script>
 
@@ -67,7 +71,7 @@ const navigationItems = [
                             <Heart :size="24" class="text-primary-content" />
                         </div>
                         <span v-if="sidebarOpen" class="text-lg font-bold whitespace-nowrap">{{ t('common.appName')
-                        }}</span>
+                            }}</span>
                     </NuxtLink>
                 </div>
 
@@ -81,7 +85,7 @@ const navigationItems = [
                             ]" :title="!sidebarOpen ? t(`navigation.${item.name}`) : undefined">
                                 <component :is="item.icon" :size="20" class="flex-shrink-0" />
                                 <span v-if="sidebarOpen" class="whitespace-nowrap">{{ t(`navigation.${item.name}`)
-                                }}</span>
+                                    }}</span>
                             </NuxtLink>
                         </li>
                     </ul>

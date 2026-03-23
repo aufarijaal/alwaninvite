@@ -74,7 +74,9 @@
     "help": "Help",
     "wishes": "Guests & Wishes",
     "rsvps": "RSVPs",
-    "media": "Media"
+    "media": "Media",
+    "test": "Test Page",
+    "confettiTest": "Confetti Test"
   },
   "invitation": {
     "title": "Invitation",
@@ -114,7 +116,8 @@
       "brideInfo": "Bride Information",
       "groomInfo": "Groom Information",
       "event": "Event",
-      "gift": "Gift"
+      "gift": "Gift",
+      "additionalSettings": "Additional Settings"
     },
     "fields": {
       "slug": "URL Slug",
@@ -145,7 +148,12 @@
       "systemAudio": "System Audio",
       "customAudioUrl": "Custom Audio URL",
       "autoplay": "Autoplay",
-      "loop": "Loop"
+      "loop": "Loop",
+      "confettiOnWish": "Confetti on wish",
+      "confettiEmoji1": "Confetti Emoji 1",
+      "confettiEmoji2": "Confetti Emoji 2",
+      "wishAutoReply": "Auto-Reply Message",
+      "sundayAsAhad": "Display Sunday as Ahad"
     },
     "placeholders": {
       "slug": "e.g., sarah-and-john-wedding",
@@ -165,13 +173,20 @@
       "selectPlatform": "Select a platform",
       "selectAudio": "Select audio",
       "streamUrl": "https://youtube.com/...",
-      "customAudioUrl": "https://example.com/audio.mp3"
+      "customAudioUrl": "https://example.com/audio.mp3",
+      "confettiEmoji1": "e.g., 🙏",
+      "confettiEmoji2": "e.g., ❤️",
+      "wishAutoReply": "e.g., Thank you so much for your kind wishes!"
     },
     "helpers": {
       "slug": "This will be your invitation URL: alwaninvite.com/invite/{slug}",
       "giftsOptional": "Gift information is optional. You can add bank accounts, e-wallets, or crypto addresses.",
       "liveStream": "Optional: Add live streaming details if you plan to broadcast your event online.",
-      "audio": "Optional: Add background music to your invitation page."
+      "audio": "Optional: Add background music to your invitation page.",
+      "confettiOnWish": "Show a confetti animation when a guest submits their wish",
+      "confettiEmoji": "Customize the emoji used in the confetti animation (max 2). Leave empty to use the default.",
+      "wishAutoReply": "Optional: This message will be shown to guests after they submit their wish.",
+      "sundayAsAhad": "When enabled, Sunday will be displayed as 'Ahad' on your invitation"
     },
     "labels": {
       "event": "Event",

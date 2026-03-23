@@ -74,7 +74,9 @@
     "help": "Bantuan",
     "wishes": "Tamu & Ucapan",
     "rsvps": "RSVPs",
-    "media": "Media"
+    "media": "Media",
+    "test": "Halaman Tes",
+    "confettiTest": "Tes Konfeti"
   },
   "invitation": {
     "title": "Undangan",
@@ -118,7 +120,8 @@
       "brideInfo": "Informasi Mempelai Wanita",
       "groomInfo": "Informasi Mempelai Pria",
       "event": "Acara",
-      "gift": "Hadiah"
+      "gift": "Hadiah",
+      "additionalSettings": "Pengaturan Tambahan"
     },
     "fields": {
       "slug": "URL Slug",
@@ -149,7 +152,12 @@
       "systemAudio": "Audio Sistem",
       "customAudioUrl": "URL Audio Kustom",
       "autoplay": "Putar Otomatis",
-      "loop": "Ulang"
+      "loop": "Ulang",
+      "confettiOnWish": "Konfeti saat ucapan",
+      "confettiEmoji1": "Emoji Konfeti 1",
+      "confettiEmoji2": "Emoji Konfeti 2",
+      "wishAutoReply": "Pesan Balasan Otomatis",
+      "sundayAsAhad": "Tampilkan Minggu sebagai Ahad"
     },
     "placeholders": {
       "slug": "contoh: pernikahan-sarah-dan-john",
@@ -169,13 +177,20 @@
       "selectPlatform": "Pilih platform",
       "selectAudio": "Pilih audio",
       "streamUrl": "https://youtube.com/...",
-      "customAudioUrl": "https://example.com/audio.mp3"
+      "customAudioUrl": "https://example.com/audio.mp3",
+      "confettiEmoji1": "contoh: 🙏",
+      "confettiEmoji2": "contoh: ❤️",
+      "wishAutoReply": "contoh: Terima kasih banyak atas doa dan ucapannya!"
     },
     "helpers": {
       "slug": "Ini akan menjadi URL undangan Anda: alwaninvite.com/invite/{slug}",
       "giftsOptional": "Informasi hadiah bersifat opsional. Anda dapat menambahkan rekening bank, e-wallet, atau alamat kripto.",
       "liveStream": "Opsional: Tambahkan detail siaran langsung jika Anda berencana menyiarkan acara Anda secara online.",
-      "audio": "Opsional: Tambahkan musik latar untuk halaman undangan Anda."
+      "audio": "Opsional: Tambahkan musik latar untuk halaman undangan Anda.",
+      "confettiOnWish": "Tampilkan animasi konfeti saat tamu mengirimkan ucapan",
+      "confettiEmoji": "Sesuaikan emoji yang digunakan dalam animasi konfeti (maks. 2). Kosongkan untuk menggunakan default.",
+      "wishAutoReply": "Opsional: Pesan ini akan ditampilkan kepada tamu setelah mereka mengirimkan ucapan.",
+      "sundayAsAhad": "Jika diaktifkan, hari Minggu akan ditampilkan sebagai 'Ahad' di undangan Anda"
     },
     "labels": {
       "event": "Acara",
