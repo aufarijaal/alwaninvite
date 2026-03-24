@@ -63,15 +63,7 @@ Kamu bisa berganti antara Draf dan Dipublikasikan kapan saja.
 
 ## Tema yang Tersedia
 
-Kamu bisa mengganti tema kapan saja, bahkan setelah dipublikasikan. Berikut tema yang tersedia:
-
-| Tema                       | Gaya                         |
-| -------------------------- | ---------------------------- |
-| **Blue**                   | Bersih dan modern            |
-| **Brown**                  | Hangat dan earthy            |
-| **Green**                  | Segar dan alami              |
-| **Islamic Light Gradient** | Elegan dengan gradien lembut |
-| **Slate**                  | Minimal dan berkelas         |
+Kamu bisa mengganti tema kapan saja, bahkan setelah dipublikasikan. Tema dimuat langsung dari aplikasi dan pilihannya bisa bertambah seiring waktu. Saat memilih tema, setiap tema menampilkan gambar pratinjau. Tema yang ditandai dengan lencana **Premium** mungkin dikhususkan untuk akun premium.
 
 Untuk mengganti tema, buka **Edit → Bagian 1 (Informasi Dasar) → Tema → Pilih Tema**.
 

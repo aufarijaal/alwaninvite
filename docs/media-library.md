@@ -24,12 +24,15 @@ You don't have to upload anything. System Audio tracks are ready to use for free
 1. Go to **Dashboard → Media**.
 2. Click **"Upload Audio"**.
 3. Select your audio file from your device.
-4. Wait for the upload to finish — the file will appear in your **My Uploads** list.
+4. Enter a **Title** for the track (required). The title is auto-filled from the filename but you can change it.
+5. Optionally enter an **Artist** name.
+6. Click **"Upload"** and wait for the upload to finish — the file will appear in your **My Uploads** list.
 
 ::: warning File Requirements
 
 - Accepted formats: **MP3, WAV, OGG**
 - Maximum file size: **5 MB** per file
+- Title is **required**
   :::
 
 ---

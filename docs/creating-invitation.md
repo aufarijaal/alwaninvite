@@ -53,7 +53,7 @@ This section is filled out for both the **Groom** and the **Bride**. Each person
 | Field                 | Required? | Description                                                          |
 | --------------------- | --------- | -------------------------------------------------------------------- |
 | **Call Name**         | Yes       | The short name shown on the invitation. Usually just the first name. |
-| **Full Name**         | No        | The complete formal name. Often shown in a smaller font.             |
+| **Full Name**         | Yes       | The complete formal name. Often shown in a smaller font.             |
 | **Additional Info 1** | No        | A free-text line. Commonly used for parent names.                    |
 | **Additional Info 2** | No        | Another free-text line. Often used for birth order.                  |
 | **Additional Info 3** | No        | A third free-text line. Often used for an Instagram handle.          |
@@ -73,15 +73,15 @@ You can add **one or more events** to your invitation (e.g. Akad Nikah + Recepti
 
 Each event has these fields:
 
-| Field                | Required? | Description                                                               |
-| -------------------- | --------- | ------------------------------------------------------------------------- |
-| **Event Type**       | Yes       | Choose: Ceremony, Reception, or Other.                                    |
-| **Event Title**      | Yes       | The name of the event. Example: _"Akad Nikah"_, _"Resepsi"_.              |
-| **Start Time**       | Yes       | The date and time the event begins.                                       |
-| **End Time**         | No        | When the event ends. Leave blank to show an open end time ("until done"). |
-| **Location Name**    | Yes       | The name of the venue. Example: _"Ballroom Grand Hyatt Jakarta"_.         |
-| **Location Address** | No        | The full address of the venue.                                            |
-| **Map URL**          | No        | A Google Maps link. Guests can tap this to get directions on their phone. |
+| Field                | Required? | Description                                                                                                                                                                     |
+| -------------------- | --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Event Type**       | Yes       | Choose: Ceremony, Reception, or Other.                                                                                                                                          |
+| **Event Title**      | Yes       | The name of the event. Example: _"Akad Nikah"_, _"Resepsi"_.                                                                                                                    |
+| **Start Time**       | Yes       | The date and time the event begins.                                                                                                                                             |
+| **End Time**         | No        | When the event ends. Only available for Reception and Other event types. Toggle **"Open end time"** to leave it blank (shows "until done"). Not applicable for Ceremony events. |
+| **Location Name**    | Yes       | The name of the venue. Example: _"Ballroom Grand Hyatt Jakarta"_.                                                                                                               |
+| **Location Address** | No        | The full address of the venue.                                                                                                                                                  |
+| **Map URL**          | No        | A Google Maps link. Guests can tap this to get directions on their phone.                                                                                                       |
 
 ---
 
@@ -106,7 +106,7 @@ If you're streaming your event online, you can add a livestream link so guests w
 
 | Field          | Description                                                                                                  |
 | -------------- | ------------------------------------------------------------------------------------------------------------ |
-| **Platform**   | Where you'll be streaming: YouTube, Instagram Live, or Zoom.                                                 |
+| **Platform**   | Where you'll be streaming: YouTube, Instagram Live, Zoom, or Other.                                          |
 | **Stream URL** | The direct link to your live stream.                                                                         |
 | **Event Date** | The date of the live stream.                                                                                 |
 | **Start Time** | What time the broadcast begins.                                                                              |
@@ -138,11 +138,11 @@ These settings let you customize the experience for your guests.
 
 When this is turned on, a confetti burst appears on screen after a guest submits a wish. It makes the moment feel more fun and celebratory!
 
-- **Emoji 1 / Emoji 2** — Choose which emojis appear in the confetti. The default is 🙏 and ❤️, but you can change them to anything you like.
+- **Emoji 1 / Emoji 2** — Choose which emojis appear in the confetti. The default is 🙏 and ❤️, but you can change them to anything you like. These fields only appear when Confetti on Wish is enabled.
 
 ### Wish Auto-Reply
 
-Write a thank-you message that guests automatically see after they submit a wish. For example:
+Write a thank-you message (up to 300 characters) that guests automatically see after they submit a wish. For example:
 
 > _"Thank you so much for your warm wishes! We're grateful you joined us on this special day. 🙏"_
 

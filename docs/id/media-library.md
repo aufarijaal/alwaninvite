@@ -24,12 +24,15 @@ Kamu tidak harus mengunggah apapun. Lagu-lagu Audio Sistem siap digunakan secara
 1. Buka **Dashboard → Media**.
 2. Klik **"Unggah Audio"**.
 3. Pilih file audio dari perangkatmu.
-4. Tunggu hingga proses unggah selesai — file akan muncul di daftar **Unggahan Saya**.
+4. Isi **Judul** lagu (wajib). Judul otomatis terisi dari nama file, tapi bisa diubah.
+5. Opsional: isi nama **Artis**.
+6. Klik **"Unggah"** dan tunggu hingga proses selesai — file akan muncul di daftar **Unggahan Saya**.
 
 ::: warning Persyaratan File
 
 - Format yang diterima: **MP3, WAV, OGG**
 - Ukuran file maksimal: **5 MB** per file
+- Judul **wajib** diisi
   :::
 
 ---

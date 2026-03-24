@@ -63,15 +63,7 @@ You can switch between Draft and Published at any time.
 
 ## Available Themes
 
-You can change the theme at any time, even after publishing. Here are the available themes:
-
-| Theme                      | Style                        |
-| -------------------------- | ---------------------------- |
-| **Blue**                   | Clean and modern             |
-| **Brown**                  | Warm and earthy              |
-| **Green**                  | Fresh and natural            |
-| **Islamic Light Gradient** | Elegant with a soft gradient |
-| **Slate**                  | Minimal and sophisticated    |
+You can change the theme at any time, even after publishing. Themes are loaded from the app and the selection may grow over time. When browsing themes, each shows a preview image. Themes marked with a **Premium** badge may be reserved for premium accounts.
 
 To change the theme, go to **Edit → Section 1 (Basic Information) → Theme → Choose Theme**.
 

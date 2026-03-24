@@ -418,6 +418,11 @@
     "saveGuests": "Simpan Tamu",
     "savingGuests": "Menyimpan...",
     "guestsSaved": "{count} tamu berhasil ditambahkan",
+    "duplicates": "Nama Duplikat Terdeteksi",
+    "duplicateInList": "Muncul lebih dari sekali di daftar Anda",
+    "alreadyInGuestList": "Sudah ada di daftar tamu",
+    "duplicateWarning": "Hapus atau ganti nama duplikat di bawah sebelum menyimpan. Setiap tamu harus memiliki nama yang unik — coba tambahkan detail pembeda (misalnya nama panggilan, inisial, atau hubungan).",
+    "duplicateReviseHint": "gunakan nama yang berbeda",
     "copyWhatsapp": "Salin pesan WhatsApp",
     "whatsappCopied": "Tersalin!",
     "waTemplate": {

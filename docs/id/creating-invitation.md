@@ -53,7 +53,7 @@ Bagian ini diisi untuk **Mempelai Pria** dan **Mempelai Wanita**. Keduanya memil
 | Kolom               | Wajib? | Keterangan                                                                   |
 | ------------------- | ------ | ---------------------------------------------------------------------------- |
 | **Nama Panggil**    | Ya     | Nama pendek yang ditampilkan menonjol di undangan. Biasanya nama depan saja. |
-| **Nama Lengkap**    | Tidak  | Nama formal lengkap. Biasanya ditampilkan lebih kecil di bawah nama panggil. |
+| **Nama Lengkap**    | Ya     | Nama formal lengkap. Biasanya ditampilkan lebih kecil di bawah nama panggil. |
 | **Info Tambahan 1** | Tidak  | Baris teks bebas. Biasa diisi nama orang tua.                                |
 | **Info Tambahan 2** | Tidak  | Baris teks kedua. Biasa diisi urutan anak.                                   |
 | **Info Tambahan 3** | Tidak  | Baris teks ketiga. Biasa diisi akun Instagram.                               |
@@ -73,15 +73,15 @@ Kamu bisa menambahkan **satu atau lebih acara** di undanganmu (misalnya Akad Nik
 
 Setiap acara memiliki kolom berikut:
 
-| Kolom             | Wajib? | Keterangan                                                                                     |
-| ----------------- | ------ | ---------------------------------------------------------------------------------------------- |
-| **Jenis Acara**   | Ya     | Pilih: Akad/Ceremony, Resepsi, atau Lainnya.                                                   |
-| **Judul Acara**   | Ya     | Nama acaranya. Contoh: _"Akad Nikah"_, _"Resepsi"_.                                            |
-| **Waktu Mulai**   | Ya     | Tanggal dan jam acara dimulai.                                                                 |
-| **Waktu Selesai** | Tidak  | Jam berakhirnya acara. Biarkan kosong untuk menampilkan waktu yang terbuka ("sampai selesai"). |
-| **Nama Lokasi**   | Ya     | Nama tempat acara. Contoh: _"Ballroom Grand Hyatt Jakarta"_.                                   |
-| **Alamat Lokasi** | Tidak  | Alamat lengkap tempat acara.                                                                   |
-| **URL Peta**      | Tidak  | Link Google Maps. Tamu bisa tap untuk membuka petunjuk arah di ponsel mereka.                  |
+| Kolom             | Wajib? | Keterangan                                                                                                                                                                                     |
+| ----------------- | ------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Jenis Acara**   | Ya     | Pilih: Akad/Ceremony, Resepsi, atau Lainnya.                                                                                                                                                   |
+| **Judul Acara**   | Ya     | Nama acaranya. Contoh: _"Akad Nikah"_, _"Resepsi"_.                                                                                                                                            |
+| **Waktu Mulai**   | Ya     | Tanggal dan jam acara dimulai.                                                                                                                                                                 |
+| **Waktu Selesai** | Tidak  | Jam berakhirnya acara. Hanya tersedia untuk jenis acara Resepsi dan Lainnya. Centang **"Waktu terbuka"** untuk membiarkannya kosong (tampil "sampai selesai"). Tidak berlaku untuk acara Akad. |
+| **Nama Lokasi**   | Ya     | Nama tempat acara. Contoh: _"Ballroom Grand Hyatt Jakarta"_.                                                                                                                                   |
+| **Alamat Lokasi** | Tidak  | Alamat lengkap tempat acara.                                                                                                                                                                   |
+| **URL Peta**      | Tidak  | Link Google Maps. Tamu bisa tap untuk membuka petunjuk arah di ponsel mereka.                                                                                                                  |
 
 ---
 
@@ -106,7 +106,7 @@ Jika kamu menyiarkan acaramu secara online, tambahkan link siaran agar tamu yang
 
 | Kolom             | Keterangan                                                                                                |
 | ----------------- | --------------------------------------------------------------------------------------------------------- |
-| **Platform**      | Tempat kamu streaming: YouTube, Instagram Live, atau Zoom.                                                |
+| **Platform**      | Tempat kamu streaming: YouTube, Instagram Live, Zoom, atau Lainnya.                                       |
 | **URL Siaran**    | Link langsung ke siaran langsung kamu.                                                                    |
 | **Tanggal Acara** | Tanggal siaran berlangsung.                                                                               |
 | **Waktu Mulai**   | Jam siaran dimulai.                                                                                       |
@@ -138,11 +138,11 @@ Pengaturan ini memungkinkan kamu menyesuaikan pengalaman untuk tamu.
 
 Saat ini diaktifkan, ledakan konfeti akan muncul di layar setelah tamu mengirim ucapan. Membuat momennya terasa lebih meriah dan menyenangkan!
 
-- **Emoji 1 / Emoji 2** — Pilih emoji apa yang muncul di konfeti. Defaultnya adalah 🙏 dan ❤️, tapi bisa diganti sesuka hati.
+- **Emoji 1 / Emoji 2** — Pilih emoji apa yang muncul di konfeti. Defaultnya adalah 🙏 dan ❤️, tapi bisa diganti sesuka hati. Kolom ini hanya muncul saat Konfeti saat Ucapan diaktifkan.
 
 ### Balasan Otomatis Ucapan
 
-Tulis pesan terima kasih yang otomatis muncul setelah tamu mengirim ucapan. Contoh:
+Tulis pesan terima kasih (maksimal 300 karakter) yang otomatis muncul setelah tamu mengirim ucapan. Contoh:
 
 > _"Terima kasih banyak atas ucapan dan doamu yang tulus! Kami sangat bersyukur kamu hadir di hari istimewa kami. 🙏"_
 
