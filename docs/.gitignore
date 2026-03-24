@@ -1,0 +1,35 @@
+/coverage
+/src/client/shared.ts
+/src/node/shared.ts
+*.log
+*.tgz
+.DS_Store
+.idea
+.temp
+.vite_opt_cache
+.vscode
+dist
+cache
+temp
+examples-temp
+node_modules
+pnpm-global
+TODOs.md
+*.timestamp-*.mjs
+# Node modules
+node_modules/
+
+# VitePress-specific ignores
+.vitepress/cache/
+.vitepress/dist/
+
+# Logs
+npm-debug.log
+yarn-error.log
+pnpm-debug.log
+lerna-debug.log
+
+# OS and Editor files
+.DS_Store
+.idea/
+.vscode/
