@@ -60,6 +60,8 @@ const steps = computed(() => [
     { number: '02', title: t('homepage.howItWorks.customize.title'), description: t('homepage.howItWorks.customize.description') },
     { number: '03', title: t('homepage.howItWorks.share.title'), description: t('homepage.howItWorks.share.description') },
 ])
+
+useHead({ title: 'Alwan Invite – Beautiful Digital Wedding Invitations' })
 </script>
 
 <template>

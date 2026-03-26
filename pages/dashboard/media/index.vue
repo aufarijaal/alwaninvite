@@ -228,6 +228,8 @@ onUnmounted(() => {
         audio.src = ''
     })
 })
+
+useHead({ title: 'Media Library – Alwan Invite' })
 </script>
 
 <template>

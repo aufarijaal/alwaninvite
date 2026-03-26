@@ -90,6 +90,8 @@ const deleteInvitation = async (id: number) => {
 onMounted(() => {
   fetchInvitations()
 })
+
+useHead({ title: 'My Invitations – Alwan Invite' })
 </script>
 
 <template>

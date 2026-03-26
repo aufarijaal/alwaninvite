@@ -709,6 +709,8 @@ onMounted(() => {
   fetchWeddings();
   fetchWishes();
 });
+
+useHead({ title: 'Guest Wishes – Alwan Invite' })
 </script>
 
 <template>

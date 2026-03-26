@@ -33,6 +33,8 @@ const signInWithOAuth = async () => {
         loading.value = false
     }
 }
+
+useHead({ title: 'Sign In – Alwan Invite' })
 </script>
 
 <template>

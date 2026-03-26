@@ -199,6 +199,8 @@ const triggerFountain = async () => {
         if (count >= 12) clearInterval(interval)
     }, 100)
 }
+
+useHead({ title: 'Confetti Test – Alwan Invite' })
 </script>
 
 <template>

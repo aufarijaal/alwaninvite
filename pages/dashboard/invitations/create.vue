@@ -367,6 +367,8 @@ onUnmounted(() => {
         audioElement.value = null
     }
 })
+
+useHead({ title: 'Create Invitation – Alwan Invite' })
 </script>
 
 <template>

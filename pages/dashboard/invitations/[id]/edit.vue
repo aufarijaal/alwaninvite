@@ -432,6 +432,11 @@ const loadMockData = (mockName: string) => {
 
 const mockDataNames = getMockInvitationNames()
 
+useHead({
+    title: computed(() =>
+        form.value.title ? `Edit: ${form.value.title} – Alwan Invite` : 'Edit Invitation – Alwan Invite'
+    ),
+})
 </script>
 
 <template>

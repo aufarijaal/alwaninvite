@@ -19,6 +19,8 @@ watch(user, () => {
         }, 500)
     }
 }, { immediate: true })
+
+useHead({ title: 'Signing In... – Alwan Invite' })
 </script>
 
 <template>

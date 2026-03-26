@@ -36,6 +36,8 @@ const clearAll = () => {
     fpTimeRef.value?.clear()
     fpInlineRef.value?.clear()
 }
+
+useHead({ title: 'Component Test – Alwan Invite' })
 </script>
 
 <template>

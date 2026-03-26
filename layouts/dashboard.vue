@@ -93,7 +93,7 @@ const navigationItems = [
 
                 <!-- Bottom Section -->
                 <div class="p-2 border-t border-base-300 flex-shrink-0">
-                    <NuxtLink to="/help" :class="[
+                    <NuxtLink to="/docs" :class="[
                         'btn btn-ghost w-full flex',
                         !sidebarOpen ? 'tooltip tooltip-right px-0' : 'justify-start items-center'
                     ]" :data-tip="!sidebarOpen ? t('navigation.help') : undefined">
