@@ -11,10 +11,10 @@ From your Dashboard, click **"Invitations"** in the left menu. You'll see all yo
 Each card shows you at a glance:
 
 - The invitation title
+- When it was created
 - The URL slug (web address)
+- The invitation language and selected theme
 - The current status — **Draft** or **Published**
-- The selected theme
-- When it was last updated
 
 ---
 

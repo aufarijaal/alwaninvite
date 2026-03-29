@@ -230,9 +230,18 @@ const submitForm = async () => {
         // Step 2: Generate OG image (non-fatal)
         console.log('[2/3] Generating OG thumbnail...')
         try {
+            const akadEvent = form.value.events.find((e: any) => e.type === 'ceremony')
+            const akadDateTime = akadEvent?.start_time ? new Date(akadEvent.start_time) : null
+            let akadDate = akadDateTime && !isNaN(akadDateTime.getTime())
+                ? akadDateTime.toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })
+                : ''
+            if (akadDate && form.value.sunday_as_ahad) akadDate = akadDate.replace(/\bMinggu\b/g, 'Ahad')
+            const akadTime = akadDateTime && !isNaN(akadDateTime.getTime())
+                ? akadDateTime.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', hour12: false })
+                : ''
             const arrayBuffer = await $fetch<ArrayBuffer>('/api/generate-og', {
                 method: 'POST',
-                body: { bride: form.value.bride_callname, groom: form.value.groom_callname, theme: selectedTheme.value?.name ?? '' },
+                body: { bride: form.value.bride_callname, groom: form.value.groom_callname, theme: selectedTheme.value?.name ?? '', akad_date: akadDate, akad_time: akadTime },
                 responseType: 'arrayBuffer',
             })
             console.log('[2/3] OG image generated. Size:', arrayBuffer.byteLength, 'bytes. Uploading...')

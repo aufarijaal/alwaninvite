@@ -42,6 +42,35 @@ const error = computed(() => fetchError.value?.message ?? null)
 const requestUrl = useRequestURL()
 const baseUrl = `${requestUrl.protocol}//${requestUrl.host}`
 
+// Extract the akad (ceremony) event and format its date/time
+const akadEvent = computed(() => {
+    const events = wedding.value?.events
+    if (!Array.isArray(events)) return null
+    return (events as { type: string; start_time?: string }[]).find(e => e.type === 'ceremony') ?? null
+})
+
+const akadDateTime = computed(() => {
+    const startTime = akadEvent.value?.start_time
+    if (!startTime) return null
+    const date = new Date(startTime)
+    if (isNaN(date.getTime())) return null
+    return date
+})
+
+const akadDateFormatted = computed(() => {
+    if (!akadDateTime.value) return ''
+    return akadDateTime.value.toLocaleDateString('id-ID', {
+        weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'
+    })
+})
+
+const akadTimeFormatted = computed(() => {
+    if (!akadDateTime.value) return ''
+    return akadDateTime.value.toLocaleTimeString('id-ID', {
+        hour: '2-digit', minute: '2-digit', hour12: false
+    })
+})
+
 const ogImageUrl = computed(() => {
     if (!wedding.value) return `${baseUrl}/api/og`
     const { data } = supabase.storage
@@ -56,9 +85,15 @@ const pageTitle = computed(() =>
         : 'Wedding Invitation'
 )
 
-const pageDescription = computed(() =>
-    `You are cordially invited to the wedding of ${wedding.value?.groom_callname ?? ''} & ${wedding.value?.bride_callname ?? ''}.`
-)
+const pageDescription = computed(() => {
+    const groom = wedding.value?.groom_callname ?? ''
+    const bride = wedding.value?.bride_callname ?? ''
+    if (!wedding.value) return 'Wedding Invitation'
+    if (akadDateFormatted.value && akadTimeFormatted.value) {
+        return `Anda dengan hormat diundang ke pernikahan ${groom} & ${bride}. Akad Nikah akan dilaksanakan pada ${akadDateFormatted.value} pukul ${akadTimeFormatted.value} WIB.`
+    }
+    return `You are cordially invited to the wedding of ${groom} & ${bride}.`
+})
 
 useSeoMeta({
     title: pageTitle,
@@ -100,6 +135,8 @@ onMounted(() => {
             <ThemesBrown v-else-if="wedding.themes?.slug === 'brown'" :invitation="wedding" :guest="toGuest" />
             <ThemesSlate v-else-if="wedding.themes?.slug === 'slate'" :invitation="wedding" :guest="toGuest" />
             <ThemesIslamicLightGradient v-else-if="wedding.themes?.slug === 'islamic-light-gradient'"
+                :invitation="wedding" :guest="toGuest" />
+            <ThemesIslamicIndonesiaFormal1 v-else-if="wedding.themes?.slug === 'islamic-indonesia-formal-1'"
                 :invitation="wedding" :guest="toGuest" />
         </template>
     </div>

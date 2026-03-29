@@ -8,7 +8,7 @@ hero:
   actions:
     - theme: brand
       text: Membuat Undangan
-      link: /i./creating-invitation
+      link: /id/creating-invitation
     - theme: alt
       text: Buka Aplikasi →
       link: https://alwaninvite.my.id

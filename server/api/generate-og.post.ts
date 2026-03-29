@@ -70,6 +70,8 @@ export default defineEventHandler(async (event) => {
   const bride = (body.bride as string) || "Fulanah";
   const groom = (body.groom as string) || "Fulan";
   const themeName = ((body.theme as string) || "").toLowerCase().trim();
+  const akadDate = (body.akad_date as string) || "";
+  const akadTime = (body.akad_time as string) || "";
 
   const colors = themeColorMap[themeName] ?? defaultColors;
 
@@ -194,10 +196,76 @@ export default defineEventHandler(async (event) => {
                 fontWeight: "bold",
                 color: colors.text,
                 lineHeight: 1.1,
-                marginBottom: "32px",
+                marginBottom: akadDate || akadTime ? "20px" : "32px",
               },
             },
           },
+
+          // Akad date/time (rendered only when provided)
+          ...(akadDate || akadTime
+            ? [
+                {
+                  type: "div",
+                  props: {
+                    style: {
+                      display: "flex",
+                      flexDirection: "column" as const,
+                      alignItems: "center",
+                      gap: "6px",
+                      marginBottom: "28px",
+                      padding: "12px 24px",
+                      borderTop: `1px solid ${colors.divider}`,
+                      borderBottom: `1px solid ${colors.divider}`,
+                    },
+                    children: [
+                      {
+                        type: "div",
+                        props: {
+                          children: "Akad Nikah",
+                          style: {
+                            fontSize: 13,
+                            letterSpacing: "0.18em",
+                            textTransform: "uppercase" as const,
+                            color: colors.textMuted,
+                            marginBottom: "4px",
+                          },
+                        },
+                      },
+                      ...(akadDate
+                        ? [
+                            {
+                              type: "div",
+                              props: {
+                                children: akadDate,
+                                style: {
+                                  fontSize: 18,
+                                  fontWeight: "bold",
+                                  color: colors.text,
+                                },
+                              },
+                            },
+                          ]
+                        : []),
+                      ...(akadTime
+                        ? [
+                            {
+                              type: "div",
+                              props: {
+                                children: `Pukul ${akadTime} WIB`,
+                                style: {
+                                  fontSize: 16,
+                                  color: colors.textMuted,
+                                },
+                              },
+                            },
+                          ]
+                        : []),
+                    ],
+                  },
+                },
+              ]
+            : []),
+
           // Bottom ornament line
           {
             type: "div",

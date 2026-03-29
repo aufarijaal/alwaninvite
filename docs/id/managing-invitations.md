@@ -11,10 +11,10 @@ Dari Dashboard, klik **"Undangan"** di menu sebelah kiri. Kamu akan melihat semu
 Setiap kartu menampilkan:
 
 - Judul undangan
+- Kapan undangan dibuat
 - URL slug (alamat web)
+- Bahasa undangan dan tema yang dipilih
 - Status saat ini — **Draf** atau **Dipublikasikan**
-- Tema yang dipilih
-- Kapan terakhir diperbarui
 
 ---
 

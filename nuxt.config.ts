@@ -72,7 +72,7 @@ export default defineNuxtConfig({
       allowedHosts: [
         "alwaninvite.my.id",
         "localhost",
-        "174b-114-10-121-158.ngrok-free.app",
+        "efe6-114-10-16-224.ngrok-free.app",
       ],
     },
   },
