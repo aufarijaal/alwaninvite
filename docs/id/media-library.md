@@ -1,8 +1,15 @@
 # Perpustakaan Media
 
-Perpustakaan Media adalah tempat kamu mengelola file audio yang bisa digunakan sebagai musik latar di undanganmu.
+Perpustakaan Media adalah tempat kamu mengelola file audio dan gambar yang bisa digunakan di undanganmu.
 
 Buka dari **Dashboard → Media**.
+
+Halaman ini memiliki dua tab:
+
+| Tab        | Isi                                                              |
+| ---------- | ---------------------------------------------------------------- |
+| **Audio**  | Lagu latar — yang disediakan sistem maupun unggahanmu sendiri.   |
+| **Gambar** | Gambar yang kamu unggah untuk digunakan di undanganmu.           |
 
 ---
 
@@ -60,6 +67,40 @@ Setelah mengunggah file, ini cara menggunakannya:
 4. Pilih file yang sudah diunggah.
 5. Opsional: aktifkan **Putar Otomatis** dan **Ulangi**.
 6. Simpan undangan.
+
+---
+
+## Tab Gambar
+
+Tab **Gambar** memungkinkan kamu mengunggah foto sendiri untuk digunakan di undanganmu.
+
+---
+
+## Cara Mengunggah Gambar
+
+1. Buka **Dashboard → Media** dan pilih tab **Gambar**.
+2. Klik **"Unggah Gambar"**.
+3. Pilih file gambar dari perangkatmu.
+4. Klik **"Unggah"** dan tunggu hingga selesai — gambar akan muncul di daftar **Gambarmu**.
+
+::: warning Persyaratan File
+
+- Format yang diterima: **JPG, PNG, GIF, WebP** (semua format gambar umum)
+- Ukuran file maksimal: **1 MB** per file
+  :::
+
+---
+
+## Mengelola Gambarmu
+
+| Tindakan        | Caranya                                                                                                                                                              |
+| --------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Salin URL**   | Klik tombol **"Salin URL"** untuk menyalin link langsung gambar ke clipboard. Tempel link tersebut di mana pun kamu membutuhkan tautan gambar di undanganmu.         |
+| **Hapus**       | Klik tombol hapus (ikon tempat sampah) untuk menghapus gambar secara permanen.                                                                                       |
+
+::: danger
+Menghapus gambar bersifat permanen dan tidak bisa dibatalkan.
+:::
 
 ---
 

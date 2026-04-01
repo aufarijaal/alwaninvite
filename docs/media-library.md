@@ -1,8 +1,15 @@
 # Media Library
 
-The Media Library is where you manage audio files that can be used as background music on your invitation.
+The Media Library is where you manage the audio files and images that can be used on your invitation.
 
 Go to **Dashboard → Media** to open it.
+
+The page has two tabs:
+
+| Tab        | What it contains                                          |
+| ---------- | --------------------------------------------------------- |
+| **Audio**  | Background music tracks — system-provided and your own.  |
+| **Images** | Images you've uploaded for use on your invitation.        |
 
 ---
 
@@ -60,6 +67,40 @@ Once you've uploaded a file, here's how to use it:
 4. Choose your uploaded file.
 5. Optionally turn on **Autoplay** and **Loop**.
 6. Save the invitation.
+
+---
+
+## Images Tab
+
+The **Images** tab lets you upload your own photos to use on your invitation.
+
+---
+
+## How to Upload an Image
+
+1. Go to **Dashboard → Media** and open the **Images** tab.
+2. Click **"Upload Image"**.
+3. Select an image file from your device.
+4. Click **"Upload"** and wait for it to finish — the image will appear in your **Your Images** list.
+
+::: warning File Requirements
+
+- Accepted formats: **JPG, PNG, GIF, WebP** (any common image format)
+- Maximum file size: **1 MB** per file
+  :::
+
+---
+
+## Managing Your Images
+
+| Action        | How to do it                                                                     |
+| ------------- | -------------------------------------------------------------------------------- |
+| **Copy URL**  | Click the **"Copy URL"** button to copy the image's direct link to your clipboard. You can then paste this URL wherever an image link is needed on your invitation. |
+| **Delete**    | Click the delete (trash) button to remove the image permanently.                 |
+
+::: danger
+Deleting an image is permanent and cannot be undone.
+:::
 
 ---
 
