@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Edit, Eye, Trash2, Globe, Users } from 'lucide-vue-next'
+import { Edit, Eye, Trash2, Globe, Users, Image as ImageIcon, X } from 'lucide-vue-next'
 import type { Database } from '~/types/database.types'
 
 const { t } = useI18n()
@@ -35,6 +35,7 @@ const thumbnailUrl = computed(() => {
 })
 
 const imgError = ref(false)
+const showOgModal = ref(false)
 </script>
 
 <template>
@@ -83,6 +84,9 @@ const imgError = ref(false)
 
             <!-- Actions -->
             <div class="card-actions justify-end">
+                <button @click="showOgModal = true" class="btn btn-ghost btn-sm" :title="t('invitation.viewOgImage')">
+                    <ImageIcon :size="16" />
+                </button>
                 <NuxtLink :to="`/invite/${invitation.slug}`" target="_blank" class="btn btn-ghost btn-sm">
                     <Eye :size="16" />
                     {{ t('invitation.preview') }}
@@ -97,4 +101,28 @@ const imgError = ref(false)
             </div>
         </div>
     </div>
+
+    <!-- OG Image Modal -->
+    <Teleport to="body">
+        <div v-if="showOgModal" class="modal modal-open" @click.self="showOgModal = false">
+            <div class="modal-box max-w-2xl">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="font-bold text-lg">{{ t('invitation.viewOgImage') }}</h3>
+                    <button @click="showOgModal = false" class="btn btn-ghost btn-sm btn-circle">
+                        <X :size="18" />
+                    </button>
+                </div>
+                <div class="w-full aspect-[1200/630] bg-base-200 rounded-lg overflow-hidden">
+                    <img :src="thumbnailUrl" :alt="invitation.title || invitation.slug" class="w-full h-full object-contain" />
+                </div>
+                <div class="modal-action">
+                    <a :href="thumbnailUrl" target="_blank" rel="noopener noreferrer" class="btn btn-ghost btn-sm">
+                        <Eye :size="16" />
+                        {{ t('invitation.openInNewTab') }}
+                    </a>
+                    <button @click="showOgModal = false" class="btn btn-sm">{{ t('common.close') }}</button>
+                </div>
+            </div>
+        </div>
+    </Teleport>
 </template>

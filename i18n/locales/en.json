@@ -96,6 +96,8 @@
     "delete": "Delete Invitation",
     "send": "Send Invitation",
     "preview": "Preview",
+    "viewOgImage": "Cover Image",
+    "openInNewTab": "Open in New Tab",
     "quickCreate": "Quick Create",
     "confirmDelete": "Are you sure you want to delete this invitation? This action cannot be undone.",
     "status": {
@@ -321,6 +323,27 @@
     "empty": {
       "title": "No Audio Files",
       "subtitle": "Upload your first audio file to get started"
+    },
+    "tabs": {
+      "audio": "Audio",
+      "images": "Images"
+    },
+    "uploadImage": "Upload Image",
+    "imageFile": "Image File",
+    "imageFileSizeError": "File size exceeds 1 MB limit",
+    "imageFileTypeError": "Only image files are allowed",
+    "imageSupportedFormats": "Supported formats",
+    "imageMaxFileSize": "Max file size",
+    "yourImages": "Your Images",
+    "imageSearchPlaceholder": "Search by filename...",
+    "confirmDeleteImage": "Are you sure you want to delete this image?",
+    "imageUploadError": "Failed to upload image",
+    "imageDeleteError": "Failed to delete image",
+    "copyUrl": "Copy URL",
+    "urlCopied": "URL copied!",
+    "imageEmpty": {
+      "title": "No Images",
+      "subtitle": "Upload your first image to get started"
     }
   },
   "homepage": {

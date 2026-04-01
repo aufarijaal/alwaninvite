@@ -100,6 +100,8 @@
     "delete": "Hapus Undangan",
     "send": "Kirim Undangan",
     "preview": "Pratinjau",
+    "viewOgImage": "Gambar Cover",
+    "openInNewTab": "Buka di Tab Baru",
     "quickCreate": "Buat Cepat",
     "confirmDelete": "Apakah Anda yakin ingin menghapus undangan ini? Tindakan ini tidak dapat dibatalkan.",
     "status": {
@@ -321,6 +323,27 @@
     "empty": {
       "title": "Tidak Ada File Audio",
       "subtitle": "Unggah file audio pertama Anda untuk memulai"
+    },
+    "tabs": {
+      "audio": "Audio",
+      "images": "Gambar"
+    },
+    "uploadImage": "Unggah Gambar",
+    "imageFile": "File Gambar",
+    "imageFileSizeError": "Ukuran file melebihi batas 1 MB",
+    "imageFileTypeError": "Hanya file gambar yang diperbolehkan",
+    "imageSupportedFormats": "Format yang didukung",
+    "imageMaxFileSize": "Ukuran file maks",
+    "yourImages": "Gambar Anda",
+    "imageSearchPlaceholder": "Cari berdasarkan nama file...",
+    "confirmDeleteImage": "Apakah Anda yakin ingin menghapus gambar ini?",
+    "imageUploadError": "Gagal mengunggah gambar",
+    "imageDeleteError": "Gagal menghapus gambar",
+    "copyUrl": "Salin URL",
+    "urlCopied": "URL disalin!",
+    "imageEmpty": {
+      "title": "Tidak Ada Gambar",
+      "subtitle": "Unggah gambar pertama Anda untuk memulai"
     }
   },
   "homepage": {

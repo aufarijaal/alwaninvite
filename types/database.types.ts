@@ -284,6 +284,56 @@ export interface Database {
           },
         ];
       };
+      user_images: {
+        Row: {
+          id: number;
+          url: string;
+          user_id: string;
+          metadata: {
+            original_name: string;
+            size: number;
+            type: string;
+            width: number | null;
+            height: number | null;
+          } | null;
+          created_at: string | null;
+        };
+        Insert: {
+          id?: never;
+          url: string;
+          user_id: string;
+          metadata?: {
+            original_name: string;
+            size: number;
+            type: string;
+            width: number | null;
+            height: number | null;
+          } | null;
+          created_at?: string | null;
+        };
+        Update: {
+          id?: never;
+          url?: string;
+          user_id?: string;
+          metadata?: {
+            original_name: string;
+            size: number;
+            type: string;
+            width: number | null;
+            height: number | null;
+          } | null;
+          created_at?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "user_images_user_id_fkey";
+            columns: ["user_id"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       wishes: {
         Row: {
           id: number;
@@ -345,3 +395,4 @@ export type Subscription = Tables<"subscriptions">;
 export type Theme = Tables<"themes">;
 export type Wedding = Tables<"weddings">;
 export type Wish = Tables<"wishes">;
+export type UserImage = Tables<"user_images">;
