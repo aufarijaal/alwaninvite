@@ -22,6 +22,7 @@ export default defineNuxtConfig({
             "Create beautiful digital invitations easily with Alwan Invite.",
         },
       ],
+      link: [{ rel: "icon", type: "image/png", href: "/favicon.png" }],
     },
   },
   postcss: {

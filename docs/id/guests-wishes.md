@@ -77,7 +77,7 @@ Tinggal buka WhatsApp, tempel pesan di chat tamu tersebut, dan kirim. Link undan
 
 ## Template Pesan WhatsApp
 
-Kamu bisa menyesuaikan pesan undangan WhatsApp default untuk setiap undangan. Klik tombol **"Atur Template WA"** (ikon pengaturan di header halaman) untuk membuka editor template.
+Kamu bisa menyesuaikan pesan undangan WhatsApp default untuk setiap undangan. Klik tombol **"Atur Pesan WA"** (ikon pengaturan di header halaman) untuk membuka editor template.
 
 **Variabel yang tersedia:**
 

@@ -1136,22 +1136,15 @@ useHead({ title: 'Create Invitation – Alwan Invite' })
                 </div>
             </div>
 
-            <!-- Form Actions -->
-            <div class="card bg-base-100 shadow-xl">
-                <div class="card-body">
-                    <div class="flex flex-col md:flex-row gap-4 justify-between">
-                        <NuxtLink to="/dashboard/invitations" class="btn btn-ghost">
-                            {{ t('common.cancel') }}
-                        </NuxtLink>
-                    </div>
-                </div>
-            </div>
         </form>
     </div>
 
-    <!-- Floating Save Button -->
-    <div class="fixed bottom-6 right-6 z-50">
-        <button type="button" @click="submitForm" class="btn btn-primary shadow-lg" :disabled="saving">
+    <!-- Floating Action Buttons -->
+    <div class="fixed bottom-6 right-6 z-50 flex gap-2">
+        <NuxtLink to="/dashboard/invitations" class="btn btn-outline btn-sm shadow-lg">
+            {{ t('common.cancel') }}
+        </NuxtLink>
+        <button type="button" @click="submitForm" class="btn btn-primary btn-sm shadow-lg" :disabled="saving">
             <Save v-if="!saving" :size="20" />
             <span v-if="saving" class="loading loading-spinner"></span>
             {{ saving ? t('common.saving') : t('common.save') }}

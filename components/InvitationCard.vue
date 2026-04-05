@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Edit, Eye, Trash2, Globe, Users, Image as ImageIcon, X } from 'lucide-vue-next'
+import { Edit, Eye, Trash2, Globe, Users, Image as ImageIcon, X, ArrowLeftRight } from 'lucide-vue-next'
 import type { Database } from '~/types/database.types'
 
 const { t } = useI18n()
@@ -94,6 +94,13 @@ const showOgModal = ref(false)
                 <NuxtLink :to="`/dashboard/invitations/${invitation.id}/edit`" class="btn btn-primary btn-sm">
                     <Edit :size="16" />
                     {{ t('common.edit') }}
+                </NuxtLink>
+                <NuxtLink
+                    :to="`/dashboard/invitations/${invitation.id}/transfer`"
+                    class="btn btn-warning btn-sm"
+                    :title="t('transferOwnership.pageTitle')"
+                >
+                    <ArrowLeftRight :size="16" />
                 </NuxtLink>
                 <button @click="handleDelete" class="btn btn-error btn-sm">
                     <Trash2 :size="16" />

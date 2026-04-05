@@ -505,6 +505,38 @@
     "empty": {
       "title": "Belum Ada Ucapan",
       "subtitle": "Ucapan tamu dan tanggapan RSVP akan muncul di sini"
+    },
+    "pagination": {
+      "showing": "Menampilkan {from}–{to} dari {total}",
+      "rowsPerPage": "Baris per halaman"
+    }
+  },
+  "transferOwnership": {
+    "pageTitle": "Transfer Kepemilikan",
+    "pageSubtitle": "Pindahkan undangan ini ke akun lain",
+    "invitationLabel": "Undangan",
+    "warningTitle": "Tindakan ini tidak dapat dibatalkan",
+    "warningBody": "Setelah ditransfer, Anda tidak lagi memiliki akses ke undangan ini. Pemilik baru akan memiliki kendali penuh.",
+    "formTitle": "Masukkan Email Pemilik Baru",
+    "emailLabel": "Email Pemilik Baru",
+    "emailPlaceholder": "mis., pemilikbaru{'@'}example.com",
+    "emailHint": "Penerima harus sudah memiliki akun Alwan Invite.",
+    "continueBtn": "Lanjutkan",
+    "confirmTitle": "Konfirmasi Transfer",
+    "currentOwner": "Pemilik saat ini",
+    "newOwner": "Pemilik baru",
+    "transferTo": "transfer ke",
+    "confirmWarning": "Dengan mengklik \"Transfer Sekarang\", kepemilikan akan segera berpindah ke akun baru. Ini tidak dapat dibatalkan.",
+    "confirmBtn": "Transfer Sekarang",
+    "transferring": "Mentransfer...",
+    "successTitle": "Kepemilikan Berhasil Ditransfer!",
+    "successBody": "Undangan telah berhasil ditransfer ke {email}.",
+    "backToInvitations": "Kembali ke Undangan Saya",
+    "errors": {
+      "notFound": "Undangan tidak ditemukan atau Anda tidak memiliki izin untuk mentransfernya.",
+      "emailRequired": "Masukkan alamat email.",
+      "emailInvalid": "Masukkan alamat email yang valid.",
+      "sameUser": "Anda tidak dapat mentransfer undangan ke diri sendiri."
     }
   }
 }

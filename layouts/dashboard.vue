@@ -67,9 +67,7 @@ const navigationItems = [
                 <!-- Logo Area -->
                 <div class="h-[64px] flex justify-center items-center border-b border-base-300 flex-shrink-0">
                     <NuxtLink to="/dashboard" class="flex items-center gap-3" :class="!sidebarOpen && 'justify-center'">
-                        <div class="w-10 h-10 bg-primary rounded-lg flex items-center justify-center flex-shrink-0">
-                            <Heart :size="24" class="text-primary-content" />
-                        </div>
+                        <img src="/favicon.png" alt="Alwan Invite" class="w-10 h-10 rounded-lg flex-shrink-0" />
                         <span v-if="sidebarOpen" class="text-lg font-bold whitespace-nowrap">{{ t('common.appName')
                             }}</span>
                     </NuxtLink>

@@ -32,7 +32,19 @@ Membuka undanganmu di tab baru persis seperti yang akan dilihat tamu. Ini berfun
 
 > **Tips:** Selalu pratinjau di tampilan mobile sebelum dibagikan, karena sebagian besar tamu akan membukanya di ponsel.
 
-### 🗑️ Hapus
+### �️ Gambar Sampul
+
+Membuka modal yang menampilkan gambar sampul (OG image) yang dibuat otomatis untuk undanganmu. Ini adalah kartu pratinjau yang muncul saat kamu membagikan link undangan di WhatsApp atau media sosial. Kamu juga bisa membukanya di tab baru untuk mengunduh atau memeriksanya.
+
+### ↔️ Transfer Kepemilikan
+
+Memindahkan undangan ke akun Alwan Invite lain. Kamu akan diminta memasukkan alamat email pemilik baru (mereka harus sudah memiliki akun). Setelah dikonfirmasi, kepemilikan langsung berpindah dan kamu tidak akan lagi bisa mengakses undangan tersebut.
+
+::: danger
+Transfer kepemilikan bersifat permanen dan tidak bisa dibatalkan. Pastikan kamu mengirimkannya ke akun yang tepat.
+:::
+
+### �🗑️ Hapus
 
 Menghapus undangan secara permanen. Sebuah layar konfirmasi akan muncul sebelum apapun dihapus.
 

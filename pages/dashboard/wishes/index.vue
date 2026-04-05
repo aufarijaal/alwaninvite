@@ -23,10 +23,12 @@ import {
   useVueTable,
   getCoreRowModel,
   getSortedRowModel,
+  getPaginationRowModel,
   createColumnHelper,
   FlexRender,
   type SortingState,
   type RowSelectionState,
+  type PaginationState,
 } from "@tanstack/vue-table";
 import type { Database } from "~/types/database.types";
 
@@ -612,6 +614,7 @@ type WishWithWedding = Database["public"]["Tables"]["wishes"]["Row"] & {
 
 const rowSelection = ref<RowSelectionState>({});
 const sorting = ref<SortingState>([]);
+const pagination = ref<PaginationState>({ pageIndex: 0, pageSize: 20 });
 
 const columnHelper = createColumnHelper<WishWithWedding>();
 
@@ -666,6 +669,9 @@ const table = useVueTable({
     get sorting() {
       return sorting.value;
     },
+    get pagination() {
+      return pagination.value;
+    },
   },
   enableRowSelection: true,
   onRowSelectionChange: (updater) => {
@@ -676,8 +682,13 @@ const table = useVueTable({
     sorting.value =
       typeof updater === "function" ? updater(sorting.value) : updater;
   },
+  onPaginationChange: (updater) => {
+    pagination.value =
+      typeof updater === "function" ? updater(pagination.value) : updater;
+  },
   getCoreRowModel: getCoreRowModel(),
   getSortedRowModel: getSortedRowModel(),
+  getPaginationRowModel: getPaginationRowModel(),
 });
 
 const selectedCount = computed(() => table.getSelectedRowModel().rows.length);
@@ -700,9 +711,10 @@ const deleteSelected = async () => {
   }
 };
 
-// Clear selection when filters change
+// Clear selection and reset pagination when filters change
 watch([searchQuery, selectedWedding, selectedAttendance], () => {
   rowSelection.value = {};
+  pagination.value = { ...pagination.value, pageIndex: 0 };
 });
 
 onMounted(() => {
@@ -883,8 +895,107 @@ useHead({ title: 'Guest Wishes – Alwan Invite' })
             </button>
           </div>
 
-          <!-- Table -->
-          <div class="overflow-x-auto">
+          <!-- ── Mobile card layout (small screens only) ── -->
+          <div class="md:hidden space-y-3">
+            <!-- Select-all bar -->
+            <div class="flex items-center gap-2 px-1">
+              <input
+                type="checkbox"
+                class="checkbox checkbox-sm"
+                :checked="table.getIsAllRowsSelected()"
+                :indeterminate="table.getIsSomeRowsSelected() && !table.getIsAllRowsSelected()"
+                @change="table.toggleAllRowsSelected()"
+              />
+              <span class="text-sm text-base-content/60">{{ t("wishes.table.guestName") }}</span>
+            </div>
+
+            <div
+              v-for="row in table.getRowModel().rows"
+              :key="row.id"
+              class="card bg-base-200 rounded-xl p-4 space-y-3"
+              :class="{ 'ring-2 ring-primary ring-offset-1': row.getIsSelected() }"
+            >
+              <!-- Card header: checkbox + name + attendance badge -->
+              <div class="flex items-start justify-between gap-2">
+                <div class="flex items-start gap-2 min-w-0">
+                  <input
+                    type="checkbox"
+                    class="checkbox checkbox-sm mt-0.5 shrink-0"
+                    :checked="row.getIsSelected()"
+                    :disabled="!row.getCanSelect()"
+                    @change="row.toggleSelected()"
+                  />
+                  <div class="min-w-0">
+                    <div class="flex items-center gap-1.5 flex-wrap">
+                      <span class="font-semibold text-base leading-tight">{{ row.original.guest_name }}</span>
+                      <span
+                        v-if="isTableDuplicate(row.original)"
+                        class="badge badge-warning badge-xs gap-0.5"
+                      >
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-2.5 w-2.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
+                        </svg>
+                        {{ t("wishes.duplicates") }}
+                      </span>
+                    </div>
+                    <div class="text-xs text-base-content/50 mt-0.5 flex items-center gap-1">
+                      <Calendar :size="12" />
+                      {{ formatDate(row.original.created_at) }}
+                    </div>
+                  </div>
+                </div>
+                <div class="badge gap-1 shrink-0" :class="getAttendanceBadge(row.original.attendance)">
+                  <component :is="getAttendanceIcon(row.original.attendance)" :size="11" />
+                  {{ getAttendanceLabel(row.original.attendance) }}
+                </div>
+              </div>
+
+              <!-- Meta row: guest count + wedding -->
+              <div class="flex items-center gap-4 text-sm text-base-content/70">
+                <div class="flex items-center gap-1">
+                  <Users :size="14" class="opacity-60" />
+                  {{ row.original.guest_count }}
+                </div>
+                <div class="truncate">{{ row.original.weddings?.title || "-" }}</div>
+              </div>
+
+              <!-- Message -->
+              <div v-if="row.original.message" class="text-sm text-base-content/70 bg-base-100 rounded-lg px-3 py-2 line-clamp-2">
+                {{ row.original.message }}
+              </div>
+
+              <!-- Actions -->
+              <div class="flex gap-2 flex-wrap">
+                <button
+                  class="btn btn-sm gap-1.5 flex-1 transition-all duration-200"
+                  :class="copiedWishId === row.original.id ? 'btn-success' : 'btn-outline border-green-500 text-green-600 hover:bg-green-500 hover:border-green-500 hover:text-white dark:text-green-400 dark:border-green-500 dark:hover:bg-green-600'"
+                  @click="copyWhatsapp(row.original)"
+                >
+                  <Check v-if="copiedWishId === row.original.id" :size="14" />
+                  <Copy v-else :size="14" />
+                  <span class="text-xs font-medium">{{ copiedWishId === row.original.id ? t("wishes.whatsappCopied") : "Copy WA" }}</span>
+                </button>
+                <button
+                  class="btn btn-sm gap-1.5 flex-1 transition-all duration-200"
+                  :class="copiedLinkId === row.original.id ? 'btn-success' : 'btn-outline border-sky-500 text-sky-600 hover:bg-sky-500 hover:border-sky-500 hover:text-white dark:text-sky-400 dark:border-sky-500 dark:hover:bg-sky-600'"
+                  @click="copyLink(row.original)"
+                >
+                  <Check v-if="copiedLinkId === row.original.id" :size="14" />
+                  <Copy v-else :size="14" />
+                  <span class="text-xs font-medium">{{ copiedLinkId === row.original.id ? t("wishes.whatsappCopied") : "Copy Link" }}</span>
+                </button>
+                <button
+                  class="btn btn-ghost btn-sm btn-circle text-error"
+                  @click="deleteWish(row.original.id)"
+                >
+                  <Trash2 :size="16" />
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- ── Desktop table layout (md+ only) ── -->
+          <div class="hidden md:block overflow-x-auto">
             <table class="table table-zebra">
               <thead>
                 <tr
@@ -1104,6 +1215,71 @@ useHead({ title: 'Guest Wishes – Alwan Invite' })
                 </tr>
               </tbody>
             </table>
+          </div>
+          <!-- /Desktop table -->
+
+          <!-- ── Pagination ── -->
+          <div class="flex flex-col sm:flex-row items-center justify-between gap-3 pt-2 border-t border-base-300">
+            <!-- Info -->
+            <div class="text-sm text-base-content/60">
+              {{
+                t("wishes.pagination.showing", {
+                  from: pagination.pageIndex * pagination.pageSize + 1,
+                  to: Math.min((pagination.pageIndex + 1) * pagination.pageSize, filteredWishes.length),
+                  total: filteredWishes.length,
+                })
+              }}
+            </div>
+            <!-- Controls -->
+            <div class="flex items-center gap-1">
+              <button
+                class="btn btn-sm btn-ghost"
+                :disabled="!table.getCanPreviousPage()"
+                @click="table.setPageIndex(0)"
+              >«</button>
+              <button
+                class="btn btn-sm btn-ghost"
+                :disabled="!table.getCanPreviousPage()"
+                @click="table.previousPage()"
+              >‹</button>
+              <template v-for="page in table.getPageCount()" :key="page">
+                <button
+                  v-if="
+                    page - 1 === 0 ||
+                    page - 1 === table.getPageCount() - 1 ||
+                    Math.abs(page - 1 - pagination.pageIndex) <= 1
+                  "
+                  class="btn btn-sm"
+                  :class="page - 1 === pagination.pageIndex ? 'btn-primary' : 'btn-ghost'"
+                  @click="table.setPageIndex(page - 1)"
+                >{{ page }}</button>
+                <span
+                  v-else-if="Math.abs(page - 1 - pagination.pageIndex) === 2"
+                  class="px-1 text-base-content/40"
+                >…</span>
+              </template>
+              <button
+                class="btn btn-sm btn-ghost"
+                :disabled="!table.getCanNextPage()"
+                @click="table.nextPage()"
+              >›</button>
+              <button
+                class="btn btn-sm btn-ghost"
+                :disabled="!table.getCanNextPage()"
+                @click="table.setPageIndex(table.getPageCount() - 1)"
+              >»</button>
+            </div>
+            <!-- Page size selector -->
+            <div class="flex items-center gap-2 text-sm">
+              <span class="text-base-content/60">{{ t("wishes.pagination.rowsPerPage") }}</span>
+              <select
+                class="select select-bordered select-xs"
+                :value="pagination.pageSize"
+                @change="table.setPageSize(Number(($event.target as HTMLSelectElement).value))"
+              >
+                <option v-for="size in [10, 20, 50, 100]" :key="size" :value="size">{{ size }}</option>
+              </select>
+            </div>
           </div>
         </div>
       </div>

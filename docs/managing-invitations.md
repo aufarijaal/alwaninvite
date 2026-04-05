@@ -32,7 +32,19 @@ Opens your invitation in a new tab exactly as your guests will see it. This work
 
 > **Tip:** Always preview on a mobile view before sharing, since most guests will open it on their phone.
 
-### 🗑️ Delete
+### �️ Cover Image
+
+Opens a modal showing the auto-generated cover image (OG image) for your invitation. This is the preview card that appears when you share your link on WhatsApp or social media. You can also open it in a new tab to download or inspect it.
+
+### ↔️ Transfer Ownership
+
+Transfers the invitation to another Alwan Invite account. You'll be asked to enter the new owner's email address (they must already have an account). After confirming, ownership moves immediately and you will no longer have access to the invitation.
+
+::: danger
+Transferring ownership is permanent and cannot be undone. Make sure you're sending it to the right account.
+:::
+
+### �🗑️ Delete
 
 Removes the invitation permanently. A confirmation screen will appear before anything is deleted.
 

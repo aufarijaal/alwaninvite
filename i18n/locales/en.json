@@ -505,6 +505,38 @@
     "empty": {
       "title": "No Wishes Yet",
       "subtitle": "Guest wishes and RSVP responses will appear here"
+    },
+    "pagination": {
+      "showing": "Showing {from}–{to} of {total}",
+      "rowsPerPage": "Rows per page"
+    }
+  },
+  "transferOwnership": {
+    "pageTitle": "Transfer Ownership",
+    "pageSubtitle": "Transfer this invitation to another account",
+    "invitationLabel": "Invitation",
+    "warningTitle": "This action is irreversible",
+    "warningBody": "Once transferred, you will no longer have access to this invitation. The new owner will have full control.",
+    "formTitle": "Enter New Owner's Email",
+    "emailLabel": "New Owner's Email",
+    "emailPlaceholder": "e.g., newowner{'@'}example.com",
+    "emailHint": "The recipient must already have an Alwan Invite account.",
+    "continueBtn": "Continue",
+    "confirmTitle": "Confirm Transfer",
+    "currentOwner": "Current owner",
+    "newOwner": "New owner",
+    "transferTo": "transfer to",
+    "confirmWarning": "By clicking \"Transfer Now\", ownership will immediately move to the new account. This cannot be undone.",
+    "confirmBtn": "Transfer Now",
+    "transferring": "Transferring...",
+    "successTitle": "Ownership Transferred!",
+    "successBody": "The invitation has been successfully transferred to {email}.",
+    "backToInvitations": "Back to My Invitations",
+    "errors": {
+      "notFound": "Invitation not found or you do not have permission to transfer it.",
+      "emailRequired": "Please enter an email address.",
+      "emailInvalid": "Please enter a valid email address.",
+      "sameUser": "You cannot transfer the invitation to yourself."
     }
   }
 }

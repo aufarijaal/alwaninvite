@@ -77,7 +77,7 @@ Just open WhatsApp, paste the message in the guest's chat, and send. The invitat
 
 ## WhatsApp Message Template
 
-You can customise the default WhatsApp invitation message for each invitation. Click the **"Configure WA Template"** button (the settings icon in the page header) to open the template editor.
+You can customise the default WhatsApp invitation message for each invitation. Click the **"Set Up WA Message"** button (the settings icon in the page header) to open the template editor.
 
 **Available variables:**
 

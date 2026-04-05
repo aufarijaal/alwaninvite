@@ -140,6 +140,10 @@ When this is turned on, a confetti burst appears on screen after a guest submits
 
 - **Emoji 1 / Emoji 2** — Choose which emojis appear in the confetti. The default is 🙏 and ❤️, but you can change them to anything you like. These fields only appear when Confetti on Wish is enabled.
 
+### Sunday as Ahad
+
+When this is turned on, Sunday is displayed as **"Ahad"** on your invitation — the Arabic/Islamic name for Sunday. This is a common choice for invitations following Islamic tradition.
+
 ### Wish Auto-Reply
 
 Write a thank-you message (up to 300 characters) that guests automatically see after they submit a wish. For example:

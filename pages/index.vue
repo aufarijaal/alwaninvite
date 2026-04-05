@@ -71,10 +71,7 @@ useHead({ title: 'Alwan Invite – Beautiful Digital Wedding Invitations' })
         <nav class="fixed top-0 inset-x-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-100">
             <div class="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
                 <div class="flex items-center gap-2">
-                    <div
-                        class="w-8 h-8 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-lg flex items-center justify-center">
-                        <Heart :size="16" class="text-white" fill="white" />
-                    </div>
+                    <img src="/favicon.png" alt="Alwan Invite" class="w-8 h-8 rounded-lg" />
                     <span class="font-semibold text-gray-900 text-lg">Alwan Invite</span>
                 </div>
                 <div class="flex items-center gap-3">
@@ -265,10 +262,7 @@ useHead({ title: 'Alwan Invite – Beautiful Digital Wedding Invitations' })
         <footer class="py-10 px-6 border-t border-gray-100">
             <div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
                 <div class="flex items-center gap-2">
-                    <div
-                        class="w-7 h-7 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-lg flex items-center justify-center">
-                        <Heart :size="14" class="text-white" fill="white" />
-                    </div>
+                    <img src="/favicon.png" alt="Alwan Invite" class="w-7 h-7 rounded-lg" />
                     <span class="font-semibold text-gray-900">Alwan Invite</span>
                 </div>
                 <p class="text-sm text-gray-400">© {{ new Date().getFullYear() }} Alwan Invite. {{
