@@ -416,6 +416,7 @@
     "title": "Wishes & RSVP",
     "subtitle": "Manage guest wishes and attendance responses",
     "exportCSV": "Export to CSV",
+    "exportExcel": "Export to Excel",
     "search": "Search",
     "searchPlaceholder": "Search by guest name or message...",
     "filterByWedding": "Filter by Wedding",

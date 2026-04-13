@@ -18,6 +18,7 @@ import {
   ArrowUpDown,
   Settings2,
   RotateCcw,
+  FileSpreadsheet,
 } from "lucide-vue-next";
 import {
   useVueTable,
@@ -544,6 +545,134 @@ const exportToCSV = () => {
   window.URL.revokeObjectURL(url);
 };
 
+const exportingExcel = ref(false);
+
+const exportToExcel = async () => {
+  if (exportingExcel.value) return;
+  exportingExcel.value = true;
+  try {
+    const ExcelJS = (await import("exceljs")).default;
+    const workbook = new ExcelJS.Workbook();
+    workbook.creator = "Alwan Invite";
+    workbook.created = new Date();
+
+    const sheet = workbook.addWorksheet("Guests & Wishes", {
+      views: [{ state: "frozen", ySplit: 1 }],
+    });
+
+    // Column definitions
+    sheet.columns = [
+      { key: "no",         header: "No.",           width: 6 },
+      { key: "date",       header: "Date",           width: 22 },
+      { key: "guest_name", header: "Guest Name",      width: 28 },
+      { key: "attendance", header: "Attendance",      width: 16 },
+      { key: "count",      header: "Guest Count",     width: 14 },
+      { key: "message",    header: "Message",         width: 45 },
+      { key: "wedding",    header: "Wedding",         width: 32 },
+    ];
+
+    // Style header row
+    const headerRow = sheet.getRow(1);
+    headerRow.eachCell((cell) => {
+      cell.fill = {
+        type: "pattern",
+        pattern: "solid",
+        fgColor: { argb: "FF1E293B" }, // slate-800
+      };
+      cell.font = { bold: true, color: { argb: "FFFFFFFF" }, size: 11 };
+      cell.alignment = { vertical: "middle", horizontal: "center", wrapText: false };
+      cell.border = {
+        bottom: { style: "thin", color: { argb: "FF334155" } },
+      };
+    });
+    headerRow.height = 28;
+
+    // Attendance label helper (English only for export)
+    const attendanceLabel = (a: string | null) => {
+      switch (a) {
+        case "hadir":        case "yes":   return "Attending";
+        case "tidak_hadir": case "no":    return "Not Attending";
+        case "mungkin":      case "maybe": return "Maybe";
+        default:                           return "Pending";
+      }
+    };
+
+    // Fill data rows
+    filteredWishes.value.forEach((wish, index) => {
+      const row = sheet.addRow({
+        no:         index + 1,
+        date:       new Date(wish.created_at).toLocaleString("en-US", {
+          year: "numeric", month: "short", day: "numeric",
+          hour: "2-digit", minute: "2-digit",
+        }),
+        guest_name: wish.guest_name,
+        attendance: attendanceLabel(wish.attendance),
+        count:      wish.guest_count ?? 0,
+        message:    wish.message ?? "",
+        wedding:    (wish as any).weddings?.title ?? "",
+      });
+
+      // Alternate row shading
+      const bg = index % 2 === 0 ? "FFFFFFFF" : "FFF8FAFC";
+      row.eachCell({ includeEmpty: true }, (cell) => {
+        cell.fill = { type: "pattern", pattern: "solid", fgColor: { argb: bg } };
+        cell.font = { size: 10 };
+        cell.alignment = { vertical: "top", wrapText: cell.col === 6 };
+      });
+
+      // Color-code attendance cell
+      const attendanceCell = row.getCell("attendance");
+      attendanceCell.alignment = { vertical: "top", horizontal: "center" };
+      switch (wish.attendance) {
+        case "hadir":
+        case "yes":
+          attendanceCell.font = { size: 10, bold: true, color: { argb: "FF16A34A" } };
+          break;
+        case "tidak_hadir":
+        case "no":
+          attendanceCell.font = { size: 10, bold: true, color: { argb: "FFDC2626" } };
+          break;
+        case "mungkin":
+        case "maybe":
+          attendanceCell.font = { size: 10, bold: true, color: { argb: "FFD97706" } };
+          break;
+        default:
+          attendanceCell.font = { size: 10, color: { argb: "FF94A3B8" } };
+      }
+
+      // Center the No. and Guest Count columns
+      row.getCell("no").alignment    = { vertical: "top", horizontal: "center" };
+      row.getCell("count").alignment = { vertical: "top", horizontal: "center" };
+    });
+
+    // Add a thin border under each data row
+    const lastRow = sheet.lastRow?.number ?? 1;
+    for (let r = 2; r <= lastRow; r++) {
+      sheet.getRow(r).eachCell({ includeEmpty: true }, (cell) => {
+        cell.border = {
+          bottom: { style: "hair", color: { argb: "FFE2E8F0" } },
+        };
+      });
+    }
+
+    // Download
+    const buffer = await workbook.xlsx.writeBuffer();
+    const blob = new Blob([buffer], {
+      type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `guests-wishes-${new Date().toISOString().split("T")[0]}.xlsx`;
+    a.click();
+    URL.revokeObjectURL(url);
+  } catch (err) {
+    console.error("Error exporting to Excel:", err);
+  } finally {
+    exportingExcel.value = false;
+  }
+};
+
 const formatDate = (date: string) =>
   new Date(date).toLocaleDateString("en-US", {
     year: "numeric",
@@ -744,17 +873,21 @@ useHead({ title: 'Guest Wishes – Alwan Invite' })
           {{ t("wishes.waTemplate.buttonLabel") }}
         </button>
         <button
+          @click="exportToExcel"
+          class="btn btn-outline btn-sm gap-2"
+          :disabled="filteredWishes.length === 0 || exportingExcel"
+        >
+          <span v-if="exportingExcel" class="loading loading-spinner loading-xs"></span>
+          <FileSpreadsheet v-else :size="16" />
+          {{ t("wishes.exportExcel") }}
+        </button>
+        <button
           @click="openAddGuestsDialog"
           class="btn btn-primary btn-sm gap-2"
         >
           <UserPlus :size="16" />
           {{ t("wishes.addGuests") }}
         </button>
-        <!-- <button @click="exportToCSV" class="btn btn-outline btn-sm gap-2"
-                    :disabled="filteredWishes.length === 0">
-                    <Download :size="16" />
-                    {{ t('wishes.exportCSV') }}
-                </button> -->
       </div>
     </div>
 

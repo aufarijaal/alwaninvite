@@ -28,6 +28,7 @@
     "@vueuse/motion": "^3.0.3",
     "@vueuse/nuxt": "14.1.0",
     "aos": "^2.3.4",
+    "exceljs": "^4.4.0",
     "flatpickr": "^4.6.13",
     "lucide-vue-next": "^0.562.0",
     "nuxt": "^3.20.2",
