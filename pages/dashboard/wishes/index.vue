@@ -61,12 +61,40 @@ const guestTextarea = ref("");
 const guestFields = ref<string[]>([""]);
 const savingGuests = ref(false);
 const savedMessage = ref("");
+const casingMode = ref<'none' | 'title' | 'sentence' | 'upper'>('none');
 
 // Current total for the selected wedding (drives the counter)
 const weddingGuestCount = computed(() => {
   if (!addGuestsWeddingId.value) return 0;
   return wishes.value.filter((w) => w.wedding_id === addGuestsWeddingId.value)
     .length;
+});
+
+const applyCasing = (name: string, mode: typeof casingMode.value): string => {
+  switch (mode) {
+    case 'title':
+      return name.replace(/\S+/g, (w) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase());
+    case 'sentence':
+      return name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
+    case 'upper':
+      return name.toUpperCase();
+    default:
+      return name;
+  }
+};
+
+watch(casingMode, (mode) => {
+  if (mode === 'none') return;
+  if (inputMethod.value === 'textarea') {
+    guestTextarea.value = guestTextarea.value
+      .split('\n')
+      .map((l) => (l.trim() ? applyCasing(l.trim(), mode) : l))
+      .join('\n');
+  } else {
+    guestFields.value = guestFields.value.map((f) =>
+      f.trim() ? applyCasing(f.trim(), mode) : f,
+    );
+  }
 });
 
 const parsedTextareaNames = computed(() =>
@@ -148,6 +176,7 @@ const openAddGuestsDialog = () => {
   guestTextarea.value = "";
   guestFields.value = [""];
   savedMessage.value = "";
+  casingMode.value = 'none';
   addGuestsModal.value?.showModal();
 };
 
@@ -1489,6 +1518,45 @@ useHead({ title: 'Guest Wishes – Alwan Invite' })
               @click="inputMethod = 'fields'"
             >
               {{ t("wishes.methodFields") }}
+            </button>
+          </div>
+        </div>
+
+        <!-- Letter casing selector -->
+        <div class="form-control mb-4">
+          <label class="label"
+            ><span class="label-text font-medium">{{
+              t("wishes.casingLabel")
+            }}</span></label
+          >
+          <div class="join flex-wrap">
+            <button
+              class="join-item btn btn-sm"
+              :class="casingMode === 'none' ? 'btn-active' : 'btn-outline'"
+              @click="casingMode = 'none'"
+            >
+              {{ t("wishes.casingNone") }}
+            </button>
+            <button
+              class="join-item btn btn-sm"
+              :class="casingMode === 'title' ? 'btn-active' : 'btn-outline'"
+              @click="casingMode = 'title'"
+            >
+              {{ t("wishes.casingTitle") }}
+            </button>
+            <button
+              class="join-item btn btn-sm"
+              :class="casingMode === 'sentence' ? 'btn-active' : 'btn-outline'"
+              @click="casingMode = 'sentence'"
+            >
+              {{ t("wishes.casingSentence") }}
+            </button>
+            <button
+              class="join-item btn btn-sm"
+              :class="casingMode === 'upper' ? 'btn-active' : 'btn-outline'"
+              @click="casingMode = 'upper'"
+            >
+              {{ t("wishes.casingUpper") }}
             </button>
           </div>
         </div>

@@ -436,6 +436,11 @@
     "inputMethod": "Metode Input",
     "methodTextarea": "Tempel daftar",
     "methodFields": "Tambah satu per satu",
+    "casingLabel": "Format Huruf",
+    "casingNone": "Apa adanya",
+    "casingTitle": "Title Case",
+    "casingSentence": "Sentence case",
+    "casingUpper": "HURUF BESAR",
     "textareaLabel": "Nama tamu (satu per baris)",
     "textareaPlaceholder": "Ahmad\nBudi Santoso\nCitra Dewi\n...",
     "addRow": "Tambah tamu lagi",
@@ -539,5 +544,15 @@
       "emailInvalid": "Masukkan alamat email yang valid.",
       "sameUser": "Anda tidak dapat mentransfer undangan ke diri sendiri."
     }
+  },
+  "exportImport": {
+    "export": "Ekspor",
+    "exportTitle": "Ekspor data undangan",
+    "exportError": "Gagal mengekspor undangan. Silakan coba lagi.",
+    "import": "Impor",
+    "importing": "Mengimpor...",
+    "importHint": "Impor undangan dari file .json yang telah diekspor",
+    "importError": "Gagal mengimpor undangan. Periksa file dan coba lagi.",
+    "invalidFile": "File ekspor tidak valid. Pilih file .json ekspor yang benar."
   }
 }

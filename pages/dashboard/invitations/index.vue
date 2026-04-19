@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Plus, Calendar } from 'lucide-vue-next'
+import { Plus, Calendar, Upload } from 'lucide-vue-next'
 import type { Database } from '~/types/database.types'
 
 definePageMeta({
@@ -10,11 +10,17 @@ definePageMeta({
 const { t } = useI18n()
 const supabase = useSupabaseClient<Database>()
 const user = useSupabaseUser()
+const router = useRouter()
 
 // State
 const invitations = ref<Database['public']['Tables']['weddings']['Row'][]>([])
 const loading = ref(true)
 const error = ref<string | null>(null)
+
+// Import state
+const importing = ref(false)
+const importError = ref<string | null>(null)
+const importFileInput = ref<HTMLInputElement | null>(null)
 
 // Fetch invitations
 const fetchInvitations = async () => {
@@ -86,6 +92,45 @@ const deleteInvitation = async (id: number) => {
   }
 }
 
+// Import handler
+const triggerImport = () => {
+  importError.value = null
+  importFileInput.value?.click()
+}
+
+const handleImportFile = async (event: Event) => {
+  const target = event.target as HTMLInputElement
+  const file = target.files?.[0]
+  if (!file) return
+
+  importing.value = true
+  importError.value = null
+  try {
+    const text = await file.text()
+    let parsed: unknown
+    try {
+      parsed = JSON.parse(text)
+    } catch {
+      throw new Error(t('exportImport.invalidFile'))
+    }
+
+    const result = await $fetch<{ success: boolean; wedding: { id: number; slug: string }; audioImported: boolean; wishesImported: number }>(
+      '/api/invitations/import',
+      { method: 'POST', body: parsed },
+    )
+
+    if (result.success) {
+      router.push(`/dashboard/invitations/${result.wedding.id}/edit`)
+    }
+  } catch (err: any) {
+    importError.value = err?.data?.statusMessage || err?.message || t('exportImport.importError')
+  } finally {
+    importing.value = false
+    // Reset the input so the same file can be re-selected if needed
+    if (importFileInput.value) importFileInput.value.value = ''
+  }
+}
+
 // Load invitations on mount
 onMounted(() => {
   fetchInvitations()
@@ -96,6 +141,15 @@ useHead({ title: 'My Invitations – Alwan Invite' })
 
 <template>
   <div class="space-y-6">
+    <!-- Hidden file input for import -->
+    <input
+      ref="importFileInput"
+      type="file"
+      accept=".json"
+      class="hidden"
+      @change="handleImportFile"
+    />
+
     <!-- Page Header -->
     <div class="flex flex-col md:flex-row md:justify-between md:items-center gap-4">
       <div>
@@ -103,11 +157,27 @@ useHead({ title: 'My Invitations – Alwan Invite' })
         <p class="text-base-content/70 mt-1">{{ t('invitation.list.subtitle') }}</p>
       </div>
       <div class="flex gap-2">
+        <button
+          class="btn btn-outline"
+          :class="{ 'loading': importing }"
+          :disabled="importing"
+          @click="triggerImport"
+          :title="t('exportImport.importHint')"
+        >
+          <Upload v-if="!importing" :size="20" />
+          {{ importing ? t('exportImport.importing') : t('exportImport.import') }}
+        </button>
         <NuxtLink to="/dashboard/invitations/create" class="btn btn-primary">
           <Plus :size="20" />
           {{ t('dashboard.createInvitation') }}
         </NuxtLink>
       </div>
+    </div>
+
+    <!-- Import error banner -->
+    <div v-if="importError" class="alert alert-error">
+      <span>{{ importError }}</span>
+      <button class="btn btn-ghost btn-xs" @click="importError = null">✕</button>
     </div>
 
     <!-- Loading State -->
@@ -136,7 +206,6 @@ useHead({ title: 'My Invitations – Alwan Invite' })
         </div>
       </div>
     </div>
-
 
     <!-- Invitations Grid -->
     <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

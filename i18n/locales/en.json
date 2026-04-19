@@ -436,6 +436,11 @@
     "inputMethod": "Input Method",
     "methodTextarea": "Paste list",
     "methodFields": "Add individually",
+    "casingLabel": "Letter Casing",
+    "casingNone": "As typed",
+    "casingTitle": "Title Case",
+    "casingSentence": "Sentence case",
+    "casingUpper": "UPPERCASE",
     "textareaLabel": "Guest names (one per line)",
     "textareaPlaceholder": "Ahmad\nBudi Santoso\nCitra Dewi\n...",
     "addRow": "Add another guest",
@@ -539,5 +544,15 @@
       "emailInvalid": "Please enter a valid email address.",
       "sameUser": "You cannot transfer the invitation to yourself."
     }
+  },
+  "exportImport": {
+    "export": "Export",
+    "exportTitle": "Export invitation data",
+    "exportError": "Failed to export invitation. Please try again.",
+    "import": "Import",
+    "importing": "Importing...",
+    "importHint": "Import an invitation from an exported .json file",
+    "importError": "Failed to import invitation. Please check the file and try again.",
+    "invalidFile": "Invalid export file. Please select a valid .json export file."
   }
 }

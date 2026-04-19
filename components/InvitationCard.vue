@@ -1,9 +1,30 @@
 <script setup lang="ts">
-import { Edit, Eye, Trash2, Globe, Users, Image as ImageIcon, X, ArrowLeftRight } from 'lucide-vue-next'
+import { Edit, Eye, Trash2, Globe, Users, Image as ImageIcon, X, ArrowLeftRight, Download } from 'lucide-vue-next'
 import type { Database } from '~/types/database.types'
 
 const { t } = useI18n()
 const supabase = useSupabaseClient()
+
+const exporting = ref(false)
+
+const exportInvitation = async () => {
+    if (exporting.value) return
+    exporting.value = true
+    try {
+        const data = await $fetch(`/api/invitations/${props.invitation.id}/export`)
+        const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' })
+        const url = URL.createObjectURL(blob)
+        const anchor = document.createElement('a')
+        anchor.href = url
+        anchor.download = `invitation-${props.invitation.slug}.alwan.json`
+        anchor.click()
+        URL.revokeObjectURL(url)
+    } catch (err: any) {
+        alert(err?.data?.statusMessage || t('exportImport.exportError'))
+    } finally {
+        exporting.value = false
+    }
+}
 
 interface Props {
     invitation: Database['public']['Tables']['weddings']['Row']
@@ -95,6 +116,15 @@ const showOgModal = ref(false)
                     <Edit :size="16" />
                     {{ t('common.edit') }}
                 </NuxtLink>
+                <button
+                    @click="exportInvitation"
+                    class="btn btn-ghost btn-sm"
+                    :class="{ 'loading': exporting }"
+                    :disabled="exporting"
+                    :title="t('exportImport.exportTitle')"
+                >
+                    <Download v-if="!exporting" :size="16" />
+                </button>
                 <NuxtLink
                     :to="`/dashboard/invitations/${invitation.id}/transfer`"
                     class="btn btn-warning btn-sm"
