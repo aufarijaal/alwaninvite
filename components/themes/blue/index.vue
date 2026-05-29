@@ -643,11 +643,7 @@
                 placeholder="Nama Anda"
                 required
                 maxlength="100"
-                :readonly="!!props.guest"
                 class="w-full bg-blue-950/60 border border-blue-700/40 rounded-xl px-4 py-2.5 text-white placeholder-blue-300/30 font-sans text-sm focus:outline-none focus:border-blue-400/60 transition-colors"
-                :class="{
-                  'opacity-60 cursor-not-allowed select-none': !!props.guest,
-                }"
               />
             </div>
             <div>
@@ -1004,7 +1000,7 @@ const copyToClipboard = async (text: string) => {
 const wishes = ref<any[]>([]);
 const submitting = ref(false);
 const wishAutoReply = ref("");
-const guestValidated = ref<boolean | null>(props.guest ? null : false);
+const guestValidated = ref<boolean | null>(false);
 const wishForm = reactive({
   guest_name: props.guest ?? "",
   attendance: "",
@@ -1032,19 +1028,12 @@ const fetchWishes = async () => {
 };
 
 const checkGuestAccess = async () => {
-  if (!props.guest || !props.invitation?.id) {
+  if (!props.invitation?.id) {
     guestValidated.value = false;
     return;
   }
-  const { data } = await supabase
-    .from("wishes")
-    .select("id")
-    .eq("wedding_id", String(props.invitation.id))
-    .ilike("guest_name", props.guest)
-    .is("attendance", null)
-    .limit(1);
-  guestValidated.value = !!(data && data.length > 0);
-  if (guestValidated.value) {
+  guestValidated.value = true;
+  if (props.guest) {
     wishForm.guest_name = props.guest;
   }
 };
@@ -1098,17 +1087,18 @@ const fireConfetti = async () => {
 };
 
 const submitWish = async () => {
-  if (!props.invitation?.id || !props.guest) return;
+  if (!props.invitation?.id || !wishForm.guest_name.trim()) return;
   submitting.value = true;
   wishAutoReply.value = "";
   const { error } = await supabase
     .from("wishes")
-    .update({
+    .insert({
+      wedding_id: String(props.invitation.id),
+      guest_name: wishForm.guest_name,
       attendance: wishForm.attendance,
       message: wishForm.message,
-    })
-    .eq("wedding_id", String(props.invitation.id))
-    .ilike("guest_name", String(props.guest));
+      guest_count: 1,
+    });
   submitting.value = false;
   if (!error) {
     guestValidated.value = false;
