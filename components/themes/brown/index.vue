@@ -743,7 +743,7 @@
               </span>
             </div>
             <p class="text-amber-300/70 text-sm font-sans leading-relaxed">
-              {{ wish.message }}
+              {{ wish.message ? wish.message : formatDateTimeId(wish.message_at || wish.created_at) }}
             </p>
           </div>
         </div>
@@ -849,6 +849,8 @@
 </template>
 
 <script setup lang="ts">
+import { formatDateTimeId } from "~/utils/dateHelpers";
+
 const props = defineProps<{
   invitation: any;
   guest?: string;
@@ -1119,6 +1121,7 @@ const submitWish = async () => {
       guest_name: wishForm.guest_name,
       attendance: wishForm.attendance,
       message: wishForm.message,
+      message_at: new Date().toISOString(),
       guest_count: 1,
     });
   submitting.value = false;

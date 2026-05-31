@@ -343,6 +343,7 @@ export interface Database {
           guest_name: string;
           guest_count: number;
           message: string | null;
+          message_at: string | null;
         };
         Insert: {
           id?: never;
@@ -352,6 +353,7 @@ export interface Database {
           guest_name: string;
           guest_count?: number;
           message?: string | null;
+          message_at?: string | null;
         };
         Update: {
           id?: never;
@@ -361,6 +363,7 @@ export interface Database {
           guest_name?: string;
           guest_count?: number;
           message?: string | null;
+          message_at?: string | null;
         };
         Relationships: [];
       };

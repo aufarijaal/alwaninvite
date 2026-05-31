@@ -32,6 +32,7 @@ import {
   type PaginationState,
 } from "@tanstack/vue-table";
 import type { Database } from "~/types/database.types";
+import { formatDateTimeId } from "~/utils/dateHelpers";
 
 definePageMeta({
   middleware: "auth",
@@ -551,6 +552,7 @@ const exportToCSV = () => {
     "Attendance",
     "Guest Count",
     "Message",
+    "Message Time",
     "Wedding",
   ];
   const rows = filteredWishes.value.map((wish) => [
@@ -559,6 +561,7 @@ const exportToCSV = () => {
     wish.attendance ?? "pending",
     wish.guest_count,
     wish.message || "",
+    formatDateTimeId(wish.message_at || wish.created_at),
     (wish as any).weddings?.title || "",
   ]);
   const csv = [
@@ -591,13 +594,14 @@ const exportToExcel = async () => {
 
     // Column definitions
     sheet.columns = [
-      { key: "no",         header: "No.",           width: 6 },
-      { key: "date",       header: "Date",           width: 22 },
-      { key: "guest_name", header: "Guest Name",      width: 28 },
-      { key: "attendance", header: "Attendance",      width: 16 },
-      { key: "count",      header: "Guest Count",     width: 14 },
-      { key: "message",    header: "Message",         width: 45 },
-      { key: "wedding",    header: "Wedding",         width: 32 },
+      { key: "no",           header: "No.",            width: 6 },
+      { key: "date",         header: "Date",           width: 22 },
+      { key: "guest_name",   header: "Guest Name",      width: 28 },
+      { key: "attendance",   header: "Attendance",      width: 16 },
+      { key: "count",        header: "Guest Count",     width: 14 },
+      { key: "message",      header: "Message",         width: 45 },
+      { key: "message_time", header: "Message Time",    width: 22 },
+      { key: "wedding",      header: "Wedding",         width: 32 },
     ];
 
     // Style header row
@@ -638,6 +642,7 @@ const exportToExcel = async () => {
         attendance: attendanceLabel(wish.attendance),
         count:      wish.guest_count ?? 0,
         message:    wish.message ?? "",
+        message_time: formatDateTimeId(wish.message_at || wish.created_at),
         wedding:    (wish as any).weddings?.title ?? "",
       });
 
@@ -710,6 +715,9 @@ const formatDate = (date: string) =>
     hour: "2-digit",
     minute: "2-digit",
   });
+
+const formatMessageTime = (date?: string | null) =>
+  formatDateTimeId(date);
 
 const getAttendanceBadge = (attendance: string | null) => {
   switch (attendance) {
@@ -796,6 +804,11 @@ const columns = [
   columnHelper.accessor("guest_count", {
     id: "guest_count",
     header: () => t("wishes.table.guestCount"),
+    enableSorting: true,
+  }),
+  columnHelper.accessor("message_at", {
+    id: "message_at",
+    header: () => t("wishes.table.messageTime"),
     enableSorting: true,
   }),
   columnHelper.accessor("message", {
@@ -1120,10 +1133,14 @@ useHead({ title: 'Guest Wishes – Alwan Invite' })
                 </div>
                 <div class="truncate">{{ row.original.weddings?.title || "-" }}</div>
               </div>
+              <div v-if="!row.original.message && (row.original.message_at || row.original.created_at)" class="flex items-center gap-1 text-xs text-base-content/50 mt-2">
+                <Clock :size="12" />
+                {{ formatMessageTime(row.original.message_at || row.original.created_at) }}
+              </div>
 
-              <!-- Message -->
-              <div v-if="row.original.message" class="text-sm text-base-content/70 bg-base-100 rounded-lg px-3 py-2 line-clamp-2">
-                {{ row.original.message }}
+              <!-- Message or Message Time -->
+              <div v-if="row.original.message || row.original.message_at" class="text-sm text-base-content/70 bg-base-100 rounded-lg px-3 py-2 line-clamp-2">
+                {{ row.original.message || formatMessageTime(row.original.message_at) }}
               </div>
 
               <!-- Actions -->
@@ -1285,13 +1302,18 @@ useHead({ title: 'Guest Wishes – Alwan Invite' })
                         {{ row.original.guest_count }}
                       </div>
                     </template>
+                    <template v-else-if="cell.column.id === 'message_at'">
+                      <div class="text-sm text-base-content/70">
+                        {{ formatMessageTime(row.original.message_at || row.original.created_at) || "-" }}
+                      </div>
+                    </template>
                     <!-- Message -->
                     <template v-else-if="cell.column.id === 'message'">
                       <div
                         class="max-w-xs truncate text-sm"
-                        :title="row.original.message || '-'"
+                        :title="row.original.message ? row.original.message : row.original.message_at ? formatMessageTime(row.original.message_at) : '-'"
                       >
-                        {{ row.original.message || "-" }}
+                        {{ row.original.message ? row.original.message : row.original.message_at ? formatMessageTime(row.original.message_at) : "-" }}
                       </div>
                     </template>
                     <!-- Wedding -->

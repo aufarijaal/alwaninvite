@@ -660,7 +660,7 @@
                 {{ attendanceLabel(wish.attendance) }}
               </span>
             </div>
-            <p class="text-sm font-sans leading-relaxed" style="color: #7a7a7a">{{ wish.message }}</p>
+            <p class="text-sm font-sans leading-relaxed" style="color: #7a7a7a">{{ wish.message ? wish.message : formatDateTimeId(wish.message_at || wish.created_at) }}</p>
           </div>
         </div>
 
@@ -745,6 +745,8 @@
 </template>
 
 <script setup lang="ts">
+import { formatDateTimeId } from "~/utils/dateHelpers";
+
 const props = defineProps<{
   invitation: any;
   guest?: string;
@@ -964,6 +966,7 @@ const submitWish = async () => {
       guest_name: wishForm.guest_name,
       attendance: wishForm.attendance,
       message: wishForm.message,
+      message_at: new Date().toISOString(),
       guest_count: 1,
     });
   submitting.value = false;
